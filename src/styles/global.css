@@ -3,9 +3,8 @@
 
 @import "tailwindcss";
 
-/* Import component styles */
-@import "./typography.css";
-@import "./buttons.css";
+/* Import scoped styles */
+@import "./richtext.css";
 
 /* CSS Variables - Design Tokens */
 @theme {
@@ -28,7 +27,7 @@
   --color-accent: var(--color-yellow);
 }
 
-/* 
+/*
   Enhanced CSS Reset
   Tailwind v4 includes Preflight (modern-normalize), but we add
   Josh Comeau's improvements for better defaults
@@ -101,51 +100,8 @@ h6 {
   text-wrap: balance;
 }
 
-/* Create a root stacking context */
-#root,
-#__next {
-  isolation: isolate;
-}
-
 /* Focus styles for accessibility */
 *:focus-visible {
   outline: 2px solid var(--color-turquoise);
   outline-offset: 2px;
-}
-
-/* Container utility */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin-inline: auto;
-  padding-inline: 1rem;
-}
-
-@media (min-width: 768px) {
-  .container {
-    padding-inline: 2rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    padding-inline: 4rem;
-  }
-}
-
-/* Utility classes */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-.hidden {
-  display: none;
 }
