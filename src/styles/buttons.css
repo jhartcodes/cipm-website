@@ -1,0 +1,186 @@
+/* Button System */
+
+/* Base button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary Buttons — Turquoise (#4EA5C2) */
+.btn-primary {
+  background-color: var(--color-turquoise);
+  color: var(--color-white);
+  border: 2px solid var(--color-turquoise);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #3d8399;
+  border-color: #3d8399;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(78, 165, 194, 0.3);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(78, 165, 194, 0.2);
+}
+
+/* Secondary Buttons — Navy (#15396A) */
+.btn-secondary {
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  border: 2px solid var(--color-navy);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #0f2a4f;
+  border-color: #0f2a4f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(21, 57, 106, 0.3);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(21, 57, 106, 0.2);
+}
+
+/* Outlined Buttons — Transparent with Border */
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-turquoise);
+  border: 2px solid var(--color-turquoise);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background-color: var(--color-turquoise);
+  color: var(--color-white);
+}
+
+.btn-outline-navy {
+  background-color: transparent;
+  color: var(--color-navy);
+  border: 2px solid var(--color-navy);
+}
+
+.btn-outline-navy:hover:not(:disabled) {
+  background-color: var(--color-navy);
+  color: var(--color-white);
+}
+
+/* Text Buttons — No Background */
+.btn-text {
+  background-color: transparent;
+  color: var(--color-turquoise);
+  border: none;
+  padding: 0.5rem 1rem;
+}
+
+.btn-text:hover:not(:disabled) {
+  color: var(--color-navy);
+  text-decoration: underline;
+}
+
+.btn-text-navy {
+  background-color: transparent;
+  color: var(--color-navy);
+  border: none;
+  padding: 0.5rem 1rem;
+}
+
+.btn-text-navy:hover:not(:disabled) {
+  color: var(--color-turquoise);
+  text-decoration: underline;
+}
+
+/* White CTA Buttons — White (#FFFFFF) */
+.btn-white {
+  background-color: var(--color-white);
+  color: var(--color-navy);
+  border: 2px solid var(--color-white);
+}
+
+.btn-white:hover:not(:disabled) {
+  background-color: transparent;
+  color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+/* Button sizes */
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+/* Button states */
+.btn-default {
+  /* Default state - already defined in base styles */
+}
+
+.btn-hover {
+  /* Hover state - handled by :hover pseudo-class */
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Button with icon */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-icon svg,
+.btn-icon img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Button group */
+.btn-group {
+  display: inline-flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Full width button */
+.btn-block {
+  width: 100%;
+  display: flex;
+}
+
+/* Focus states for accessibility */
+.btn:focus-visible {
+  outline: 2px solid var(--color-turquoise);
+  outline-offset: 2px;
+}
+
+.btn-secondary:focus-visible {
+  outline-color: var(--color-navy);
+}
