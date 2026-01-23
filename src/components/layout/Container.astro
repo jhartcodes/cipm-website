@@ -1,0 +1,27 @@
+---
+interface Props {
+  size?: 'narrow' | 'base' | 'wide';
+  bleed?: boolean; // removes max-width for full-bleed content
+  class?: string;
+}
+
+const { size = 'base', bleed = false, class: className } = Astro.props;
+
+const maxWidthClasses = {
+  narrow: 'max-w-3xl', // ~768px
+  base: 'max-w-6xl',   // ~1152px
+  wide: 'max-w-7xl',   // ~1280px
+};
+
+const classes = [
+  'w-full',
+  'mx-auto',
+  'px-4 md:px-8 lg:px-16',
+  !bleed && maxWidthClasses[size],
+  className,
+].filter(Boolean).join(' ');
+---
+
+<div class={classes}>
+  <slot />
+</div>

@@ -1,0 +1,56 @@
+---
+type TextElement = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
+type TextVariant = 'hero' | 'headingLg' | 'heading' | 'headingSm' | 'body' | 'bodyLg' | 'small';
+type TextAlign = 'left' | 'center' | 'right';
+
+interface Props {
+  as: TextElement;
+  variant?: TextVariant;
+  align?: TextAlign;
+  id?: string;
+  class?: string;
+}
+
+const { as: Element, variant, align, id, class: className } = Astro.props;
+
+const defaultVariants: Record<TextElement, TextVariant> = {
+  h1: 'hero',
+  h2: 'headingLg',
+  h3: 'heading',
+  h4: 'headingSm',
+  h5: 'headingSm',
+  h6: 'headingSm',
+  p: 'body',
+  span: 'body',
+};
+
+const resolvedVariant = variant || defaultVariants[Element];
+
+const variantClasses: Record<TextVariant, string> = {
+  hero: 'text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight text-navy tracking-tight',
+  headingLg: 'text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-snug text-navy tracking-tight',
+  heading: 'text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-snug text-navy',
+  headingSm: 'text-[clamp(1.25rem,2.5vw,1.5rem)] font-semibold leading-normal text-navy',
+  body: 'text-base leading-relaxed text-gray-900',
+  bodyLg: 'text-lg leading-relaxed text-gray-900',
+  small: 'text-sm leading-normal text-gray-600',
+};
+
+const alignClasses: Record<TextAlign, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+};
+
+const classNames: (string | false | undefined)[] = [
+  variantClasses[resolvedVariant],
+  align ? alignClasses[align] : undefined,
+  className,
+];
+
+const classes = classNames.filter((c): c is string => Boolean(c)).join(' ');
+---
+
+<Element id={id} class={classes}>
+  <slot />
+</Element>

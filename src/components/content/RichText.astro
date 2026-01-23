@@ -1,0 +1,69 @@
+---
+interface Props {
+  content?: any[]; // Portable Text blocks from Sanity
+  class?: string;
+}
+
+const { content, class: className } = Astro.props;
+
+const classes = ['richtext', className].filter(Boolean).join(' ');
+
+function renderPortableText(blocks: any[]): string {
+  if (!blocks || !Array.isArray(blocks)) return '';
+
+  return blocks.map(block => {
+    if (block._type === 'block') {
+      const style = block.style || 'normal';
+      const children = renderChildren(block.children || []);
+
+      switch (style) {
+        case 'h1': return `<h1>${children}</h1>`;
+        case 'h2': return `<h2>${children}</h2>`;
+        case 'h3': return `<h3>${children}</h3>`;
+        case 'h4': return `<h4>${children}</h4>`;
+        case 'h5': return `<h5>${children}</h5>`;
+        case 'h6': return `<h6>${children}</h6>`;
+        case 'blockquote': return `<blockquote>${children}</blockquote>`;
+        default: return `<p>${children}</p>`;
+      }
+    }
+
+    return '';
+  }).join('\n');
+}
+
+function renderChildren(children: any[]): string {
+  return children.map(child => {
+    if (child._type === 'span') {
+      let text = escapeHtml(child.text || '');
+
+      const marks = child.marks || [];
+      if (marks.includes('strong')) text = `<strong>${text}</strong>`;
+      if (marks.includes('em')) text = `<em>${text}</em>`;
+      if (marks.includes('code')) text = `<code>${text}</code>`;
+
+      return text;
+    }
+    return '';
+  }).join('');
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+const renderedContent = content ? renderPortableText(content) : '';
+---
+
+<div class={classes}>
+  {content ? (
+    <Fragment set:html={renderedContent} />
+  ) : (
+    <slot />
+  )}
+</div>
