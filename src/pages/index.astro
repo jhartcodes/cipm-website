@@ -1,11 +1,28 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+/**
+ * Home Page
+ *
+ * Fetches home page data from Sanity and renders using BaseLayout
+ */
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Server-render for preview mode support
+export const prerender = false;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/layout/Container.astro";
+import Section from "../components/layout/Section.astro";
+import Text from "../components/ui/Text.astro";
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout title="Home">
+  <Section size="xl">
+    <Container>
+      <Text as="h1" variant="displayLg" class="text-center">
+        Welcome to CIPM
+      </Text>
+      <Text as="p" variant="body" class="text-center mt-4 text-gray-600">
+        Community Impact Property Management
+      </Text>
+    </Container>
+  </Section>
+</BaseLayout>
