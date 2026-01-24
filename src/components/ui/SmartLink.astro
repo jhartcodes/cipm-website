@@ -1,0 +1,43 @@
+---
+/**
+ * SmartLink Component
+ * 
+ * UI Primitive for links
+ * Handles internal/external routing with proper attributes
+ * 
+ * Architecture Rules:
+ * - NO Sanity logic here
+ * - Accepts resolved URL string (not Sanity link objects)
+ * - Use resolveLink() before passing to this component
+ */
+
+interface Props {
+  href: string | null;
+  external?: boolean;
+  class?: string;
+  ariaCurrent?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
+}
+
+const { href, external, class: className, ariaCurrent } = Astro.props;
+
+// Don't render if no valid href
+if (!href) {
+  return null;
+}
+
+const isExternal = external ?? (href.startsWith('http://') || href.startsWith('https://'));
+
+const attrs = {
+  href,
+  class: className,
+  'aria-current': ariaCurrent,
+  ...(isExternal && {
+    target: '_blank',
+    rel: 'noopener noreferrer',
+  }),
+};
+---
+
+<a {...attrs}>
+  <slot />
+</a>
