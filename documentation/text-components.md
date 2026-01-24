@@ -287,6 +287,63 @@ RichText content is styled through the `.richtext` class in `src/styles/richtext
 
 ---
 
+## **Tailwind v4 Color System**
+
+### **Defining Custom Colors**
+
+In Tailwind v4, custom colors are defined in `src/styles/global.css` using the `@theme` directive:
+
+```css
+@theme {
+  /* Custom brand colors - these become utilities */
+  --color-navy: #15396a;      /* → text-navy, bg-navy, border-navy */
+  --color-turquoise: #4ea5c2; /* → text-turquoise, bg-turquoise */
+  --color-yellow: #f2c94c;    /* → text-yellow, bg-yellow */
+
+  /* Custom grays (use unique names, not gray-50, etc.) */
+  --color-gray-50: #f4f7fa;
+  --color-gray-900: #1c2b33;
+}
+```
+
+### **Important Rules**
+
+1. **Don't redefine built-in colors** - Tailwind has `white`, `black`, `transparent`, and standard `gray-*` colors built-in. Redefining them (e.g., `--color-white`) causes conflicts.
+
+2. **Naming convention matters** - The prefix determines the utility type:
+   - `--color-*` → `text-*`, `bg-*`, `border-*`
+   - `--spacing-*` → `p-*`, `m-*`, `gap-*`
+   - `--font-*` → `font-*`
+
+3. **Use utilities in templates, `var()` in CSS**:
+   ```astro
+   <!-- In Astro/HTML: use utility class -->
+   <div class="bg-navy text-white">...</div>
+   ```
+   ```css
+   /* In CSS files: use var() syntax */
+   body {
+     color: var(--color-gray-900);
+   }
+   ```
+
+### **Available Color Utilities**
+
+From our `@theme` configuration:
+
+| Variable | Utilities Created |
+|----------|-------------------|
+| `--color-navy` | `text-navy`, `bg-navy`, `border-navy` |
+| `--color-turquoise` | `text-turquoise`, `bg-turquoise`, `border-turquoise` |
+| `--color-yellow` | `text-yellow`, `bg-yellow`, `border-yellow` |
+| `--color-gray-50` | `text-gray-50`, `bg-gray-50` |
+| `--color-gray-600` | `text-gray-600`, `bg-gray-600` |
+| `--color-gray-900` | `text-gray-900`, `bg-gray-900` |
+
+Plus all built-in Tailwind colors: `white`, `black`, `transparent`, etc.
+
+---
+
 ## **Key Differences**
 
 | Feature            | **Text**                              | **RichText**                      |
