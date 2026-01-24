@@ -1,0 +1,157 @@
+---
+/**
+ * Footer Component
+ *
+ * Section Component (Sanity-aware)
+ * Site footer with contact info, social links, land acknowledgement
+ */
+
+import Container from "../layout/Container.astro";
+import Section from "../layout/Section.astro";
+import Text from "../ui/Text.astro";
+import SmartLink from "../ui/SmartLink.astro";
+import Icon from "../ui/Icon.astro";
+
+interface SocialLink {
+  platform: string;
+  url: string;
+}
+
+interface Props {
+  data: {
+    phoneNumber?: string;
+    email?: string;
+    address?: string;
+    landAcknowledgement?: string;
+    socialLinks?: SocialLink[];
+    copyrightText?: string;
+  };
+}
+
+const { data } = Astro.props;
+
+// Map platform names to icon names
+const platformToIcon: Record<string, "linkedin" | "facebook" | "instagram" | "twitter" | "youtube" | "link"> = {
+  LinkedIn: "linkedin",
+  Facebook: "facebook",
+  Instagram: "instagram",
+  Twitter: "twitter",
+  X: "twitter",
+  YouTube: "youtube",
+};
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-navy text-white mt-auto">
+  <Section size="lg" tone="inverted">
+    <Container>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        <!-- Contact Info -->
+        <div>
+          <Text as="h3" variant="headingSm" tone="inverted" class="mb-4">
+            Contact Us
+          </Text>
+
+          <div class="space-y-3">
+            {
+              data.phoneNumber && (
+                <div>
+                  <SmartLink
+                    href={`tel:${data.phoneNumber.replace(/\s/g, "")}`}
+                    class="inline-flex items-center gap-2 hover:text-turquoise transition-colors"
+                  >
+                    <Icon name="phone" size={18} />
+                    <Text as="span" variant="body" tone="inherit">
+                      {data.phoneNumber}
+                    </Text>
+                  </SmartLink>
+                </div>
+              )
+            }
+
+            {
+              data.email && (
+                <div>
+                  <SmartLink
+                    href={`mailto:${data.email}`}
+                    class="inline-flex items-center gap-2 hover:text-turquoise transition-colors"
+                  >
+                    <Icon name="envelope" size={18} />
+                    <Text as="span" variant="body" tone="inherit">
+                      {data.email}
+                    </Text>
+                  </SmartLink>
+                </div>
+              )
+            }
+
+            {
+              data.address && (
+                <div>
+                  <Text
+                    as="p"
+                    variant="body"
+                    tone="inverted"
+                    class="whitespace-pre-line"
+                  >
+                    {data.address}
+                  </Text>
+                </div>
+              )
+            }
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        {
+          data.socialLinks && data.socialLinks.length > 0 && (
+            <div>
+              <Text as="h3" variant="headingSm" tone="inverted" class="mb-4">
+                Follow Us
+              </Text>
+
+              <div class="flex gap-4">
+                {data.socialLinks.map((link) => {
+                  const iconName = platformToIcon[link.platform] || "link";
+                  return (
+                    <SmartLink
+                      href={link.url}
+                      external
+                      class="hover:text-turquoise transition-colors"
+                      aria-label={link.platform}
+                    >
+                      <Icon name={iconName} size={24} aria-label={link.platform} />
+                    </SmartLink>
+                  );
+                })}
+              </div>
+            </div>
+          )
+        }
+
+        <!-- Land Acknowledgement -->
+        {
+          data.landAcknowledgement && (
+            <div>
+              <Text as="h3" variant="headingSm" tone="inverted" class="mb-4">
+                Land Acknowledgement
+              </Text>
+              <Text as="p" variant="small" tone="inverted">
+                {data.landAcknowledgement}
+              </Text>
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Copyright -->
+      <div class="mt-12 pt-8 border-t border-gray-700 text-center">
+        <Text as="p" variant="small" tone="inverted">
+          {data.copyrightText ||
+            `© ${currentYear} Community Impact Property Management. All rights reserved.`}
+        </Text>
+      </div>
+    </Container>
+  </Section>
+</footer>
