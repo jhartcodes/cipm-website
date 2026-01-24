@@ -1,0 +1,56 @@
+---
+import Container from "../../layout/Container.astro";
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import PortableText from "../../PortableText.astro";
+import SanityImage from "../../content/SanityImage.astro";
+
+interface PropertyType {
+  title?: string;
+  icon?: any;
+}
+
+interface Props {
+  heading?: string;
+  content?: any[];
+  propertyTypes?: PropertyType[];
+}
+
+const { heading, content, propertyTypes = [] } = Astro.props;
+---
+
+<Section size="lg">
+  <Container>
+    <Text as="h2" variant="headingLg">
+      {heading || "What We Manage"}
+    </Text>
+
+    {content && (
+      <div class="mt-4">
+        <PortableText value={content} class="richtext" />
+      </div>
+    )}
+
+    {propertyTypes.length > 0 && (
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {propertyTypes.map((item) => (
+          <div class="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+            {item.icon && (
+              <SanityImage
+                image={item.icon}
+                alt={item.title || ""}
+                width={80}
+                class="h-16 w-16"
+              />
+            )}
+            {item.title && (
+              <Text as="h3" variant="headingSm" class="mt-4">
+                {item.title}
+              </Text>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+  </Container>
+</Section>

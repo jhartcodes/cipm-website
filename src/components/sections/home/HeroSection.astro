@@ -1,0 +1,46 @@
+---
+import Container from "../../layout/Container.astro";
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import SanityImage from "../../content/SanityImage.astro";
+
+interface Props {
+  hero?: {
+    heading?: string;
+    subheading?: string;
+    backgroundImage?: any;
+  };
+}
+
+const { hero } = Astro.props;
+---
+
+<Section size="xl">
+  <Container>
+    <div class="grid gap-8 md:grid-cols-2 md:items-center">
+      <div>
+        <Text as="h1" variant="hero">
+          {hero?.heading || "Welcome to CIPM"}
+        </Text>
+
+        {hero?.subheading && (
+          <Text as="p" variant="bodyLg" class="mt-4 text-gray-600">
+            {hero.subheading}
+          </Text>
+        )}
+      </div>
+
+      {hero?.backgroundImage && (
+        <div class="w-full">
+          <SanityImage
+            image={hero.backgroundImage}
+            alt={hero.backgroundImage?.alt || ""}
+            width={800}
+            class="w-full rounded-2xl"
+            loading="eager"
+          />
+        </div>
+      )}
+    </div>
+  </Container>
+</Section>

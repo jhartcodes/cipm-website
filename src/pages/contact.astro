@@ -1,14 +1,21 @@
 ---
 /**
- * Contact Page
+ * Contact Page (Production - SSR)
+ *
+ * SSR to handle form success query param.
+ * Fetches published content from Sanity.
  */
 
+import { getSanityClient } from "../lib/sanity/client";
+import { CONTACT_PAGE_QUERY } from "../lib/sanity/queries";
+import ContactPage from "../components/pages/ContactPage.astro";
+
+// SSR for form handling
 export const prerender = false;
 
-import BaseLayout from "../layouts/BaseLayout.astro";
-import ContactPage from "../components/pages/ContactPage.astro";
+// Fetch published content
+const client = getSanityClient({ preview: false });
+const data = await client.fetch(CONTACT_PAGE_QUERY);
 ---
 
-<BaseLayout title="Contact Us">
-  <ContactPage />
-</BaseLayout>
+<ContactPage data={data} />

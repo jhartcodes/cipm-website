@@ -1,0 +1,45 @@
+---
+/**
+ * OurStorySection Component
+ *
+ * Two-column section with heading, content (PortableText), and optional image.
+ */
+
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import PortableText from "../../PortableText.astro";
+import SanityImage from "../../content/SanityImage.astro";
+
+interface Props {
+  heading?: string;
+  content?: any[];
+  image?: any;
+}
+
+const { heading, content, image } = Astro.props;
+---
+
+<Section size="lg">
+  <div class="grid gap-8 md:grid-cols-2 md:items-center">
+    <div>
+      <Text as="h2" variant="headingLg">
+        {heading || "Our Story"}
+      </Text>
+
+      {content && (
+        <div class="mt-4">
+          <PortableText value={content} class="richtext" />
+        </div>
+      )}
+    </div>
+
+    {image && (
+      <SanityImage
+        image={image}
+        alt={image?.alt || ""}
+        width={700}
+        class="w-full rounded-2xl"
+      />
+    )}
+  </div>
+</Section>

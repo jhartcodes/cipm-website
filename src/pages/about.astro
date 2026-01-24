@@ -1,14 +1,20 @@
 ---
 /**
- * About Page
+ * About Page (Production - Static)
+ *
+ * Fetches published content from Sanity at build time.
  */
 
-export const prerender = false;
-
-import BaseLayout from "../layouts/BaseLayout.astro";
+import { getSanityClient } from "../lib/sanity/client";
+import { ABOUT_PAGE_QUERY } from "../lib/sanity/queries";
 import AboutPage from "../components/pages/AboutPage.astro";
+
+// Static generation for production
+export const prerender = true;
+
+// Fetch published content
+const client = getSanityClient({ preview: false });
+const data = await client.fetch(ABOUT_PAGE_QUERY);
 ---
 
-<BaseLayout title="About Us">
-  <AboutPage />
-</BaseLayout>
+<AboutPage data={data} />

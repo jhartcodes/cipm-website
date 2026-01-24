@@ -1,16 +1,42 @@
 ---
-import Container from "../layout/Container.astro";
+/**
+ * ContactPage Component
+ *
+ * Shared component for both production and preview routes.
+ * Receives data as props (fetched by the route).
+ */
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../layout/Section.astro";
-import Text from "../ui/Text.astro";
+import HeroSection from "../sections/shared/HeroSection.astro";
+import ContactInfoSection from "../sections/contact/ContactInfoSection.astro";
+import ContactFormSection from "../sections/contact/ContactFormSection.astro";
+
+interface Props {
+  data?: any;
+  preview?: boolean;
+}
+
+const { data, preview = false } = Astro.props;
 ---
 
-<Section size="xl">
-  <Container>
-    <Text as="h1" variant="displayLg" class="text-center">
-      Contact Us
-    </Text>
-    <Text as="p" variant="body" class="text-center mt-4 text-gray-600">
-      Get in touch with our team
-    </Text>
-  </Container>
-</Section>
+<BaseLayout title="Contact Us" seo={data?.seo} preview={preview}>
+  <HeroSection hero={data?.hero} defaultHeading="Contact Us" />
+  <Section size="lg">
+    <div class="grid gap-12 md:grid-cols-2">
+      <ContactInfoSection
+        heading={data?.contactHeading}
+        address={data?.address}
+        phone={data?.phone}
+        email={data?.email}
+        mapEmbedUrl={data?.mapEmbedUrl}
+      />
+      <ContactFormSection
+        heading={data?.formHeading}
+        description={data?.formDescription}
+        buttonText={data?.submitButtonText}
+        successMessage={data?.successMessage}
+      />
+    </div>
+  </Section>
+</BaseLayout>

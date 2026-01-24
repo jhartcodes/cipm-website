@@ -1,0 +1,73 @@
+---
+/**
+ * FaqItem Component
+ *
+ * Accordion-style FAQ item with question and answer.
+ * Uses HTML details/summary for native accordion behavior.
+ * Supports both plain strings and PortableText for question/answer.
+ */
+
+import Text from "../../ui/Text.astro";
+import PortableTextRenderer from "../../PortableText.astro";
+
+interface Props {
+  question?: string | any[];
+  answer?: string | any[];
+}
+
+const { question, answer } = Astro.props;
+
+// Helper to check if value is PortableText (array of blocks)
+const isPortableText = (value: unknown): value is any[] => Array.isArray(value);
+
+// Extract plain text from PortableText for simple display
+const getPlainText = (value: string | any[] | undefined): string => {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    return value
+      .filter((block) => block._type === "block")
+      .map((block) => block.children?.map((child: any) => child.text).join("") || "")
+      .join(" ");
+  }
+  return "";
+};
+---
+
+<details class="group border-b border-gray-200 py-4">
+  <summary class="flex cursor-pointer items-center justify-between gap-4 list-none">
+    <Text as="span" variant="headingSm" class="text-left">
+      {getPlainText(question) || "Question"}
+    </Text>
+    <span class="flex-shrink-0 text-turquoise transition-transform duration-200 group-open:rotate-180">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </span>
+  </summary>
+  <div class="pt-4 pb-2">
+    {isPortableText(answer) ? (
+      <PortableTextRenderer value={answer} class="richtext text-gray-600" />
+    ) : (
+      <Text as="p" variant="body" class="text-gray-600">
+        {answer || "Answer"}
+      </Text>
+    )}
+  </div>
+</details>
+
+<style>
+  /* Hide default marker */
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

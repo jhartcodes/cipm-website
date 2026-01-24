@@ -1,0 +1,14 @@
+---
+import { resolveLink } from "../../lib/routing/resolveLink";
+
+const { value, children } = Astro.props;
+
+const href = resolveLink(value) || value?.href || "#";
+const isExternal = href.startsWith("http");
+const target = value?.openInNewTab || isExternal ? "_blank" : undefined;
+const rel = target === "_blank" ? "noopener noreferrer" : undefined;
+---
+
+<a href={href} target={target} rel={rel}>
+  {children}
+</a>

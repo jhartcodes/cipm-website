@@ -1,21 +1,29 @@
 ---
 /**
  * About Page Preview (SSR - Draft Content)
+ *
+ * Mirror route for previewing draft about page content.
+ * Uses the same AboutPage component as production.
  */
 
-export const prerender = false;
-
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getSanityClient } from "../../lib/sanity/client";
+import { ABOUT_PAGE_QUERY } from "../../lib/sanity/queries";
+import { isPreviewMode, validatePreviewSecret } from "../../lib/preview/cookies";
 import AboutPage from "../../components/pages/AboutPage.astro";
 import PreviewBanner from "../../components/sections/PreviewBanner.astro";
-import { isPreviewMode, validatePreviewSecret } from "../../lib/preview/cookies";
 
+// SSR only for preview
+export const prerender = false;
+
+// Validate preview mode
 if (!isPreviewMode(Astro.cookies) || !validatePreviewSecret(Astro.cookies)) {
-  return Astro.redirect("/preview-exit?redirect=/about");
+  return Astro.redirect('/preview-exit?redirect=/about');
 }
+
+// Fetch draft content
+const client = getSanityClient({ preview: true });
+const data = await client.fetch(ABOUT_PAGE_QUERY);
 ---
 
-<BaseLayout title="About Us" preview={true}>
-  <PreviewBanner />
-  <AboutPage />
-</BaseLayout>
+<PreviewBanner />
+<AboutPage data={data} preview={true} />

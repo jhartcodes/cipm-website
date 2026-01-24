@@ -1,16 +1,50 @@
 ---
-import Container from "../layout/Container.astro";
-import Section from "../layout/Section.astro";
-import Text from "../ui/Text.astro";
+/**
+ * BlogPage Component
+ *
+ * Shared component for both production and preview routes.
+ * Receives data as props (fetched by the route).
+ */
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HeroSection from "../sections/shared/HeroSection.astro";
+import BlogIntroSection from "../sections/blog/BlogIntroSection.astro";
+import BlogGridSection from "../sections/blog/BlogGridSection.astro";
+
+interface Props {
+  data?: any;
+  posts?: any[];
+  categories?: any[];
+  currentPage?: number;
+  totalPages?: number;
+  activeCategory?: string;
+  preview?: boolean;
+}
+
+const {
+  data,
+  posts = [],
+  categories = [],
+  currentPage = 1,
+  totalPages = 1,
+  activeCategory,
+  preview = false,
+} = Astro.props;
 ---
 
-<Section size="xl">
-  <Container>
-    <Text as="h1" variant="displayLg" class="text-center">
-      Blog
-    </Text>
-    <Text as="p" variant="body" class="text-center mt-4 text-gray-600">
-      Latest news and updates
-    </Text>
-  </Container>
-</Section>
+<BaseLayout title="Blog" seo={data?.seo} preview={preview}>
+  <HeroSection hero={data?.hero} defaultHeading="Blog" />
+  <BlogIntroSection
+    heading={data?.heading}
+    intro={data?.introText}
+  />
+  <div transition:name="blog-grid" transition:animate="initial">
+    <BlogGridSection
+      posts={posts}
+      categories={categories}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      activeCategory={activeCategory}
+    />
+  </div>
+</BaseLayout>

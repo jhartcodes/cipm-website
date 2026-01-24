@@ -57,14 +57,16 @@ body {
   min-height: 100vh;
 }
 
-/* Improve media defaults */
-img,
-picture,
-video,
-canvas,
-svg {
-  display: block;
-  max-width: 100%;
+/* Improve media defaults - in base layer so utilities can override */
+@layer base {
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
 }
 
 /* Remove built-in form typography styles */
@@ -104,4 +106,67 @@ h6 {
 *:focus-visible {
   outline: 2px solid var(--color-turquoise);
   outline-offset: 2px;
+}
+
+/* ============================================
+   View Transitions - Smooth Page Navigation
+   ============================================ */
+
+/* Custom fade animation for main content */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Apply crossfade to the main content area */
+/* Using mix-blend-mode: normal ensures both views are visible during transition */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 150ms;
+  animation-timing-function: ease-out;
+  /* Crossfade: both views visible simultaneously, prevents blank state */
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation-name: fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in;
+  /* Slight delay so new content fades in as old fades out */
+  animation-delay: 50ms;
+}
+
+/* Blog grid has its own transition name for smoother SSR page loads */
+::view-transition-old(blog-grid),
+::view-transition-new(blog-grid) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* Prevent flash of unstyled content during transitions */
+html.astro-route-announcer {
+  display: none;
 }

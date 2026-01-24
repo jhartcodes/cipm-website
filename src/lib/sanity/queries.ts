@@ -45,18 +45,9 @@ const HERO_PROJECTION = /* groq */ `
 hero{
   heading,
   subheading,
-  backgroundImage,
-  showCta,
-  ctaButton{
-    text,
-    link{
-      linkType,
-      externalUrl,
-      internalLink->{
-        _type,
-        slug
-      }
-    }
+  backgroundImage{
+    asset,
+    alt
   }
 }
 `;
@@ -64,10 +55,49 @@ hero{
 export const HOME_PAGE_QUERY = /* groq */ `
 *[_type == "homePage"][0]{
   ${HERO_PROJECTION},
-  // Add fields as you build sections:
-  // whoWeAreHeading,
-  // whoWeAreContent,
-  // whoWeAreImage,
+  whoWeAreHeading,
+  whoWeAreContent,
+  whoWeAreImage{
+    asset,
+    alt
+  },
+  whatWeManageHeading,
+  whatWeManageContent,
+  propertyTypes[]{
+    title,
+    icon
+  },
+  whatWeOfferHeading,
+  whatWeOfferIntro,
+  featuredServices[]-> {
+    title,
+    slug,
+    shortDescription,
+    image{
+      asset,
+      alt
+    },
+    enableDetailPage
+  },
+  testimonialsHeading,
+  featuredTestimonials[]-> {
+    quote,
+    authorName,
+    authorTitle,
+    image
+  },
+  contactHeading,
+  contactSubheading,
+  contactButtonText,
+  contactButtonLink{
+    linkType,
+    internalLink->{
+      _type,
+      slug
+    },
+    externalUrl,
+    openInNewTab
+  },
   seo
 }
 `;
@@ -75,12 +105,28 @@ export const HOME_PAGE_QUERY = /* groq */ `
 export const ABOUT_PAGE_QUERY = /* groq */ `
 *[_type == "aboutPage"][0]{
   ${HERO_PROJECTION},
-  // ourStoryHeading,
-  // ourStoryContent,
-  // teamHeading,
-  // teamMembers[]{ name, title, headshot, bio },
-  // faqHeading,
-  // faqs[]{ question, answer },
+  ourStoryHeading,
+  ourStoryContent,
+  ourStoryImage{
+    asset,
+    alt
+  },
+  teamHeading,
+  teamIntro,
+  teamMembers[]{
+    name,
+    title,
+    headshot{
+      asset,
+      alt
+    },
+    bio
+  },
+  faqHeading,
+  faqs[]{
+    question,
+    answer
+  },
   seo
 }
 `;
@@ -88,13 +134,32 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
 export const SERVICES_PAGE_QUERY = /* groq */ `
 *[_type == "servicesPage"][0]{
   ${HERO_PROJECTION},
-  // introHeading,
-  // introContent,
-  // services[]->{
-  //   title, slug, shortDescription, bulletPoints, image, enableDetailPage
-  // },
-  // showCta,
-  // ctaHeading, ctaText, ctaButtonText, ctaButtonLink,
+  introHeading,
+  introContent,
+  services[]->{
+    title,
+    slug,
+    shortDescription,
+    bulletPoints,
+    image{
+      asset,
+      alt
+    },
+    enableDetailPage
+  },
+  showCta,
+  ctaHeading,
+  ctaText,
+  ctaButtonText,
+  ctaButtonLink{
+    linkType,
+    internalLink->{
+      _type,
+      slug
+    },
+    externalUrl,
+    openInNewTab
+  },
   seo
 }
 `;
@@ -102,16 +167,16 @@ export const SERVICES_PAGE_QUERY = /* groq */ `
 export const CONTACT_PAGE_QUERY = /* groq */ `
 *[_type == "contactPage"][0]{
   ${HERO_PROJECTION},
-  // contactHeading,
-  // address,
-  // phone,
-  // email,
-  // mapEmbedUrl,
-  // formHeading,
-  // formDescription,
-  // submitButtonText,
-  // successMessage,
-  // recipientEmail,
+  contactHeading,
+  address,
+  phone,
+  email,
+  mapEmbedUrl,
+  formHeading,
+  formDescription,
+  submitButtonText,
+  successMessage,
+  recipientEmail,
   seo
 }
 `;
@@ -119,11 +184,19 @@ export const CONTACT_PAGE_QUERY = /* groq */ `
 export const BLOG_PAGE_QUERY = /* groq */ `
 *[_type == "blogPage"][0]{
   ${HERO_PROJECTION},
-  // heading,
-  // introText,
+  heading,
+  introText,
   postsPerPageDesktop,
   postsPerPageMobile,
   seo
+}
+`;
+
+export const BLOG_CATEGORIES_QUERY = /* groq */ `
+*[_type == "blogCategory"] | order(title asc){
+  title,
+  slug,
+  color
 }
 `;
 
@@ -133,7 +206,10 @@ export const BLOG_LIST_QUERY = /* groq */ `
   slug,
   publishedAt,
   excerpt,
-  featuredImage,
+  featuredImage{
+    asset,
+    alt
+  },
   author,
   showAuthor,
   category->{
@@ -142,6 +218,10 @@ export const BLOG_LIST_QUERY = /* groq */ `
     color
   }
 }
+`;
+
+export const BLOG_COUNT_QUERY = /* groq */ `
+count(*[_type == "blogPost"])
 `;
 
 export const BLOG_POST_QUERY = /* groq */ `

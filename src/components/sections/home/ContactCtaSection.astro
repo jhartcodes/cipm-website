@@ -1,0 +1,40 @@
+---
+import Container from "../../layout/Container.astro";
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import Button from "../../ui/Button.astro";
+import { resolveLink } from "../../../lib/routing/resolveLink";
+
+interface Props {
+  heading?: string;
+  subheading?: string;
+  buttonText?: string;
+  buttonLink?: any;
+}
+
+const { heading, subheading, buttonText, buttonLink } = Astro.props;
+---
+
+<Section size="lg">
+  <Container>
+    <div class="rounded-2xl bg-navy px-6 py-10 text-center text-white">
+      <Text as="h2" variant="headingLg" tone="inverted">
+        {heading || "Have a property that needs management?"}
+      </Text>
+
+      {subheading && (
+        <Text as="p" variant="body" tone="inverted" class="mt-3">
+          {subheading}
+        </Text>
+      )}
+
+      {buttonText && buttonLink && (
+        <div class="mt-6 flex justify-center">
+          <Button href={resolveLink(buttonLink)} variant="secondary" size="md">
+            {buttonText}
+          </Button>
+        </div>
+      )}
+    </div>
+  </Container>
+</Section>

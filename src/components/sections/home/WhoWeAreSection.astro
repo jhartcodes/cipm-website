@@ -1,0 +1,42 @@
+---
+import Container from "../../layout/Container.astro";
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import PortableText from "../../PortableText.astro";
+import SanityImage from "../../content/SanityImage.astro";
+
+interface Props {
+  heading?: string;
+  content?: any[];
+  image?: any;
+}
+
+const { heading, content, image } = Astro.props;
+---
+
+<Section size="lg">
+  <Container>
+    <div class="grid gap-8 md:grid-cols-2 md:items-center">
+      <div>
+        <Text as="h2" variant="headingLg">
+          {heading || "Who We Are"}
+        </Text>
+
+        {content && (
+          <div class="mt-4">
+            <PortableText value={content} class="richtext" />
+          </div>
+        )}
+      </div>
+
+      {image && (
+        <SanityImage
+          image={image}
+          alt={image?.alt || ""}
+          width={700}
+          class="w-full rounded-2xl"
+        />
+      )}
+    </div>
+  </Container>
+</Section>

@@ -1,0 +1,35 @@
+---
+/**
+ * BlogIntroSection Component
+ *
+ * Optional intro section for the blog page with heading and intro text.
+ */
+
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+
+interface Props {
+  heading?: string;
+  intro?: string;
+}
+
+const { heading, intro } = Astro.props;
+---
+
+{(heading || intro) && (
+  <Section size="sm">
+    <div class="text-center">
+      {heading && (
+        <Text as="h2" variant="headingLg">
+          {heading}
+        </Text>
+      )}
+
+      {intro && (
+        <Text as="p" variant="body" class="mt-4 mx-auto max-w-2xl text-gray-600">
+          {intro}
+        </Text>
+      )}
+    </div>
+  </Section>
+)}

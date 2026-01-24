@@ -1,0 +1,134 @@
+---
+/**
+ * BlogGridSection Component
+ *
+ * Displays blog posts in a grid with optional category filter and pagination.
+ */
+
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import BlogCard from "./BlogCard.astro";
+import CategoryFilter from "./CategoryFilter.astro";
+
+interface Category {
+  title?: string;
+  slug?: { current?: string };
+  color?: string;
+}
+
+interface Post {
+  title?: string;
+  slug?: { current?: string };
+  excerpt?: string;
+  featuredImage?: any;
+  category?: Category;
+  publishedAt?: string;
+  author?: string;
+  showAuthor?: boolean;
+}
+
+interface Props {
+  posts?: Post[];
+  categories?: Category[];
+  currentPage?: number;
+  totalPages?: number;
+  activeCategory?: string;
+}
+
+const {
+  posts = [],
+  categories = [],
+  currentPage = 1,
+  totalPages = 1,
+  activeCategory,
+} = Astro.props;
+
+// Build pagination URLs
+const buildPageUrl = (page: number) => {
+  const params = new URLSearchParams();
+  if (page > 1) params.set('page', String(page));
+  if (activeCategory) params.set('category', activeCategory);
+  const queryString = params.toString();
+  return `/blog${queryString ? `?${queryString}` : ''}`;
+};
+---
+
+<Section size="lg">
+  <div class="min-h-64">
+    {categories.length > 0 && (
+      <div class="mb-8">
+        <CategoryFilter categories={categories} activeCategory={activeCategory} />
+      </div>
+    )}
+
+    {posts.length > 0 ? (
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => (
+        <BlogCard
+          title={post.title}
+          slug={post.slug}
+          excerpt={post.excerpt}
+          featuredImage={post.featuredImage}
+          category={post.category}
+          publishedAt={post.publishedAt}
+          author={post.author}
+          showAuthor={post.showAuthor}
+        />
+      ))}
+    </div>
+  ) : (
+    <div class="text-center py-12">
+      <Text as="p" variant="body" class="text-gray-500">
+        No posts found.
+      </Text>
+    </div>
+  )}
+
+  {totalPages > 1 && (
+    <nav class="mt-12 flex justify-center gap-2" aria-label="Pagination">
+      {currentPage > 1 && (
+        <a
+          href={buildPageUrl(currentPage - 1)}
+          class="flex items-center gap-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+          data-astro-prefetch="false"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Previous
+        </a>
+      )}
+
+      <div class="flex items-center gap-1">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <a
+            href={buildPageUrl(page)}
+            class={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+              page === currentPage
+                ? 'bg-turquoise text-white'
+                : 'border border-gray-200 text-gray-700 hover:bg-gray-50'
+            }`}
+            aria-current={page === currentPage ? 'page' : undefined}
+            data-astro-prefetch="false"
+          >
+            {page}
+          </a>
+        ))}
+      </div>
+
+      {currentPage < totalPages && (
+        <a
+          href={buildPageUrl(currentPage + 1)}
+          class="flex items-center gap-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+          data-astro-prefetch="false"
+        >
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      )}
+    </nav>
+  )}
+  </div>
+</Section>

@@ -1,14 +1,65 @@
 ---
 /**
- * Blog Page
+ * Blog Page (Production - SSR)
+ *
+ * SSR to handle pagination and category filtering via query params.
+ * Fetches published content from Sanity.
  */
 
+import { getSanityClient } from "../../lib/sanity/client";
+import {
+  BLOG_PAGE_QUERY,
+  BLOG_LIST_QUERY,
+  BLOG_CATEGORIES_QUERY,
+  BLOG_COUNT_QUERY,
+} from "../../lib/sanity/queries";
+import BlogPage from "../../components/pages/BlogPage.astro";
+
+// SSR for pagination/filtering
 export const prerender = false;
 
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import BlogPage from "../../components/pages/BlogPage.astro";
+// Fetch published content
+const client = getSanityClient({ preview: false });
+
+// Fetch page data, all posts, and categories in parallel
+const [pageData, allPosts, categories, totalCount] = await Promise.all([
+  client.fetch(BLOG_PAGE_QUERY),
+  client.fetch(BLOG_LIST_QUERY),
+  client.fetch(BLOG_CATEGORIES_QUERY),
+  client.fetch(BLOG_COUNT_QUERY),
+]);
+
+// Get pagination params from URL
+const url = Astro.url;
+const currentPage = Math.max(1, parseInt(url.searchParams.get('page') || '1'));
+const activeCategory = url.searchParams.get('category') || undefined;
+
+// Posts per page (default to 9 if not set in Sanity)
+const postsPerPage = pageData?.postsPerPageDesktop || 9;
+
+// Filter posts by category if active
+let filteredPosts = allPosts || [];
+if (activeCategory) {
+  filteredPosts = filteredPosts.filter(
+    (post: any) => post.category?.slug?.current === activeCategory
+  );
+}
+
+// Calculate pagination
+const totalFilteredPosts = filteredPosts.length;
+const totalPages = Math.ceil(totalFilteredPosts / postsPerPage);
+
+// Get posts for current page
+const startIndex = (currentPage - 1) * postsPerPage;
+const endIndex = startIndex + postsPerPage;
+const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
 ---
 
-<BaseLayout title="Blog">
-  <BlogPage />
-</BaseLayout>
+<BlogPage
+  data={pageData}
+  posts={paginatedPosts}
+  categories={categories}
+  currentPage={currentPage}
+  totalPages={totalPages}
+  activeCategory={activeCategory}
+/>

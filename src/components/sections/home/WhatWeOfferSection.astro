@@ -1,0 +1,75 @@
+---
+import Container from "../../layout/Container.astro";
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import Button from "../../ui/Button.astro";
+import SanityImage from "../../content/SanityImage.astro";
+import { resolveLink } from "../../../lib/routing/resolveLink";
+
+interface ServiceItem {
+  title?: string;
+  slug?: { current?: string };
+  shortDescription?: string;
+  image?: any;
+  enableDetailPage?: boolean;
+}
+
+interface Props {
+  heading?: string;
+  intro?: string;
+  services?: ServiceItem[];
+}
+
+const { heading, intro, services = [] } = Astro.props;
+---
+
+<Section size="lg">
+  <Container>
+    <Text as="h2" variant="headingLg">
+      {heading || "What We Offer"}
+    </Text>
+
+    {intro && (
+      <Text as="p" variant="body" class="mt-4 text-gray-600">
+        {intro}
+      </Text>
+    )}
+
+    {services.length > 0 && (
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        {services.map((service) => (
+          <div class="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+            {service.image && (
+              <SanityImage
+                image={service.image}
+                alt={service.image?.alt || service.title || ""}
+                width={600}
+                class="w-full rounded-lg"
+              />
+            )}
+
+            {service.title && (
+              <Text as="h3" variant="headingSm" class="mt-4">
+                {service.title}
+              </Text>
+            )}
+
+            {service.shortDescription && (
+              <Text as="p" variant="body" class="mt-2 text-gray-600">
+                {service.shortDescription}
+              </Text>
+            )}
+
+            {service.enableDetailPage && service.slug?.current && (
+              <div class="mt-4">
+                <Button href={resolveLink({ linkType: "internal", internalLink: { _type: "service", slug: service.slug } })} variant="outline" size="sm">
+                  Learn more
+                </Button>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+  </Container>
+</Section>

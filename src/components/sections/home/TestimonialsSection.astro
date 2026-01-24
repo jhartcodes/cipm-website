@@ -1,0 +1,66 @@
+---
+import Container from "../../layout/Container.astro";
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import SanityImage from "../../content/SanityImage.astro";
+
+interface Testimonial {
+  quote?: string;
+  authorName?: string;
+  authorTitle?: string;
+  image?: any;
+}
+
+interface Props {
+  heading?: string;
+  testimonials?: Testimonial[];
+}
+
+const { heading, testimonials = [] } = Astro.props;
+---
+
+<Section size="lg" tone="inverted">
+  <Container>
+    <Text as="h2" variant="headingLg" tone="inverted">
+      {heading || "What Our Clients Say"}
+    </Text>
+
+    {testimonials.length > 0 && (
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        {testimonials.map((item) => (
+          <div class="rounded-xl bg-white p-6 text-navy shadow-sm">
+            {item.quote && (
+              <Text as="p" variant="body" class="text-navy">
+                “{item.quote}”
+              </Text>
+            )}
+
+            <div class="mt-4 flex items-center gap-3">
+              {item.image && (
+                <SanityImage
+                  image={item.image}
+                  alt={item.authorName || ""}
+                  width={64}
+                  height={64}
+                  class="h-12 w-12 rounded-full object-cover"
+                />
+              )}
+              <div>
+                {item.authorName && (
+                  <Text as="p" variant="body" class="text-navy font-semibold">
+                    {item.authorName}
+                  </Text>
+                )}
+                {item.authorTitle && (
+                  <Text as="p" variant="small" class="text-gray-600">
+                    {item.authorTitle}
+                  </Text>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </Container>
+</Section>

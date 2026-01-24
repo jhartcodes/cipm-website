@@ -1,0 +1,19 @@
+---
+import { getImageUrl } from "../../lib/sanity/image";
+
+const { value } = Astro.props;
+
+const url = value?.asset ? getImageUrl(value.asset, 800) : null;
+if (!url) {
+  return null;
+}
+---
+
+<figure class="my-6">
+  <img src={url} alt={value?.alt ?? ""} class="rounded-lg" loading="lazy" />
+  {value?.caption && (
+    <figcaption class="mt-2 text-sm text-gray-600 text-center">
+      {value.caption}
+    </figcaption>
+  )}
+</figure>

@@ -1,0 +1,51 @@
+---
+/**
+ * TeamSection Component
+ *
+ * Displays a grid of team members with heading and optional intro text.
+ */
+
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import TeamMemberCard from "./TeamMemberCard.astro";
+
+interface TeamMember {
+  name?: string;
+  title?: string;
+  headshot?: any;
+  bio?: string;
+}
+
+interface Props {
+  heading?: string;
+  intro?: string;
+  members?: TeamMember[];
+}
+
+const { heading, intro, members = [] } = Astro.props;
+---
+
+<Section size="lg" tone="muted">
+  <Text as="h2" variant="headingLg" align="center">
+    {heading || "Our Team"}
+  </Text>
+
+  {intro && (
+    <Text as="p" variant="body" align="center" class="mt-4 mx-auto max-w-2xl text-gray-600">
+      {intro}
+    </Text>
+  )}
+
+  {members.length > 0 && (
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {members.map((member) => (
+        <TeamMemberCard
+          name={member.name}
+          title={member.title}
+          headshot={member.headshot}
+          bio={member.bio}
+        />
+      ))}
+    </div>
+  )}
+</Section>

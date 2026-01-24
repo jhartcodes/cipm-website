@@ -1,0 +1,39 @@
+---
+/**
+ * FaqSection Component
+ *
+ * Displays a list of frequently asked questions in an accordion pattern.
+ */
+
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import FaqItem from "./FaqItem.astro";
+
+interface FaqItemData {
+  question?: string;
+  answer?: string;
+}
+
+interface Props {
+  heading?: string;
+  faqs?: FaqItemData[];
+}
+
+const { heading, faqs = [] } = Astro.props;
+---
+
+<Section size="lg">
+  <div class="mx-auto max-w-3xl">
+    <Text as="h2" variant="headingLg" align="center">
+      {heading || "Frequently Asked Questions"}
+    </Text>
+
+    {faqs.length > 0 && (
+      <div class="mt-8">
+        {faqs.map((faq) => (
+          <FaqItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    )}
+  </div>
+</Section>

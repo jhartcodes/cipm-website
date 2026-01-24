@@ -9,8 +9,6 @@
 import Container from "../layout/Container.astro";
 import SmartLink from "../ui/SmartLink.astro";
 import Button from "../ui/Button.astro";
-import Icon from "../ui/Icon.astro";
-import SanityImage from "../content/SanityImage.astro";
 import { resolveLink } from "../../lib/routing/resolveLink";
 
 interface MenuItem {
@@ -30,11 +28,10 @@ interface Props {
     ctaText?: string;
     ctaLink?: any;
   };
-  logo?: any;
   siteName?: string;
 }
 
-const { data, logo, siteName } = Astro.props;
+const { data, siteName } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
@@ -45,22 +42,21 @@ const currentPath = Astro.url.pathname;
       aria-label="Main navigation"
     >
       <!-- Logo -->
-      <SmartLink href="/" class="flex items-center gap-3">
-        {
-          logo ? (
-            <SanityImage
-              image={logo}
-              alt={siteName || "CIPM"}
-              width={180}
-              class="h-12 w-auto"
-              loading="eager"
-            />
-          ) : (
-            <span class="text-2xl font-bold text-navy">
-              {siteName || "CIPM"}
-            </span>
-          )
-        }
+      <SmartLink href="/" class="flex items-center">
+        <!-- Desktop: Full logo -->
+        <img
+          src="/CIPM logo long colour.svg"
+          alt={siteName || "CIPM - Community Impact Property Management"}
+          class="h-10 w-auto hidden md:block"
+          loading="eager"
+        />
+        <!-- Mobile: Cube icon only -->
+        <img
+          src="/cube_house.svg"
+          alt={siteName || "CIPM"}
+          class="h-10 w-auto md:hidden"
+          loading="eager"
+        />
       </SmartLink>
 
       <!-- Desktop Menu -->
@@ -100,15 +96,38 @@ const currentPath = Astro.url.pathname;
         class="md:hidden p-2 text-navy"
         aria-label="Toggle menu"
         aria-expanded="false"
+        aria-controls="mobile-menu"
         id="mobile-menu-button"
       >
-        <Icon name="hamburger" size={24} class="menu-open-icon" />
-        <Icon name="cross" size={24} class="menu-close-icon hidden" />
+        <!-- Hamburger icon (shown when menu closed) -->
+        <svg
+          class="menu-icon-open"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 15 15"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M1.5 3C1.22386 3 1 3.22386 1 3.5C1 3.77614 1.22386 4 1.5 4H13.5C13.7761 4 14 3.77614 14 3.5C14 3.22386 13.7761 3 13.5 3H1.5ZM1 7.5C1 7.22386 1.22386 7 1.5 7H13.5C13.7761 7 14 7.22386 14 7.5C14 7.77614 13.7761 8 13.5 8H1.5C1.22386 8 1 7.77614 1 7.5ZM1 11.5C1 11.2239 1.22386 11 1.5 11H13.5C13.7761 11 14 11.2239 14 11.5C14 11.7761 13.7761 12 13.5 12H1.5C1.22386 12 1 11.7761 1 11.5Z" fill-rule="evenodd" clip-rule="evenodd" />
+        </svg>
+        <!-- Close icon (shown when menu open) -->
+        <svg
+          class="menu-icon-close hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 15 15"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z" fill-rule="evenodd" clip-rule="evenodd" />
+        </svg>
       </button>
     </nav>
 
     <!-- Mobile Menu (hidden by default) -->
-    <div class="hidden md:hidden pb-4" id="mobile-menu">
+    <div class="mobile-menu hidden pb-4 md:hidden" id="mobile-menu">
       <div class="flex flex-col gap-4">
         {
           data.menuItems?.map((item) => {
@@ -147,20 +166,88 @@ const currentPath = Astro.url.pathname;
   </Container>
 </header>
 
+<style>
+  /* Mobile menu toggle states - scoped to this component */
+  .menu-icon-open,
+  .menu-icon-close {
+    display: block;
+  }
+
+  .menu-icon-close.hidden {
+    display: none;
+  }
+
+  .menu-icon-open.hidden {
+    display: none;
+  }
+
+  .mobile-menu.hidden {
+    display: none;
+  }
+</style>
+
 <script>
-  // Mobile menu toggle
-  const button = document.getElementById("mobile-menu-button");
-  const menu = document.getElementById("mobile-menu");
-  const openIcon = button?.querySelector(".menu-open-icon");
-  const closeIcon = button?.querySelector(".menu-close-icon");
+  /**
+   * Mobile Menu Controller
+   *
+   * With transition:persist, the Navigation element is preserved across navigations.
+   * We use a data attribute to track if we've already initialized to prevent
+   * duplicate event listeners.
+   */
+  (function() {
+    const button = document.getElementById("mobile-menu-button");
+    const menu = document.getElementById("mobile-menu");
 
-  button?.addEventListener("click", () => {
-    const isOpen = !menu?.classList.contains("hidden");
+    if (!button || !menu) return;
 
-    menu?.classList.toggle("hidden");
-    openIcon?.classList.toggle("hidden");
-    closeIcon?.classList.toggle("hidden");
+    // Only initialize once - check for flag
+    if (button.dataset.initialized === "true") return;
+    button.dataset.initialized = "true";
 
-    button.setAttribute("aria-expanded", isOpen ? "false" : "true");
-  });
+    const openIcon = button.querySelector(".menu-icon-open");
+    const closeIcon = button.querySelector(".menu-icon-close");
+
+    function closeMenu() {
+      menu.classList.add("hidden");
+      openIcon?.classList.remove("hidden");
+      closeIcon?.classList.add("hidden");
+      button.setAttribute("aria-expanded", "false");
+    }
+
+    function openMenu() {
+      menu.classList.remove("hidden");
+      openIcon?.classList.add("hidden");
+      closeIcon?.classList.remove("hidden");
+      button.setAttribute("aria-expanded", "true");
+    }
+
+    // Toggle on button click
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains("hidden");
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !menu.classList.contains("hidden")) {
+        closeMenu();
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (!button.contains(target) && !menu.contains(target) && !menu.classList.contains("hidden")) {
+        closeMenu();
+      }
+    });
+
+    // Close menu before View Transitions navigation
+    document.addEventListener("astro:before-swap", closeMenu);
+  })();
 </script>
