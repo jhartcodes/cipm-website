@@ -1,0 +1,21 @@
+---
+/**
+ * Contact Page Preview (SSR - Draft Content)
+ */
+
+export const prerender = false;
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ContactPage from "../../components/pages/ContactPage.astro";
+import PreviewBanner from "../../components/sections/PreviewBanner.astro";
+import { isPreviewMode, validatePreviewSecret } from "../../lib/preview/cookies";
+
+if (!isPreviewMode(Astro.cookies) || !validatePreviewSecret(Astro.cookies)) {
+  return Astro.redirect("/preview-exit?redirect=/contact");
+}
+---
+
+<BaseLayout title="Contact Us" preview={true}>
+  <PreviewBanner />
+  <ContactPage />
+</BaseLayout>

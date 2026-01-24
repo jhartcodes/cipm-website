@@ -1,0 +1,54 @@
+---
+/**
+ * PortableText Component
+ *
+ * Centralized renderer for Sanity Portable Text
+ */
+
+import { PortableText } from "astro-portabletext";
+import { getImageUrl } from "../lib/sanity/image";
+import { resolveLink } from "../lib/routing/resolveLink";
+
+interface Props {
+  value?: any[];
+  class?: string;
+}
+
+const { value, class: className } = Astro.props;
+
+const components = {
+  types: {
+    image: ({ value }: { value: any }) => {
+      const url = value?.asset ? getImageUrl(value.asset, 800) : null;
+      if (!url) return null;
+      return (
+        <figure class="my-6">
+          <img src={url} alt={value?.alt ?? ""} class="rounded-lg" loading="lazy" />
+          {value?.caption && (
+            <figcaption class="mt-2 text-sm text-gray-600 text-center">
+              {value.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    },
+  },
+  marks: {
+    link: ({ value, children }: { value: any; children: any }) => {
+      const href = resolveLink(value) || value?.href || "#";
+      const isExternal = href.startsWith("http");
+      const target = value?.blank || isExternal ? "_blank" : undefined;
+      const rel = target === "_blank" ? "noopener noreferrer" : undefined;
+      return (
+        <a href={href} target={target} rel={rel}>
+          {children}
+        </a>
+      );
+    },
+  },
+};
+---
+
+<div class={className}>
+  <PortableText value={value ?? []} components={components} />
+</div>

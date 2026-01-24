@@ -1,0 +1,21 @@
+---
+/**
+ * Services Page Preview (SSR - Draft Content)
+ */
+
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ServicesPage from "../../../components/pages/ServicesPage.astro";
+import PreviewBanner from "../../../components/sections/PreviewBanner.astro";
+import { isPreviewMode, validatePreviewSecret } from "../../../lib/preview/cookies";
+
+export const prerender = false;
+
+if (!isPreviewMode(Astro.cookies) || !validatePreviewSecret(Astro.cookies)) {
+  return Astro.redirect("/preview-exit?redirect=/services");
+}
+---
+
+<BaseLayout title="Our Services" preview={true}>
+  <PreviewBanner />
+  <ServicesPage />
+</BaseLayout>

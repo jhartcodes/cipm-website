@@ -1,0 +1,30 @@
+---
+/**
+ * PreviewBanner Component
+ * 
+ * Shows exit preview button and indicator
+ * Only used in preview mirror routes
+ */
+
+interface Props {
+  exitPath?: string;
+}
+
+const { exitPath = '/' } = Astro.props;
+const currentPath = Astro.url.pathname.replace('/p', '') || '/';
+---
+
+<!-- Preview Mode Indicator -->
+<div class="fixed top-0 left-0 right-0 z-50 bg-yellow text-navy px-4 py-2 text-center text-sm font-medium shadow-md">
+  <span class="mr-2">📝</span>
+  Preview Mode - Viewing Draft Content
+  <a
+    href={`/preview-exit?redirect=${currentPath}`}
+    class="ml-4 underline hover:no-underline font-semibold"
+  >
+    Exit Preview
+  </a>
+</div>
+
+<!-- Spacer to prevent content from being hidden under banner -->
+<div class="h-10"></div>

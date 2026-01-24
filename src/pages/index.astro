@@ -1,28 +1,20 @@
 ---
 /**
- * Home Page
- *
- * Fetches home page data from Sanity and renders using BaseLayout
+ * Home Page (Production - Static)
+ * 
+ * Fetches published content from Sanity at build time
  */
 
-// Server-render for preview mode support
-export const prerender = false;
+import { getSanityClient } from "../lib/sanity/client";
+import { HOME_PAGE_QUERY } from "../lib/sanity/queries";
+import HomePage from "../components/pages/HomePage.astro";
 
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Container from "../components/layout/Container.astro";
-import Section from "../components/layout/Section.astro";
-import Text from "../components/ui/Text.astro";
+// Static generation for production
+export const prerender = true;
+
+// Fetch published content
+const client = getSanityClient({ preview: false });
+const data = await client.fetch(HOME_PAGE_QUERY);
 ---
 
-<BaseLayout title="Home">
-  <Section size="xl">
-    <Container>
-      <Text as="h1" variant="displayLg" class="text-center">
-        Welcome to CIPM
-      </Text>
-      <Text as="p" variant="body" class="text-center mt-4 text-gray-600">
-        Community Impact Property Management
-      </Text>
-    </Container>
-  </Section>
-</BaseLayout>
+<HomePage data={data} />

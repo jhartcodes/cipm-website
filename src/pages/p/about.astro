@@ -1,0 +1,21 @@
+---
+/**
+ * About Page Preview (SSR - Draft Content)
+ */
+
+export const prerender = false;
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AboutPage from "../../components/pages/AboutPage.astro";
+import PreviewBanner from "../../components/sections/PreviewBanner.astro";
+import { isPreviewMode, validatePreviewSecret } from "../../lib/preview/cookies";
+
+if (!isPreviewMode(Astro.cookies) || !validatePreviewSecret(Astro.cookies)) {
+  return Astro.redirect("/preview-exit?redirect=/about");
+}
+---
+
+<BaseLayout title="About Us" preview={true}>
+  <PreviewBanner />
+  <AboutPage />
+</BaseLayout>

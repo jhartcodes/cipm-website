@@ -1,0 +1,42 @@
+---
+/**
+ * HomePage Component
+ * 
+ * Shared component for both production and preview routes
+ * Receives data as props (fetched by the route)
+ */
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../layout/Container.astro";
+import Section from "../layout/Section.astro";
+import Text from "../ui/Text.astro";
+
+interface Props {
+  data?: any; // Home page data from Sanity
+  preview?: boolean; // Whether in preview mode
+}
+
+const { data, preview = false } = Astro.props;
+---
+
+<BaseLayout title="Home" seo={data?.seo} preview={preview}>
+  <Section size="xl">
+    <Container>
+      <Text as="h1" variant="hero" align="center">
+        {data?.hero?.heading || 'Welcome to CIPM'}
+      </Text>
+      
+      {data?.hero?.subheading && (
+        <Text as="p" variant="bodyLg" align="center" tone="muted" class="mt-4">
+          {data.hero.subheading}
+        </Text>
+      )}
+      
+      {!data && (
+        <Text as="p" variant="body" align="center" tone="muted" class="mt-4">
+          Loading content from Sanity...
+        </Text>
+      )}
+    </Container>
+  </Section>
+</BaseLayout>
