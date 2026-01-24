@@ -2,16 +2,18 @@
 type TextElement = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
 type TextVariant = 'hero' | 'headingLg' | 'heading' | 'headingSm' | 'body' | 'bodyLg' | 'small';
 type TextAlign = 'left' | 'center' | 'right';
+type TextTone = 'default' | 'muted' | 'inverted' | 'inherit';
 
 interface Props {
   as: TextElement;
   variant?: TextVariant;
   align?: TextAlign;
+  tone?: TextTone;
   id?: string;
   class?: string;
 }
 
-const { as: Element, variant, align, id, class: className } = Astro.props;
+const { as: Element, variant, align, tone, id, class: className } = Astro.props;
 
 const defaultVariants: Record<TextElement, TextVariant> = {
   h1: 'hero',
@@ -26,14 +28,34 @@ const defaultVariants: Record<TextElement, TextVariant> = {
 
 const resolvedVariant = variant || defaultVariants[Element];
 
+// Variant styles WITHOUT colors (colors handled separately by tone)
 const variantClasses: Record<TextVariant, string> = {
-  hero: 'text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight text-navy tracking-tight',
-  headingLg: 'text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-snug text-navy tracking-tight',
-  heading: 'text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-snug text-navy',
-  headingSm: 'text-[clamp(1.25rem,2.5vw,1.5rem)] font-semibold leading-normal text-navy',
-  body: 'text-base leading-relaxed text-gray-900',
-  bodyLg: 'text-lg leading-relaxed text-gray-900',
-  small: 'text-sm leading-normal text-gray-600',
+  hero: 'text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight tracking-tight',
+  headingLg: 'text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-snug tracking-tight',
+  heading: 'text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-snug',
+  headingSm: 'text-[clamp(1.25rem,2.5vw,1.5rem)] font-semibold leading-normal',
+  body: 'text-base leading-relaxed',
+  bodyLg: 'text-lg leading-relaxed',
+  small: 'text-sm leading-normal',
+};
+
+// Default colors per variant (used when tone is not specified)
+const defaultColors: Record<TextVariant, string> = {
+  hero: 'text-navy',
+  headingLg: 'text-navy',
+  heading: 'text-navy',
+  headingSm: 'text-navy',
+  body: 'text-gray-900',
+  bodyLg: 'text-gray-900',
+  small: 'text-gray-600',
+};
+
+// Tone overrides color
+const toneClasses: Record<TextTone, string> = {
+  default: '', // uses variant default
+  muted: 'text-gray-600',
+  inverted: 'text-white',
+  inherit: '', // inherits from parent
 };
 
 const alignClasses: Record<TextAlign, string> = {
@@ -42,8 +64,16 @@ const alignClasses: Record<TextAlign, string> = {
   right: 'text-right',
 };
 
+// Determine color: tone override > variant default
+const colorClass = tone === 'inherit'
+  ? ''
+  : tone && tone !== 'default'
+    ? toneClasses[tone]
+    : defaultColors[resolvedVariant];
+
 const classNames: (string | false | undefined)[] = [
   variantClasses[resolvedVariant],
+  colorClass,
   align ? alignClasses[align] : undefined,
   className,
 ];

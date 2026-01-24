@@ -8,11 +8,11 @@
 
 /* CSS Variables - Design Tokens */
 @theme {
-  /* Brand Colors */
+  /* Brand Colors - these become utilities like bg-navy, text-turquoise */
   --color-navy: #15396a;
   --color-turquoise: #4ea5c2;
   --color-yellow: #f2c94c;
-  --color-white: #ffffff;
+  /* Note: Don't define --color-white, use Tailwind's built-in white */
 
   /* Neutral Colors */
   --color-gray-50: #f4f7fa;

@@ -19,7 +19,7 @@ import RichText from "../components/content/RichText.astro";
     <Section size="md">
       <header class="text-center">
         <Text as="h1">CIPM Design System</Text>
-        <Text as="p" variant="bodyLg" class="text-gray-600">
+        <Text as="p" variant="bodyLg" tone="muted">
           Typography & Button Component Testing
         </Text>
       </header>
@@ -97,7 +97,7 @@ import RichText from "../components/content/RichText.astro";
         <!-- Primary Buttons -->
         <div>
           <Text as="h3">Primary Buttons - Turquoise</Text>
-          <Text as="p" variant="small" class="text-gray-600">
+          <Text as="p" variant="small">
             Use for main actions, CTAs, and primary user flows
           </Text>
           <div class="flex flex-wrap gap-3 mt-4">
@@ -110,7 +110,7 @@ import RichText from "../components/content/RichText.astro";
         <!-- Secondary Buttons -->
         <div>
           <Text as="h3">Secondary Buttons - Navy</Text>
-          <Text as="p" variant="small" class="text-gray-600">
+          <Text as="p" variant="small">
             Use for important but not primary actions
           </Text>
           <div class="flex flex-wrap gap-3 mt-4">
@@ -122,7 +122,7 @@ import RichText from "../components/content/RichText.astro";
         <!-- Outlined Buttons -->
         <div>
           <Text as="h3">Outlined Buttons - Transparent with Border</Text>
-          <Text as="p" variant="small" class="text-gray-600">
+          <Text as="p" variant="small">
             Use for secondary actions or when paired with primary buttons
           </Text>
           <div class="flex flex-wrap gap-3 mt-4">
@@ -134,7 +134,7 @@ import RichText from "../components/content/RichText.astro";
         <!-- Text Buttons -->
         <div>
           <Text as="h3">Text Buttons - No Background</Text>
-          <Text as="p" variant="small" class="text-gray-600">
+          <Text as="p" variant="small">
             Use for tertiary actions, links, and low-emphasis interactions
           </Text>
           <div class="flex flex-wrap gap-3 mt-4">
@@ -146,8 +146,8 @@ import RichText from "../components/content/RichText.astro";
 
         <!-- White CTA Buttons -->
         <div class="bg-navy p-8 rounded-lg">
-          <Text as="h3" class="text-white">White CTA Buttons</Text>
-          <Text as="p" variant="small" class="text-gray-100">
+          <Text as="h3" tone="inverted">White CTA Buttons</Text>
+          <Text as="p" variant="small" tone="inverted" class="opacity-80">
             Use on dark backgrounds for high contrast CTAs
           </Text>
           <div class="flex flex-wrap gap-3 mt-4">
@@ -223,7 +223,7 @@ import RichText from "../components/content/RichText.astro";
         <!-- Button as Link -->
         <div>
           <Text as="h3">Button as Link</Text>
-          <Text as="p" variant="small" class="text-gray-600">
+          <Text as="p" variant="small">
             Using href prop renders an anchor tag with button styling
           </Text>
           <div class="flex flex-wrap gap-3 mt-4">
@@ -247,17 +247,17 @@ import RichText from "../components/content/RichText.astro";
             <div>
               <div class="bg-navy h-24 rounded-lg mb-2"></div>
               <Text as="p"><strong>Navy Blue</strong></Text>
-              <Text as="p" variant="small" class="text-gray-600">#15396A</Text>
+              <Text as="p" variant="small">#15396A</Text>
             </div>
             <div>
               <div class="bg-turquoise h-24 rounded-lg mb-2"></div>
               <Text as="p"><strong>Turquoise</strong></Text>
-              <Text as="p" variant="small" class="text-gray-600">#4EA5C2</Text>
+              <Text as="p" variant="small">#4EA5C2</Text>
             </div>
             <div>
               <div class="bg-yellow h-24 rounded-lg mb-2"></div>
               <Text as="p"><strong>Yellow</strong></Text>
-              <Text as="p" variant="small" class="text-gray-600">#F2C94C</Text>
+              <Text as="p" variant="small">#F2C94C</Text>
             </div>
           </div>
         </div>
@@ -268,27 +268,27 @@ import RichText from "../components/content/RichText.astro";
             <div>
               <div class="bg-gray-50 h-20 rounded-lg mb-2 border border-gray-100"></div>
               <Text as="p" variant="small"><strong>Gray 50</strong></Text>
-              <Text as="span" variant="small" class="text-gray-600">#F4F7FA</Text>
+              <Text as="span" variant="small">#F4F7FA</Text>
             </div>
             <div>
               <div class="bg-gray-100 h-20 rounded-lg mb-2"></div>
               <Text as="p" variant="small"><strong>Gray 100</strong></Text>
-              <Text as="span" variant="small" class="text-gray-600">#E6EAED</Text>
+              <Text as="span" variant="small">#E6EAED</Text>
             </div>
             <div>
               <div class="bg-gray-400 h-20 rounded-lg mb-2"></div>
               <Text as="p" variant="small"><strong>Gray 400</strong></Text>
-              <Text as="span" variant="small" class="text-gray-600">#989898</Text>
+              <Text as="span" variant="small">#989898</Text>
             </div>
             <div>
               <div class="bg-gray-600 h-20 rounded-lg mb-2"></div>
               <Text as="p" variant="small"><strong>Gray 600</strong></Text>
-              <Text as="span" variant="small" class="text-gray-600">#565656</Text>
+              <Text as="span" variant="small">#565656</Text>
             </div>
             <div>
               <div class="bg-gray-900 h-20 rounded-lg mb-2"></div>
               <Text as="p" variant="small"><strong>Gray 900</strong></Text>
-              <Text as="span" variant="small" class="text-gray-600">#1C2B33</Text>
+              <Text as="span" variant="small">#1C2B33</Text>
             </div>
           </div>
         </div>
@@ -302,12 +302,12 @@ import RichText from "../components/content/RichText.astro";
       </Text>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div class="bg-navy text-white p-8 rounded-lg text-center">
-          <Text as="p" class="text-white"><strong>White on Navy</strong></Text>
-          <Text as="p" variant="small" class="text-white">AAA ✓</Text>
+          <Text as="p" tone="inverted"><strong>White on Navy</strong></Text>
+          <Text as="p" variant="small" tone="inverted">AAA ✓</Text>
         </div>
         <div class="bg-turquoise text-white p-8 rounded-lg text-center">
-          <Text as="p" class="text-white"><strong>White on Turquoise</strong></Text>
-          <Text as="p" variant="small" class="text-white">AA ✓</Text>
+          <Text as="p" tone="inverted"><strong>White on Turquoise</strong></Text>
+          <Text as="p" variant="small" tone="inverted">AA ✓</Text>
         </div>
         <div class="bg-white text-navy p-8 rounded-lg text-center border-2 border-navy">
           <Text as="p"><strong>Navy on White</strong></Text>
@@ -319,8 +319,8 @@ import RichText from "../components/content/RichText.astro";
     <!-- Layout Components Demo -->
     <Section size="lg" tone="inverted">
       <div class="text-center">
-        <Text as="h2" class="text-white">Section Component Demo</Text>
-        <Text as="p" variant="bodyLg" class="text-gray-100 mt-4">
+        <Text as="h2" tone="inverted">Section Component Demo</Text>
+        <Text as="p" variant="bodyLg" tone="inverted" class="opacity-80 mt-4">
           This section uses <code class="bg-white/20 px-2 py-1 rounded">tone="inverted"</code> and <code class="bg-white/20 px-2 py-1 rounded">size="lg"</code>
         </Text>
         <div class="flex justify-center gap-4 mt-8">
@@ -370,7 +370,7 @@ import RichText from "../components/content/RichText.astro";
     <!-- Footer -->
     <Section size="sm" class="border-t border-gray-100">
       <footer class="text-center">
-        <Text as="p" variant="small" class="text-gray-600">
+        <Text as="p" variant="small">
           CIPM Design System Test Page - Built with Astro + Tailwind + Component Architecture
         </Text>
       </footer>
