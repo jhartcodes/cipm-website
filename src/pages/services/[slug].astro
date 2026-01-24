@@ -1,0 +1,59 @@
+---
+/**
+ * Service Detail Page (Dynamic Route)
+ */
+
+export const prerender = false;
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/layout/Container.astro";
+import Section from "../../components/layout/Section.astro";
+import Text from "../../components/ui/Text.astro";
+import RichText from "../../components/content/RichText.astro";
+import { getSanityClient } from "../../lib/sanity/client";
+import { isPreviewMode } from "../../lib/preview/cookies";
+
+const { slug } = Astro.params;
+
+const preview = isPreviewMode(Astro.cookies);
+const client = getSanityClient({ preview });
+
+// Fetch individual service
+const service = await client.fetch(
+  `*[_type == "service" && slug.current == $slug][0]{
+    title,
+    slug,
+    shortDescription,
+    content,
+    image,
+    seo
+  }`,
+  { slug }
+);
+
+if (!service) {
+  return Astro.redirect("/404");
+}
+---
+
+<BaseLayout title={service.title} seo={service.seo}>
+  <Section size="xl">
+    <Container class="max-w-3xl">
+      <Text as="h1" variant="displayLg">
+        {service.title}
+      </Text>
+
+      {service.shortDescription && (
+        <Text as="p" variant="bodyLg" class="mt-4 text-gray-600">
+          {service.shortDescription}
+        </Text>
+      )}
+
+      {service.content && (
+        <div class="mt-8">
+          <RichText content={service.content} />
+        </div>
+      )}
+    </Container>
+  </Section>
+</BaseLayout>
