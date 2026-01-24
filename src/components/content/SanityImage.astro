@@ -1,0 +1,65 @@
+---
+/**
+ * SanityImage Component
+ * 
+ * Content Component (Sanity-aware)
+ * Renders optimized images from Sanity CDN with responsive srcset
+ * 
+ * Architecture Rules:
+ * - This IS allowed to import from lib/sanity
+ * - Handles Sanity image objects
+ * - Provides responsive, optimized images
+ */
+
+import { getImageUrl, getImageSrcSet, getImageDimensions } from '../../lib/sanity/image';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+
+interface Props {
+  image: SanityImageSource;
+  alt: string;
+  width?: number;
+  height?: number;
+  sizes?: string;
+  quality?: number;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+}
+
+const {
+  image,
+  alt,
+  width,
+  height,
+  sizes = '100vw',
+  quality = 80,
+  loading = 'lazy',
+  class: className,
+} = Astro.props;
+
+// Don't render if no image
+if (!image) {
+  return null;
+}
+
+// Get image dimensions from Sanity metadata
+const dimensions = getImageDimensions(image);
+const aspectWidth = width || dimensions?.width;
+const aspectHeight = height || dimensions?.height;
+
+// Generate responsive srcset
+const srcSet = getImageSrcSet(image, [400, 800, 1200, 1600], quality);
+
+// Fallback src
+const src = getImageUrl(image, width, quality);
+---
+
+<img
+  src={src}
+  srcset={srcSet}
+  sizes={sizes}
+  alt={alt}
+  width={aspectWidth}
+  height={aspectHeight}
+  loading={loading}
+  class={className}
+/>
