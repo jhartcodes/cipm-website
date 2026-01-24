@@ -1,0 +1,67 @@
+---
+/**
+ * TextField Component
+ * 
+ * UI Primitive for text input fields
+ * Styled for CIPM brand
+ */
+
+interface Props {
+  name: string;
+  label: string;
+  type?: 'text' | 'email' | 'tel' | 'url';
+  required?: boolean;
+  placeholder?: string;
+  value?: string;
+  error?: string;
+  class?: string;
+}
+
+const {
+  name,
+  label,
+  type = 'text',
+  required = false,
+  placeholder,
+  value,
+  error,
+  class: className,
+} = Astro.props;
+
+const inputId = `field-${name}`;
+const errorId = `error-${name}`;
+---
+
+<div class={className}>
+  <label for={inputId} class="block text-sm font-medium text-gray-900 mb-2">
+    {label}
+    {required && <span class="text-red-500 ml-1">*</span>}
+  </label>
+
+  <input
+    type={type}
+    id={inputId}
+    name={name}
+    value={value}
+    placeholder={placeholder}
+    required={required}
+    aria-required={required}
+    aria-invalid={error ? 'true' : 'false'}
+    aria-describedby={error ? errorId : undefined}
+    class:list={[
+      'w-full px-4 py-3 rounded-lg border',
+      'text-gray-900 placeholder-gray-400',
+      'focus:outline-none focus:ring-2 focus:ring-turquoise focus:border-transparent',
+      'transition-colors',
+      error
+        ? 'border-red-500'
+        : 'border-gray-300 hover:border-gray-400',
+    ]}
+  />
+
+  {error && (
+    <p id={errorId} class="mt-2 text-sm text-red-600" role="alert">
+      {error}
+    </p>
+  )}
+</div>
