@@ -1,0 +1,178 @@
+---
+/**
+ * BlogBlocks Component
+ * 
+ * Content Component (Sanity-aware)
+ * Renders blog content blocks (text, image, video)
+ * 
+ * Architecture Rules:
+ * - This IS Sanity-aware
+ * - Accepts Sanity blogContent array
+ * - Delegates to appropriate block renderers
+ */
+
+import RichText from './RichText.astro';
+import SanityImage from './SanityImage.astro';
+
+interface TextBlock {
+  _type: 'textBlock';
+  _key: string;
+  content: any[]; // Portable text
+}
+
+interface ImageBlock {
+  _type: 'imageBlock';
+  _key: string;
+  image: any;
+  alt: string;
+  caption?: string;
+  size?: 'full' | 'large' | 'medium';
+}
+
+interface VideoBlock {
+  _type: 'videoBlock';
+  _key: string;
+  videoType: 'youtube' | 'vimeo' | 'upload';
+  url?: string;
+  upload?: any;
+  title: string;
+  caption?: string;
+}
+
+type Block = TextBlock | ImageBlock | VideoBlock;
+
+interface Props {
+  blocks: Block[];
+  class?: string;
+}
+
+const { blocks, class: className } = Astro.props;
+
+if (!blocks || !Array.isArray(blocks)) {
+  return null;
+}
+
+// Map size variants to Tailwind classes
+const sizeClasses = {
+  full: 'w-full',
+  large: 'w-full lg:w-3/4 mx-auto',
+  medium: 'w-full md:w-2/3 lg:w-1/2 mx-auto',
+};
+
+// Extract YouTube video ID from URL
+function getYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+  return match ? match[1] : null;
+}
+
+// Extract Vimeo video ID from URL
+function getVimeoId(url: string): string | null {
+  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  return match ? match[1] : null;
+}
+---
+
+<div class={className}>
+  {blocks.map((block) => {
+    // TEXT BLOCK
+    if (block._type === 'textBlock') {
+      return (
+        <div class="my-6">
+          <RichText content={block.content} />
+        </div>
+      );
+    }
+
+    // IMAGE BLOCK
+    if (block._type === 'imageBlock') {
+      const size = block.size || 'full';
+      const sizeClass = sizeClasses[size];
+
+      return (
+        <figure class={`my-8 ${sizeClass}`}>
+          <SanityImage
+            image={block.image}
+            alt={block.alt}
+            class="rounded-lg"
+            sizes={
+              size === 'full' ? '100vw' :
+              size === 'large' ? '(min-width: 1024px) 75vw, 100vw' :
+              '(min-width: 1024px) 50vw, (min-width: 768px) 66vw, 100vw'
+            }
+          />
+          {block.caption && (
+            <figcaption class="mt-2 text-sm text-gray-600 text-center">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
+
+    // VIDEO BLOCK
+    if (block._type === 'videoBlock') {
+      let videoEmbed = null;
+
+      if (block.videoType === 'youtube' && block.url) {
+        const videoId = getYouTubeId(block.url);
+        if (videoId) {
+          videoEmbed = (
+            <div class="aspect-video">
+              <iframe
+                src={`https://www.youtube.com/embed/${videoId}`}
+                title={block.title}
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                class="w-full h-full rounded-lg"
+              />
+            </div>
+          );
+        }
+      } else if (block.videoType === 'vimeo' && block.url) {
+        const videoId = getVimeoId(block.url);
+        if (videoId) {
+          videoEmbed = (
+            <div class="aspect-video">
+              <iframe
+                src={`https://player.vimeo.com/video/${videoId}`}
+                title={block.title}
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen
+                class="w-full h-full rounded-lg"
+              />
+            </div>
+          );
+        }
+      } else if (block.videoType === 'upload' && block.upload) {
+        // Self-hosted video from Sanity
+        videoEmbed = (
+          <div class="aspect-video">
+            <video
+              controls
+              class="w-full h-full rounded-lg"
+              preload="metadata"
+            >
+              <source src={block.upload.url} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        );
+      }
+
+      return videoEmbed ? (
+        <figure class="my-8">
+          {videoEmbed}
+          {block.caption && (
+            <figcaption class="mt-2 text-sm text-gray-600 text-center">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      ) : null;
+    }
+
+    return null;
+  })}
+</div>
