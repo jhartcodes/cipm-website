@@ -1,0 +1,166 @@
+---
+/**
+ * Navigation Component
+ *
+ * Section Component (Sanity-aware)
+ * Main site navigation with dynamic menu items and CTA
+ */
+
+import Container from "../layout/Container.astro";
+import SmartLink from "../ui/SmartLink.astro";
+import Button from "../ui/Button.astro";
+import Icon from "../ui/Icon.astro";
+import SanityImage from "../content/SanityImage.astro";
+import { resolveLink } from "../../lib/routing/resolveLink";
+
+interface MenuItem {
+  title: string;
+  linkType: "internal" | "external";
+  externalUrl?: string;
+  internalPage?: {
+    _type: string;
+    slug?: { current: string };
+  };
+}
+
+interface Props {
+  data: {
+    menuItems: MenuItem[];
+    showCtaButton?: boolean;
+    ctaText?: string;
+    ctaLink?: any;
+  };
+  logo?: any;
+  siteName?: string;
+}
+
+const { data, logo, siteName } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+  <Container>
+    <nav
+      class="flex items-center justify-between py-4"
+      aria-label="Main navigation"
+    >
+      <!-- Logo -->
+      <SmartLink href="/" class="flex items-center gap-3">
+        {
+          logo ? (
+            <SanityImage
+              image={logo}
+              alt={siteName || "CIPM"}
+              width={180}
+              class="h-12 w-auto"
+              loading="eager"
+            />
+          ) : (
+            <span class="text-2xl font-bold text-navy">
+              {siteName || "CIPM"}
+            </span>
+          )
+        }
+      </SmartLink>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center gap-8">
+        {
+          data.menuItems?.map((item) => {
+            const href = resolveLink(item);
+            const isActive = href === currentPath;
+
+            return (
+              <SmartLink
+                href={href}
+                class:list={[
+                  "text-base font-medium transition-colors",
+                  isActive ? "text-navy" : "text-gray-600 hover:text-navy",
+                ]}
+                ariaCurrent={isActive ? "page" : undefined}
+              >
+                {item.title}
+              </SmartLink>
+            );
+          })
+        }
+
+        {
+          data.showCtaButton && data.ctaText && data.ctaLink && (
+            <Button href={resolveLink(data.ctaLink)} variant="primary" size="md">
+              {data.ctaText}
+            </Button>
+          )
+        }
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button
+        type="button"
+        class="md:hidden p-2 text-navy"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        id="mobile-menu-button"
+      >
+        <Icon name="hamburger" size={24} class="menu-open-icon" />
+        <Icon name="cross" size={24} class="menu-close-icon hidden" />
+      </button>
+    </nav>
+
+    <!-- Mobile Menu (hidden by default) -->
+    <div class="hidden md:hidden pb-4" id="mobile-menu">
+      <div class="flex flex-col gap-4">
+        {
+          data.menuItems?.map((item) => {
+            const href = resolveLink(item);
+            const isActive = href === currentPath;
+
+            return (
+              <SmartLink
+                href={href}
+                class:list={[
+                  "text-base font-medium py-2 transition-colors",
+                  isActive ? "text-navy" : "text-gray-600 hover:text-navy",
+                ]}
+                ariaCurrent={isActive ? "page" : undefined}
+              >
+                {item.title}
+              </SmartLink>
+            );
+          })
+        }
+
+        {
+          data.showCtaButton && data.ctaText && data.ctaLink && (
+            <Button
+              href={resolveLink(data.ctaLink)}
+              variant="primary"
+              size="md"
+              class="w-full"
+            >
+              {data.ctaText}
+            </Button>
+          )
+        }
+      </div>
+    </div>
+  </Container>
+</header>
+
+<script>
+  // Mobile menu toggle
+  const button = document.getElementById("mobile-menu-button");
+  const menu = document.getElementById("mobile-menu");
+  const openIcon = button?.querySelector(".menu-open-icon");
+  const closeIcon = button?.querySelector(".menu-close-icon");
+
+  button?.addEventListener("click", () => {
+    const isOpen = !menu?.classList.contains("hidden");
+
+    menu?.classList.toggle("hidden");
+    openIcon?.classList.toggle("hidden");
+    closeIcon?.classList.toggle("hidden");
+
+    button.setAttribute("aria-expanded", isOpen ? "false" : "true");
+  });
+</script>
