@@ -3,11 +3,9 @@
   publish = "dist"
   command = "npm run build"
 
-  # Ignore README and docs in secrets scanning (false positives)
-  environment = { SECRETS_SCAN_OMIT_PATHS = "README.md,documentation/**" }
+[build.environment]
+  # Exclude intentionally public Sanity vars from secrets scanning
+  SECRETS_SCAN_OMIT_KEYS = "PUBLIC_SANITY_DATASET,PUBLIC_SANITY_PROJECT_ID"
 
-# Redirect all routes to index.html for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Note: Redirects are handled by @astrojs/netlify adapter automatically
+# Do NOT add a catch-all redirect to index.html - this is SSR, not SPA
