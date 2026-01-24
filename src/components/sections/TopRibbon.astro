@@ -1,0 +1,62 @@
+---
+/**
+ * TopRibbon Component
+ *
+ * Section Component (Sanity-aware)
+ * Optional top bar with contact info
+ */
+
+import Container from "../layout/Container.astro";
+import Text from "../ui/Text.astro";
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  data: {
+    enabled: boolean;
+    phoneNumber?: string;
+    email?: string;
+  };
+}
+
+const { data } = Astro.props;
+
+if (!data?.enabled) {
+  return null;
+}
+---
+
+<div class="bg-navy text-white py-2">
+  <Container>
+    <div
+      class="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm"
+    >
+      {
+        data.phoneNumber && (
+          <a
+            href={`tel:${data.phoneNumber.replace(/\s/g, "")}`}
+            class="flex items-center gap-2 hover:text-turquoise transition-colors"
+          >
+            <Icon name="phone" size={16} />
+            <Text as="span" variant="small" tone="inherit">
+              {data.phoneNumber}
+            </Text>
+          </a>
+        )
+      }
+
+      {
+        data.email && (
+          <a
+            href={`mailto:${data.email}`}
+            class="flex items-center gap-2 hover:text-turquoise transition-colors"
+          >
+            <Icon name="envelope" size={16} />
+            <Text as="span" variant="small" tone="inherit">
+              {data.email}
+            </Text>
+          </a>
+        )
+      }
+    </div>
+  </Container>
+</div>
