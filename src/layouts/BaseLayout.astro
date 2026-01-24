@@ -1,0 +1,72 @@
+---
+/**
+ * BaseLayout
+ *
+ * Main site wrapper for all pages
+ * Fetches global chrome data (navigation, footer, site settings)
+ * Provides consistent SEO, navigation, and footer
+ *
+ * Architecture Rules:
+ * - Fetches global data once at layout level
+ * - Passes data down to components
+ * - Pages only fetch page-specific data
+ */
+
+import { getSanityClient } from "../lib/sanity/client";
+import { GLOBAL_CHROME_QUERY } from "../lib/sanity/queries";
+import { isPreviewMode } from "../lib/preview/cookies";
+import SeoHead from "../components/seo/SeoHead.astro";
+import TopRibbon from "../components/sections/TopRibbon.astro";
+import Navigation from "../components/sections/Navigation.astro";
+import Footer from "../components/sections/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  seo?: any;
+  class?: string;
+}
+
+const { title, description, seo, class: className } = Astro.props;
+
+// Determine if preview mode
+const preview = isPreviewMode(Astro.cookies);
+const client = getSanityClient({ preview });
+
+// Fetch global chrome data
+const globalData = await client.fetch(GLOBAL_CHROME_QUERY);
+const { site, nav, topRibbon, footer } = globalData;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <SeoHead
+      seo={seo}
+      siteSettings={site}
+      title={title}
+      description={description}
+    >
+      {
+        site?.favicon && (
+          <link rel="icon" type="image/svg+xml" href={site.favicon.asset.url} />
+        )
+      }
+    </SeoHead>
+  </head>
+
+  <body class="min-h-screen flex flex-col">
+    {topRibbon?.enabled && <TopRibbon data={topRibbon} />}
+
+    <Navigation data={nav} logo={site?.logo} siteName={site?.siteName} />
+
+    <main class={className}>
+      <slot />
+    </main>
+
+    <Footer data={footer} />
+  </body>
+</html>
