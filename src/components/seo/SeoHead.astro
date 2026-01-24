@@ -1,0 +1,90 @@
+---
+/**
+ * SeoHead Component
+ *
+ * SEO Component (Sanity-aware)
+ * Renders meta tags with fallbacks to Site Settings
+ *
+ * Architecture Rules:
+ * - Accepts page-level SEO data
+ * - Falls back to siteSettings for defaults
+ * - Generates Open Graph, Twitter Card, canonical tags
+ * - Does NOT render <head> tag - parent layout handles that
+ */
+
+import { getImageUrl } from "../../lib/sanity/image";
+
+interface SeoData {
+  metaTitle?: string;
+  metaDescription?: string;
+  ogImage?: any;
+  noIndex?: boolean;
+}
+
+interface SiteSettings {
+  siteName?: string;
+  siteDescription?: string;
+  defaultOgImage?: any;
+}
+
+interface Props {
+  seo?: SeoData;
+  siteSettings?: SiteSettings;
+  title?: string; // Page title fallback
+  description?: string; // Description fallback
+  canonicalUrl?: string;
+}
+
+const {
+  seo,
+  siteSettings,
+  title: fallbackTitle,
+  description: fallbackDescription,
+  canonicalUrl,
+} = Astro.props;
+
+// Determine final meta values with fallback chain
+const metaTitle =
+  seo?.metaTitle || fallbackTitle || siteSettings?.siteName || "CIPM";
+const metaDescription =
+  seo?.metaDescription ||
+  fallbackDescription ||
+  siteSettings?.siteDescription ||
+  "Community Impact Property Management";
+
+// Open Graph image
+const ogImage = seo?.ogImage || siteSettings?.defaultOgImage;
+const ogImageUrl = ogImage ? getImageUrl(ogImage, 1200, 85) : null;
+
+// Robots meta
+const robots = seo?.noIndex ? "noindex, nofollow" : "index, follow";
+
+// Canonical URL
+const canonical = canonicalUrl || Astro.url.href;
+---
+
+<!-- Primary Meta Tags -->
+<title>{metaTitle}</title>
+<meta name="title" content={metaTitle} />
+<meta name="description" content={metaDescription} />
+<meta name="robots" content={robots} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonical} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={metaTitle} />
+<meta property="og:description" content={metaDescription} />
+{ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={canonical} />
+<meta property="twitter:title" content={metaTitle} />
+<meta property="twitter:description" content={metaDescription} />
+{ogImageUrl && <meta property="twitter:image" content={ogImageUrl} />}
+
+<!-- Additional content from slot -->
+<slot />
