@@ -1,0 +1,25 @@
+---
+/**
+ * About Page
+ */
+
+export const prerender = false;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/layout/Container.astro";
+import Section from "../components/layout/Section.astro";
+import Text from "../components/ui/Text.astro";
+---
+
+<BaseLayout title="About Us">
+  <Section size="xl">
+    <Container>
+      <Text as="h1" variant="displayLg" class="text-center">
+        About Us
+      </Text>
+      <Text as="p" variant="body" class="text-center mt-4 text-gray-600">
+        Learn more about Community Impact Property Management
+      </Text>
+    </Container>
+  </Section>
+</BaseLayout>
