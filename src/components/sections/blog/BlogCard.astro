@@ -56,8 +56,11 @@ const postUrl = slug?.current ? `/blog/${slug.current}` : '#';
       <div class="flex items-center gap-3 text-sm">
         {category?.title && (
           <span
-            class="rounded-full px-3 py-1 text-xs font-medium"
-            style={category.color ? `background-color: ${category.color}20; color: ${category.color}` : 'background-color: #4A9BA820; color: #4A9BA8'}
+            class="rounded-full px-3 py-1 text-xs font-medium bg-turquoise/10 text-turquoise"
+            style={category.color ? `--category-color: ${category.color}` : undefined}
+            class:list={[
+              category.color && '[background-color:color-mix(in_srgb,var(--category-color)_10%,transparent)] [color:var(--category-color)]'
+            ]}
           >
             {category.title}
           </span>

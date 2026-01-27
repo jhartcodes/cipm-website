@@ -12,7 +12,7 @@ import WhoWeAreSection from "../sections/home/WhoWeAreSection.astro";
 import WhatWeManageSection from "../sections/home/WhatWeManageSection.astro";
 import WhatWeOfferSection from "../sections/home/WhatWeOfferSection.astro";
 import TestimonialsSection from "../sections/home/TestimonialsSection.astro";
-import ContactCtaSection from "../sections/home/ContactCtaSection.astro";
+import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
 
 interface Props {
   data?: any; // Home page data from Sanity
@@ -48,5 +48,6 @@ const { data, preview = false } = Astro.props;
     subheading={data?.contactSubheading}
     buttonText={data?.contactButtonText}
     buttonLink={data?.contactButtonLink}
+    useContainer={true}
   />
 </BaseLayout>

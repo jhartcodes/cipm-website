@@ -188,7 +188,7 @@ const currentPath = Astro.url.pathname;
 
 <script>
   /**
-   * Mobile Menu Controller
+   * Mobile Menu Controller with Focus Trap
    *
    * With transition:persist, the Navigation element is preserved across navigations.
    * We use a data attribute to track if we've already initialized to prevent
@@ -207,18 +207,67 @@ const currentPath = Astro.url.pathname;
     const openIcon = button.querySelector(".menu-icon-open");
     const closeIcon = button.querySelector(".menu-icon-close");
 
+    // Get all focusable elements in the menu
+    function getFocusableElements(): HTMLElement[] {
+      const selector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      return Array.from(menu.querySelectorAll<HTMLElement>(selector));
+    }
+
+    // Store the element that had focus before opening menu
+    let previousFocusedElement: HTMLElement | null = null;
+
     function closeMenu() {
       menu.classList.add("hidden");
       openIcon?.classList.remove("hidden");
       closeIcon?.classList.add("hidden");
       button.setAttribute("aria-expanded", "false");
+
+      // Return focus to the button that opened the menu
+      if (previousFocusedElement) {
+        previousFocusedElement.focus();
+        previousFocusedElement = null;
+      }
     }
 
     function openMenu() {
+      // Store current focused element
+      previousFocusedElement = document.activeElement as HTMLElement;
+
       menu.classList.remove("hidden");
       openIcon?.classList.add("hidden");
       closeIcon?.classList.remove("hidden");
       button.setAttribute("aria-expanded", "true");
+
+      // Focus first menu item
+      const focusableElements = getFocusableElements();
+      if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+      }
+    }
+
+    // Handle Tab key for focus trap
+    function handleTabKey(e: KeyboardEvent) {
+      if (menu.classList.contains("hidden")) return;
+
+      const focusableElements = getFocusableElements();
+      if (focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        // Shift + Tab: moving backwards
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        // Tab: moving forwards
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
     }
 
     // Toggle on button click
@@ -232,10 +281,18 @@ const currentPath = Astro.url.pathname;
       }
     });
 
-    // Close on Escape key
+    // Handle keyboard navigation
     document.addEventListener("keydown", (e) => {
+      // Close on Escape
       if (e.key === "Escape" && !menu.classList.contains("hidden")) {
+        e.preventDefault();
         closeMenu();
+        button.focus();
+      }
+
+      // Trap focus with Tab
+      if (e.key === "Tab") {
+        handleTabKey(e);
       }
     });
 

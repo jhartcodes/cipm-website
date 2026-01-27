@@ -20,7 +20,12 @@ type IconName =
   | "cross"
   | "chevron-down"
   | "chevron-right"
-  | "external-link";
+  | "chevron-left"
+  | "external-link"
+  | "map-pin"
+  | "phone-call"
+  | "mail"
+  | "check-circle";
 
 interface Props {
   name: IconName;
@@ -32,7 +37,7 @@ interface Props {
 const { name, size = 24, class: className, "aria-label": ariaLabel } = Astro.props;
 
 // SVG paths from Radix Icons (15x15 viewBox) and custom icons
-const icons: Record<IconName, { viewBox: string; path: string }> = {
+const icons: Record<IconName, { viewBox: string; path: string; stroke?: boolean }> = {
   linkedin: {
     viewBox: "0 0 15 15",
     path: "M2 1C1.44772 1 1 1.44772 1 2V13C1 13.5523 1.44772 14 2 14H13C13.5523 14 14 13.5523 14 13V2C14 1.44772 13.5523 1 13 1H2ZM3.05 6H4.95V12H3.05V6ZM5.075 4.005C5.075 4.59871 4.59371 5.08 4 5.08C3.4063 5.08 2.925 4.59871 2.925 4.005C2.925 3.41129 3.4063 2.93 4 2.93C4.59371 2.93 5.075 3.41129 5.075 4.005ZM12 8.35713C12 6.55208 10.8334 5.85033 9.67449 5.85033C9.29502 5.83163 8.91721 5.91119 8.57874 6.08107C8.32172 6.21007 8.05265 6.50523 7.84516 7.01853H7.79179V6.00044H6V12.0047H7.90616V8.8112C7.8786 8.48413 7.98327 8.06142 8.19741 7.80987C8.41156 7.55832 8.71789 7.49825 8.95015 7.46774H9.02258C9.62874 7.46774 10.0786 7.84301 10.0786 8.78868V12.0047H11.9847L12 8.35713Z",
@@ -85,6 +90,31 @@ const icons: Record<IconName, { viewBox: string; path: string }> = {
     viewBox: "0 0 15 15",
     path: "M3 2C2.44772 2 2 2.44772 2 3V12C2 12.5523 2.44772 13 3 13H12C12.5523 13 13 12.5523 13 12V8.5C13 8.22386 12.7761 8 12.5 8C12.2239 8 12 8.22386 12 8.5V12H3V3L6.5 3C6.77614 3 7 2.77614 7 2.5C7 2.22386 6.77614 2 6.5 2H3ZM12.8536 2.14645C12.9015 2.19439 12.9377 2.24964 12.9621 2.30861C12.9861 2.36669 12.9996 2.4303 13 2.497L13 2.5V2.50049V5.5C13 5.77614 12.7761 6 12.5 6C12.2239 6 12 5.77614 12 5.5V3.70711L6.85355 8.85355C6.65829 9.04882 6.34171 9.04882 6.14645 8.85355C5.95118 8.65829 5.95118 8.34171 6.14645 8.14645L11.2929 3H9.5C9.22386 3 9 2.77614 9 2.5C9 2.22386 9.22386 2 9.5 2H12.4999H12.5C12.5678 2 12.6324 2.01349 12.6914 2.03794C12.7504 2.06234 12.8056 2.09851 12.8536 2.14645Z",
   },
+  "chevron-left": {
+    viewBox: "0 0 24 24",
+    path: "M15 18l-6-6 6-6",
+    stroke: true,
+  },
+  "map-pin": {
+    viewBox: "0 0 24 24",
+    path: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
+    stroke: true,
+  },
+  "phone-call": {
+    viewBox: "0 0 24 24",
+    path: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z",
+    stroke: true,
+  },
+  "mail": {
+    viewBox: "0 0 24 24",
+    path: "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6",
+    stroke: true,
+  },
+  "check-circle": {
+    viewBox: "0 0 24 24",
+    path: "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-2.99",
+    stroke: true,
+  },
 };
 
 const icon = icons[name];
@@ -95,11 +125,15 @@ const icon = icons[name];
   width={size}
   height={size}
   viewBox={icon.viewBox}
-  fill="currentColor"
+  fill={icon.stroke ? "none" : "currentColor"}
+  stroke={icon.stroke ? "currentColor" : "none"}
+  stroke-width={icon.stroke ? "2" : undefined}
+  stroke-linecap={icon.stroke ? "round" : undefined}
+  stroke-linejoin={icon.stroke ? "round" : undefined}
   class={className}
   aria-label={ariaLabel}
   aria-hidden={!ariaLabel}
   role={ariaLabel ? "img" : "presentation"}
 >
-  <path d={icon.path} fill-rule="evenodd" clip-rule="evenodd" />
+  <path d={icon.path} fill-rule={icon.stroke ? undefined : "evenodd"} clip-rule={icon.stroke ? undefined : "evenodd"} />
 </svg>

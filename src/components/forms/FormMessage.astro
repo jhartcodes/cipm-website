@@ -1,10 +1,12 @@
 ---
 /**
  * FormMessage Component
- * 
+ *
  * UI Primitive for form success/error messages
  * Used for contact form feedback
  */
+
+import Icon from "../ui/Icon.astro";
 
 type MessageType = 'success' | 'error' | 'info';
 
@@ -22,10 +24,17 @@ const typeStyles = {
   info: 'bg-blue-50 border-blue-200 text-blue-800',
 };
 
-const icons = {
-  success: '✓',
-  error: '✕',
-  info: 'ℹ',
+const iconColors = {
+  success: 'text-green-600',
+  error: 'text-red-600',
+  info: 'text-blue-600',
+};
+
+// Map message types to icon names
+const iconNames = {
+  success: 'check-circle' as const,
+  error: 'cross' as const,
+  info: 'link' as const, // Using link as placeholder for info icon
 };
 ---
 
@@ -38,8 +47,8 @@ const icons = {
   role="alert"
 >
   <div class="flex items-center gap-3">
-    <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center font-bold">
-      {icons[type]}
+    <span class:list={['flex-shrink-0', iconColors[type]]}>
+      <Icon name={iconNames[type]} size={24} />
     </span>
     <p class="text-sm font-medium">{message}</p>
   </div>

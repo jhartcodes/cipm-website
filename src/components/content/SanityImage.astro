@@ -36,8 +36,8 @@ const {
   class: className,
 } = Astro.props;
 
-// Don't render if no image
-if (!image) {
+// Don't render if no image or no asset reference
+if (!image || !image.asset || !image.asset._ref) {
   return null;
 }
 

@@ -8,6 +8,7 @@
  */
 
 import Text from "../../ui/Text.astro";
+import Icon from "../../ui/Icon.astro";
 import PortableTextRenderer from "../../PortableText.astro";
 
 interface Props {
@@ -34,27 +35,21 @@ const getPlainText = (value: string | any[] | undefined): string => {
 ---
 
 <details class="group border-b border-gray-200 py-4">
-  <summary class="flex cursor-pointer items-center justify-between gap-4 list-none">
+  <summary
+    class="flex cursor-pointer items-center justify-between gap-4 list-none"
+    aria-label={`${getPlainText(question) || "Question"} - Click to expand or collapse`}
+  >
     <Text as="span" variant="headingSm" class="text-left">
       {getPlainText(question) || "Question"}
     </Text>
-    <span class="flex-shrink-0 text-turquoise transition-transform duration-200 group-open:rotate-180">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
+    <span
+      class="flex-shrink-0 text-turquoise transition-transform duration-200 group-open:rotate-180"
+      aria-hidden="true"
+    >
+      <Icon name="chevron-down" size={24} />
     </span>
   </summary>
-  <div class="pt-4 pb-2">
+  <div class="pt-4 pb-2" role="region" aria-label="Answer">
     {isPortableText(answer) ? (
       <PortableTextRenderer value={answer} class="richtext text-gray-600" />
     ) : (

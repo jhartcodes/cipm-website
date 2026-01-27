@@ -4,8 +4,10 @@
  *
  * Generic CTA section that can be used across pages.
  * Features heading, subheading, and call-to-action button.
+ * Can be used with or without Container wrapping via useContainer prop.
  */
 
+import Container from "../../layout/Container.astro";
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
@@ -16,12 +18,12 @@ interface Props {
   subheading?: string;
   buttonText?: string;
   buttonLink?: any;
+  useContainer?: boolean; // Whether to wrap in Container (default: false for backward compat with shared usage)
 }
 
-const { heading, subheading, buttonText, buttonLink } = Astro.props;
----
+const { heading, subheading, buttonText, buttonLink, useContainer = false } = Astro.props;
 
-<Section size="lg">
+const ctaContent = (
   <div class="rounded-2xl bg-navy px-6 py-10 text-center text-white">
     <Text as="h2" variant="headingLg" tone="inverted">
       {heading || "Have a property that needs management?"}
@@ -41,4 +43,15 @@ const { heading, subheading, buttonText, buttonLink } = Astro.props;
       </div>
     )}
   </div>
+);
+---
+
+<Section size="lg">
+  {useContainer ? (
+    <Container>
+      {ctaContent}
+    </Container>
+  ) : (
+    ctaContent
+  )}
 </Section>

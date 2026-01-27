@@ -19,16 +19,33 @@ const { name, title, headshot, bio } = Astro.props;
 ---
 
 <div class="rounded-xl border border-gray-100 bg-white p-6 shadow-sm text-center">
-  {headshot && (
-    <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
+  <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
+    {headshot?.asset ? (
       <SanityImage
         image={headshot}
         alt={headshot?.alt || name || "Team member"}
         width={200}
         class="h-full w-full object-cover"
       />
-    </div>
-  )}
+    ) : (
+      <div class="h-full w-full bg-gray-200 flex items-center justify-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="h-16 w-16 text-gray-400"
+          aria-hidden="true"
+        >
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      </div>
+    )}
+  </div>
 
   {name && (
     <Text as="h3" variant="headingSm">

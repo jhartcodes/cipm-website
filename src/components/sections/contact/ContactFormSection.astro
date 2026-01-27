@@ -8,6 +8,9 @@
 
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
+import Icon from "../../ui/Icon.astro";
+import TextField from "../../forms/TextField.astro";
+import TextArea from "../../forms/TextArea.astro";
 
 interface Props {
   heading?: string;
@@ -37,10 +40,7 @@ const isSuccess = Astro.url.searchParams.get('success') === 'true';
     <div class="mt-6 rounded-lg bg-green-50 border border-green-200 p-6">
       <div class="flex items-center gap-3">
         <div class="flex-shrink-0 text-green-600">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
+          <Icon name="check-circle" size={24} />
         </div>
         <Text as="p" variant="body" class="text-green-800">
           {successMessage || "Thank you for your message! We'll be in touch soon."}
@@ -65,60 +65,36 @@ const isSuccess = Astro.url.searchParams.get('success') === 'true';
         </label>
       </p>
 
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-          Name *
-        </label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          required
-          class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:border-turquoise focus:outline-none focus:ring-1 focus:ring-turquoise"
-          placeholder="Your name"
-        />
-      </div>
+      <TextField
+        name="name"
+        label="Name"
+        type="text"
+        required
+        placeholder="Your name"
+      />
 
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-          Email *
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:border-turquoise focus:outline-none focus:ring-1 focus:ring-turquoise"
-          placeholder="your@email.com"
-        />
-      </div>
+      <TextField
+        name="email"
+        label="Email"
+        type="email"
+        required
+        placeholder="your@email.com"
+      />
 
-      <div>
-        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
-          Phone
-        </label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:border-turquoise focus:outline-none focus:ring-1 focus:ring-turquoise"
-          placeholder="(123) 456-7890"
-        />
-      </div>
+      <TextField
+        name="phone"
+        label="Phone"
+        type="tel"
+        placeholder="(123) 456-7890"
+      />
 
-      <div>
-        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">
-          Message *
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          required
-          rows="5"
-          class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:border-turquoise focus:outline-none focus:ring-1 focus:ring-turquoise resize-none"
-          placeholder="How can we help you?"
-        ></textarea>
-      </div>
+      <TextArea
+        name="message"
+        label="Message"
+        required
+        rows={5}
+        placeholder="How can we help you?"
+      />
 
       <div class="pt-2">
         <Button type="submit" variant="primary" size="md">
