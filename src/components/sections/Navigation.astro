@@ -88,32 +88,23 @@ const currentPath = Astro.url.pathname;
             </Button>
           )
         }
-      <script>
-        function bindMobileMenu() {
-          const button = document.getElementById("mobile-menu-button");
-          const menu = document.getElementById("mobile-menu");
-          const openIcon = button?.querySelector(".menu-open-icon");
-          const closeIcon = button?.querySelector(".menu-close-icon");
+      </div>
 
-          if (!button || !menu) return;
-
-          const handleClick = () => {
-            const isOpen = !menu.classList.contains("hidden");
-
-            menu.classList.toggle("hidden");
-            openIcon?.classList.toggle("hidden");
-            closeIcon?.classList.toggle("hidden");
-
-            button.setAttribute("aria-expanded", isOpen ? "false" : "true");
-          };
-
-          button.removeEventListener("click", handleClick);
-          button.addEventListener("click", handleClick);
-        }
-
-        bindMobileMenu();
-        document.addEventListener("astro:page-load", bindMobileMenu);
-      </script>
+      <!-- Mobile Menu Button -->
+      <button
+        type="button"
+        class="md:hidden p-2 text-navy"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        id="mobile-menu-button"
+      >
+        <!-- Hamburger icon (shown when menu closed) -->
+        <svg
+          class="menu-icon-open"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
           viewBox="0 0 15 15"
           fill="currentColor"
           aria-hidden="true"
