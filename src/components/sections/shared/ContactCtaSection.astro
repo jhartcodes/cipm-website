@@ -22,36 +22,50 @@ interface Props {
 }
 
 const { heading, subheading, buttonText, buttonLink, useContainer = false } = Astro.props;
-
-const ctaContent = (
-  <div class="rounded-2xl bg-navy px-6 py-10 text-center text-white">
-    <Text as="h2" variant="headingLg" tone="inverted">
-      {heading || "Have a property that needs management?"}
-    </Text>
-
-    {subheading && (
-      <Text as="p" variant="body" tone="inverted" class="mt-3">
-        {subheading}
-      </Text>
-    )}
-
-    {buttonText && buttonLink && (
-      <div class="mt-6 flex justify-center">
-        <Button href={resolveLink(buttonLink)} variant="secondary" size="md">
-          {buttonText}
-        </Button>
-      </div>
-    )}
-  </div>
-);
 ---
 
 <Section size="lg">
   {useContainer ? (
     <Container>
-      {ctaContent}
+      <div class="rounded-2xl bg-navy px-6 py-10 text-center text-white">
+        <Text as="h2" variant="headingLg" tone="inverted">
+          {heading || "Have a property that needs management?"}
+        </Text>
+
+        {subheading && (
+          <Text as="p" variant="body" tone="inverted" class="mt-3">
+            {subheading}
+          </Text>
+        )}
+
+        {buttonText && buttonLink && (
+          <div class="mt-6 flex justify-center">
+            <Button href={resolveLink(buttonLink)} variant="secondary" size="md">
+              {buttonText}
+            </Button>
+          </div>
+        )}
+      </div>
     </Container>
   ) : (
-    ctaContent
+    <div class="rounded-2xl bg-navy px-6 py-10 text-center text-white">
+      <Text as="h2" variant="headingLg" tone="inverted">
+        {heading || "Have a property that needs management?"}
+      </Text>
+
+      {subheading && (
+        <Text as="p" variant="body" tone="inverted" class="mt-3">
+          {subheading}
+        </Text>
+      )}
+
+      {buttonText && buttonLink && (
+        <div class="mt-6 flex justify-center">
+          <Button href={resolveLink(buttonLink)} variant="secondary" size="md">
+            {buttonText}
+          </Button>
+        </div>
+      )}
+    </div>
   )}
 </Section>
