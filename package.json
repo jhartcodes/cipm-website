@@ -17,5 +17,9 @@
     "astro": "^5.16.15",
     "astro-portabletext": "^0.13.0",
     "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.0"
   }
 }
