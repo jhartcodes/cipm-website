@@ -248,22 +248,18 @@ export const BLOG_POST_QUERY = /* groq */ `
   content[]{
     _type,
     _key,
-    _type == "textBlock" => {
-      content
-    },
-    _type == "imageBlock" => {
-      image,
-      alt,
-      caption,
-      size
-    },
-    _type == "videoBlock" => {
-      videoType,
-      url,
-      upload,
-      title,
-      caption
-    }
+    content,
+    image,
+    alt,
+    caption,
+    size,
+    videoType,
+    "url": select(
+      videoType == "youtube" => youtubeUrl,
+      videoType == "vimeo" => vimeoUrl
+    ),
+    "upload": uploadedVideo,
+    "title": caption
   },
   seo
 }
