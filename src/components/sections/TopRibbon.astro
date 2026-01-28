@@ -14,6 +14,7 @@ interface Props {
     enabled: boolean;
     phoneNumber?: string;
     email?: string;
+    serviceText?: string;
   };
 }
 
@@ -28,30 +29,37 @@ if (!data?.enabled) {
   <Container>
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-6">
-        {data.phoneNumber && (
-          <a
-            href={`tel:${data.phoneNumber.replace(/[^0-9+]/g, '')}`}
-            class="text-turquoise-light hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
-          >
-            <Icon name="phone-call" size={16} />
-            <span>{data.phoneNumber}</span>
-          </a>
-        )}
+        {
+          data.phoneNumber && (
+            <a
+              href={`tel:${data.phoneNumber.replace(/[^0-9+]/g, "")}`}
+              class="text-turquoise-light hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
+            >
+              <Icon name="phone-call" size={16} />
+              <span>{data.phoneNumber}</span>
+            </a>
+          )
+        }
 
-        {data.email && (
-          <a
-            href={`mailto:${data.email}`}
-            class="text-turquoise-light hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
-          >
-            <Icon name="mail" size={16} />
-            <span>{data.email}</span>
-          </a>
-        )}
+        {
+          data.email && (
+            <a
+              href={`mailto:${data.email}`}
+              class="text-turquoise-light hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
+            >
+              <Icon name="mail" size={16} />
+              <span>{data.email}</span>
+            </a>
+          )
+        }
       </div>
-
-      <span class="text-sm text-white/60 hidden md:inline">
-        Serving Metro Vancouver
-      </span>
+      {
+        data.serviceText && (
+          <span class="text-sm text-white/60 hidden md:inline">
+            {data.serviceText}
+          </span>
+        )
+      }
     </div>
   </Container>
 </div>

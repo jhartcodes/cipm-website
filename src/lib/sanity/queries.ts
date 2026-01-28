@@ -28,7 +28,9 @@ export const GLOBAL_CHROME_QUERY = /* groq */ `
   "topRibbon": *[_type == "topRibbon"][0]{
     enabled,
     phoneNumber,
-    email
+    email, 
+    serviceText
+
   },
   "footer": *[_type == "footer"][0]{
     phoneNumber,
