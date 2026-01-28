@@ -25,7 +25,8 @@ type IconName =
   | "map-pin"
   | "phone-call"
   | "mail"
-  | "check-circle";
+  | "check-circle"
+  | "check";
 
 interface Props {
   name: IconName;
@@ -113,6 +114,11 @@ const icons: Record<IconName, { viewBox: string; path: string; stroke?: boolean 
   "check-circle": {
     viewBox: "0 0 24 24",
     path: "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-2.99",
+    stroke: true,
+  },
+  "check": {
+    viewBox: "0 0 24 24",
+    path: "M20 6L9 17l-5-5",
     stroke: true,
   },
 };

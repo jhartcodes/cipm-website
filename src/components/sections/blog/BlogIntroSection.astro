@@ -3,6 +3,7 @@
  * BlogIntroSection Component
  *
  * Optional intro section for the blog page with heading and intro text.
+ * Variant C style with turquoise background and white text.
  */
 
 import Section from "../../layout/Section.astro";
@@ -17,16 +18,16 @@ const { heading, intro } = Astro.props;
 ---
 
 {(heading || intro) && (
-  <Section size="sm">
+  <Section size="sm" class="bg-turquoise">
     <div class="text-center">
       {heading && (
-        <Text as="h2" variant="headingLg">
+        <Text as="h2" variant="headingLg" class="text-3xl md:text-4xl font-bold text-white">
           {heading}
         </Text>
       )}
 
       {intro && (
-        <Text as="p" variant="body" class="mt-4 mx-auto max-w-2xl text-gray-600">
+        <Text as="p" variant="body" class="mt-4 mx-auto max-w-2xl text-white/90">
           {intro}
         </Text>
       )}

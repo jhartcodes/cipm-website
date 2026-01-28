@@ -1,0 +1,36 @@
+---
+/**
+ * BlogPostFeaturedImage Component
+ *
+ * Full-width featured image that overlaps the hero section.
+ * Uses negative margin to create the overlap effect.
+ */
+
+import Container from "../../layout/Container.astro";
+import SanityImage from "../../content/SanityImage.astro";
+
+interface Props {
+  image?: any;
+  alt?: string;
+}
+
+const { image, alt } = Astro.props;
+
+if (!image) {
+  return null;
+}
+---
+
+<section class="-mt-8 relative z-10">
+  <Container>
+    <div class="aspect-[2/1] rounded-2xl overflow-hidden shadow-2xl">
+      <SanityImage
+        image={image}
+        alt={alt || ""}
+        width={1200}
+        class="w-full h-full object-cover"
+        loading="eager"
+      />
+    </div>
+  </Container>
+</section>

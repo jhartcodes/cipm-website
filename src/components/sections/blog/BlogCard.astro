@@ -39,7 +39,7 @@ const formattedDate = publishedAt
 const postUrl = slug?.current ? `/blog/${slug.current}` : '#';
 ---
 
-<article class="group overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md">
+<article class="group bg-white rounded-lg overflow-hidden shadow-md border border-gray-200 hover:border-turquoise transition-colors">
   <a href={postUrl} class="block">
     {featuredImage && (
       <div class="aspect-[16/9] overflow-hidden">
@@ -52,43 +52,46 @@ const postUrl = slug?.current ? `/blog/${slug.current}` : '#';
       </div>
     )}
 
-    <div class="p-5">
-      <div class="flex items-center gap-3 text-sm">
-        {category?.title && (
-          <span
-            class="rounded-full px-3 py-1 text-xs font-medium bg-turquoise/10 text-turquoise"
-            style={category.color ? `--category-color: ${category.color}` : undefined}
-            class:list={[
-              category.color && '[background-color:color-mix(in_srgb,var(--category-color)_10%,transparent)] [color:var(--category-color)]'
-            ]}
-          >
-            {category.title}
-          </span>
-        )}
-        {formattedDate && (
-          <Text as="span" variant="small" class="text-gray-500">
-            {formattedDate}
-          </Text>
-        )}
-      </div>
+    <div class="p-6">
+      {category?.title && (
+        <span
+          class="inline-block bg-turquoise/10 text-turquoise font-bold text-xs uppercase tracking-wide px-2 py-1 rounded mb-3"
+          style={category.color ? `--category-color: ${category.color}` : undefined}
+          class:list={[
+            category.color && '[background-color:color-mix(in_srgb,var(--category-color)_10%,transparent)] [color:var(--category-color)]'
+          ]}
+        >
+          {category.title}
+        </span>
+      )}
 
       {title && (
-        <Text as="h3" variant="headingSm" class="mt-3 line-clamp-2 group-hover:text-turquoise transition-colors">
+        <Text as="h3" variant="headingSm" class="text-base font-bold text-navy mb-2 line-clamp-2 group-hover:text-turquoise transition-colors">
           {title}
         </Text>
       )}
 
       {excerpt && (
-        <Text as="p" variant="body" class="mt-2 text-gray-600 line-clamp-3">
+        <Text as="p" variant="body" class="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-3">
           {excerpt}
         </Text>
       )}
 
+      {formattedDate && (
+        <Text as="time" variant="small" class="text-xs text-gray-400">
+          {formattedDate}
+        </Text>
+      )}
+
       {showAuthor && author && (
-        <Text as="p" variant="small" class="mt-3 text-gray-500">
+        <Text as="p" variant="small" class="mt-1 text-gray-500">
           By {author}
         </Text>
       )}
+
+      <span class="inline-flex items-center gap-1 text-sm text-turquoise font-bold hover:text-navy transition-colors mt-2">
+        Read More →
+      </span>
     </div>
   </a>
 </article>
