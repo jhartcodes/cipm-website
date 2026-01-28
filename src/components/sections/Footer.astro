@@ -7,6 +7,7 @@
  */
 
 import Container from "../layout/Container.astro";
+import SmartLink from "../ui/SmartLink.astro";
 import Icon from "../ui/Icon.astro";
 
 interface SocialLink {
@@ -45,14 +46,14 @@ const currentYear = new Date().getFullYear();
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
       <!-- Logo & Description -->
       <div class="lg:col-span-2">
-        <a href="/" class="block mb-6" aria-label="CIPM - Go to homepage">
+        <SmartLink href="/" class="block mb-6" aria-label="CIPM - Go to homepage">
           <img
             src="/CIPM logo long white.svg"
             alt="CIPM - Community Impact Property Management"
             class="h-10 w-auto"
             loading="lazy"
           />
-        </a>
+        </SmartLink>
         <p class="text-white/70 max-w-md leading-relaxed">
           Professional property management in Metro Vancouver for commercial,
           nonprofit, rental, and mixed-use properties.
@@ -63,15 +64,12 @@ const currentYear = new Date().getFullYear();
             {data.socialLinks.map((link) => {
               const iconName = platformToIcon[link.platform] || "link";
               return (
-                <a
+                <SmartLink
                   href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   class="text-white/70 hover:text-white transition-colors"
-                  aria-label={link.platform}
                 >
                   <Icon name={iconName} size={20} aria-label={link.platform} />
-                </a>
+                </SmartLink>
               );
             })}
           </div>
@@ -84,25 +82,25 @@ const currentYear = new Date().getFullYear();
         <ul class="space-y-3">
           {data.phoneNumber && (
             <li>
-              <a
+              <SmartLink
                 href={`tel:${data.phoneNumber.replace(/[^0-9+]/g, '')}`}
                 class="text-white/70 hover:text-white transition-colors flex items-center gap-2"
               >
                 <Icon name="phone-call" size={16} class="flex-shrink-0" />
                 {data.phoneNumber}
-              </a>
+              </SmartLink>
             </li>
           )}
 
           {data.email && (
             <li>
-              <a
+              <SmartLink
                 href={`mailto:${data.email}`}
                 class="text-white/70 hover:text-white transition-colors flex items-center gap-2"
               >
                 <Icon name="mail" size={16} class="flex-shrink-0" />
                 {data.email}
-              </a>
+              </SmartLink>
             </li>
           )}
 
@@ -119,10 +117,10 @@ const currentYear = new Date().getFullYear();
       <div>
         <h3 class="text-base font-bold mb-3 text-turquoise-light">Quick Links</h3>
         <ul class="space-y-2">
-          <li><a href="/about" class="text-white/70 hover:text-white transition-colors">About Us</a></li>
-          <li><a href="/services" class="text-white/70 hover:text-white transition-colors">Services</a></li>
-          <li><a href="/blog" class="text-white/70 hover:text-white transition-colors">Blog</a></li>
-          <li><a href="/contact" class="text-white/70 hover:text-white transition-colors">Contact</a></li>
+          <li><SmartLink href="/about" class="text-white/70 hover:text-white transition-colors">About Us</SmartLink></li>
+          <li><SmartLink href="/services" class="text-white/70 hover:text-white transition-colors">Services</SmartLink></li>
+          <li><SmartLink href="/blog" class="text-white/70 hover:text-white transition-colors">Blog</SmartLink></li>
+          <li><SmartLink href="/contact" class="text-white/70 hover:text-white transition-colors">Contact</SmartLink></li>
         </ul>
       </div>
     </div>
