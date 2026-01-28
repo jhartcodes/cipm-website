@@ -10,7 +10,9 @@
 @theme {
   /* Brand Colors - these become utilities like bg-navy, text-turquoise */
   --color-navy: #15396a;
+  --color-navy-dark: #0f2a4f;
   --color-turquoise: #4ea5c2;
+  --color-turquoise-light: #6bb8d1;
   --color-yellow: #f2c94c;
   /* Note: Don't define --color-white, use Tailwind's built-in white */
 
