@@ -23,12 +23,17 @@ export const GLOBAL_CHROME_QUERY = /* groq */ `
     },
     showCtaButton,
     ctaText,
-    ctaLink
+    ctaLinkType,
+    ctaExternalUrl,
+    ctaInternalPage->{
+      _type,
+      slug
+    }
   },
   "topRibbon": *[_type == "topRibbon"][0]{
     enabled,
     phoneNumber,
-    email, 
+    email,
     serviceText
 
   },
