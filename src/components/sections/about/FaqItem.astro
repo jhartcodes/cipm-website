@@ -3,8 +3,8 @@
  * FaqItem Component
  *
  * Accordion-style FAQ item with question and answer.
- * Uses HTML details/summary for native accordion behavior.
- * Supports both plain strings and PortableText for question/answer.
+ * Variant A design with generous padding and shadow.
+ * Uses button/div pattern with ARIA for accessibility.
  */
 
 import Text from "../../ui/Text.astro";
@@ -14,9 +14,10 @@ import PortableTextRenderer from "../../PortableText.astro";
 interface Props {
   question?: string | any[];
   answer?: string | any[];
+  id: string;
 }
 
-const { question, answer } = Astro.props;
+const { question, answer, id } = Astro.props;
 
 // Helper to check if value is PortableText (array of blocks)
 const isPortableText = (value: unknown): value is any[] => Array.isArray(value);
@@ -32,37 +33,51 @@ const getPlainText = (value: string | any[] | undefined): string => {
   }
   return "";
 };
+
+const contentId = `${id}-content`;
 ---
 
-<details class="group border-b border-gray-200 py-4">
-  <summary
-    class="flex cursor-pointer items-center justify-between gap-4 list-none"
-    aria-label={`${getPlainText(question) || "Question"} - Click to expand or collapse`}
+<div class="rounded-2xl bg-white shadow-lg overflow-hidden" data-accordion-item>
+  <button
+    type="button"
+    class="w-full flex items-center justify-between gap-4 px-8 py-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-turquoise focus-visible:ring-inset"
+    aria-expanded="false"
+    aria-controls={contentId}
+    data-accordion-trigger
   >
-    <Text as="span" variant="headingSm" class="text-left">
+    <Text as="span" variant="headingSm" class="text-lg font-semibold text-navy">
       {getPlainText(question) || "Question"}
     </Text>
     <span
-      class="flex-shrink-0 text-turquoise transition-transform duration-200 group-open:rotate-180"
+      class="flex-shrink-0 text-turquoise transition-transform duration-200"
       aria-hidden="true"
+      data-accordion-icon
     >
       <Icon name="chevron-down" size={24} />
     </span>
-  </summary>
-  <div class="pt-4 pb-2" role="region" aria-label="Answer">
+  </button>
+
+  <div
+    id={contentId}
+    role="region"
+    aria-labelledby={id}
+    hidden
+    class="px-8 pb-6"
+    data-accordion-content
+  >
     {isPortableText(answer) ? (
-      <PortableTextRenderer value={answer} class="richtext text-gray-600" />
+      <PortableTextRenderer value={answer} class="richtext text-gray-600 leading-relaxed" />
     ) : (
-      <Text as="p" variant="body" class="text-gray-600">
+      <Text as="p" variant="body" class="text-gray-600 leading-relaxed">
         {answer || "Answer"}
       </Text>
     )}
   </div>
-</details>
+</div>
 
 <style>
-  /* Hide default marker */
-  details summary::-webkit-details-marker {
-    display: none;
+  /* Rotate chevron when expanded */
+  [aria-expanded="true"] [data-accordion-icon] {
+    transform: rotate(180deg);
   }
 </style>

@@ -3,6 +3,7 @@
  * FaqSection Component
  *
  * Displays a list of frequently asked questions in an accordion pattern.
+ * Variant A style with generous padding and single-open behavior.
  */
 
 import Section from "../../layout/Section.astro";
@@ -29,11 +30,87 @@ const { heading, faqs = [] } = Astro.props;
     </Text>
 
     {faqs.length > 0 && (
-      <div class="mt-8">
-        {faqs.map((faq) => (
-          <FaqItem question={faq.question} answer={faq.answer} />
+      <div class="mt-8 space-y-4" data-accordion-group>
+        {faqs.map((faq, index) => (
+          <FaqItem question={faq.question} answer={faq.answer} id={`faq-${index}`} />
         ))}
       </div>
     )}
   </div>
 </Section>
+
+<script>
+  /**
+   * Accordion Controller
+   * Single-open behavior with keyboard navigation
+   */
+  (function() {
+    const groups = document.querySelectorAll('[data-accordion-group]');
+
+    groups.forEach((group) => {
+      const items = group.querySelectorAll('[data-accordion-item]');
+      const buttons = group.querySelectorAll('[data-accordion-trigger]');
+
+      // Single-open: close others when one opens
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+          // Close all other items first
+          buttons.forEach((otherButton) => {
+            if (otherButton !== button) {
+              otherButton.setAttribute('aria-expanded', 'false');
+              const otherId = otherButton.getAttribute('aria-controls');
+              const otherContent = document.getElementById(otherId || '');
+              if (otherContent) {
+                otherContent.hidden = true;
+              }
+            }
+          });
+
+          // Toggle current item
+          const contentId = button.getAttribute('aria-controls');
+          const content = document.getElementById(contentId || '');
+          if (content) {
+            button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+            content.hidden = isExpanded;
+          }
+        });
+      });
+
+      // Keyboard navigation
+      group.addEventListener('keydown', (e) => {
+        const target = e.target as HTMLElement;
+        if (!target.matches('[data-accordion-trigger]')) return;
+
+        const buttonList = Array.from(buttons) as HTMLElement[];
+        const currentIndex = buttonList.indexOf(target);
+
+        let nextIndex = -1;
+
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            nextIndex = (currentIndex + 1) % buttonList.length;
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            nextIndex = (currentIndex - 1 + buttonList.length) % buttonList.length;
+            break;
+          case 'Home':
+            e.preventDefault();
+            nextIndex = 0;
+            break;
+          case 'End':
+            e.preventDefault();
+            nextIndex = buttonList.length - 1;
+            break;
+        }
+
+        if (nextIndex >= 0) {
+          buttonList[nextIndex].focus();
+        }
+      });
+    });
+  })();
+</script>

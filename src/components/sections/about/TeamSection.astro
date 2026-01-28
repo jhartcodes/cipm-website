@@ -3,6 +3,7 @@
  * TeamSection Component
  *
  * Displays a grid of team members with heading and optional intro text.
+ * Variant A design with circular images and modal bio display.
  */
 
 import Section from "../../layout/Section.astro";
@@ -37,15 +38,158 @@ const { heading, intro, members = [] } = Astro.props;
   )}
 
   {members.length > 0 && (
-    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {members.map((member) => (
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      {members.map((member, index) => (
         <TeamMemberCard
           name={member.name}
           title={member.title}
           headshot={member.headshot}
           bio={member.bio}
+          id={`team-member-${index}`}
         />
       ))}
     </div>
   )}
 </Section>
+
+{/* Modal for team member bio */}
+<div
+  id="team-modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="team-modal-title"
+  data-team-modal
+>
+  <div class="relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-xl" data-modal-content>
+    <button
+      type="button"
+      class="absolute top-4 right-4 p-2 text-gray-400 hover:text-navy transition-colors"
+      aria-label="Close dialog"
+      data-modal-close
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <div class="text-center">
+      <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full ring-4 ring-turquoise/30">
+        <img id="modal-image" src="" alt="" class="h-full w-full object-cover" />
+      </div>
+
+      <h3 id="team-modal-title" class="text-xl font-bold text-navy"></h3>
+      <p id="modal-title" class="mt-1 text-turquoise font-medium"></p>
+      <p id="modal-bio" class="mt-4 text-gray-600 text-left"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  /**
+   * Team Modal Controller
+   * Opens modal on card click, handles keyboard navigation and focus trap
+   */
+  (function() {
+    const modal = document.querySelector('[data-team-modal]') as HTMLElement;
+    const modalContent = modal?.querySelector('[data-modal-content]');
+    const closeButton = modal?.querySelector('[data-modal-close]');
+    const cards = document.querySelectorAll('[data-team-card]');
+
+    if (!modal || !modalContent || !closeButton) return;
+
+    const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+    const modalName = document.getElementById('team-modal-title');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBio = document.getElementById('modal-bio');
+
+    let previousFocusedElement: HTMLElement | null = null;
+
+    function openModal(card: Element) {
+      const name = card.getAttribute('data-name') || '';
+      const title = card.getAttribute('data-title') || '';
+      const bio = card.getAttribute('data-bio') || '';
+      const image = card.getAttribute('data-image') || '';
+
+      if (modalName) modalName.textContent = name;
+      if (modalTitle) modalTitle.textContent = title;
+      if (modalBio) modalBio.textContent = bio;
+      if (modalImage) {
+        modalImage.src = image;
+        modalImage.alt = name;
+      }
+
+      previousFocusedElement = document.activeElement as HTMLElement;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      // Focus the close button
+      (closeButton as HTMLElement).focus();
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+
+      // Restore focus
+      if (previousFocusedElement) {
+        previousFocusedElement.focus();
+        previousFocusedElement = null;
+      }
+    }
+
+    // Open modal on card click
+    cards.forEach((card) => {
+      card.addEventListener('click', () => openModal(card));
+
+      // Also handle Enter/Space for keyboard users
+      card.addEventListener('keydown', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+          e.preventDefault();
+          openModal(card);
+        }
+      });
+    });
+
+    // Close on close button click
+    closeButton.addEventListener('click', closeModal);
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+
+    // Focus trap
+    modal.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = modalContent.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    });
+  })();
+</script>
