@@ -7,9 +7,6 @@
  */
 
 import Container from "../layout/Container.astro";
-import Section from "../layout/Section.astro";
-import Text from "../ui/Text.astro";
-import SmartLink from "../ui/SmartLink.astro";
 import Icon from "../ui/Icon.astro";
 
 interface SocialLink {
@@ -43,12 +40,12 @@ const platformToIcon: Record<string, "linkedin" | "facebook" | "instagram" | "tw
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-navy text-white mt-auto">
-  <Section size="lg" tone="inverted">
-    <Container>
-      <!-- Logo -->
-      <div class="mb-10">
-        <a href="/" class="inline-block">
+<footer class="bg-navy-dark text-white py-12 lg:py-16">
+  <Container>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+      <!-- Logo & Description -->
+      <div class="lg:col-span-2">
+        <a href="/" class="block mb-6" aria-label="CIPM - Go to homepage">
           <img
             src="/CIPM logo long white.svg"
             alt="CIPM - Community Impact Property Management"
@@ -56,114 +53,91 @@ const currentYear = new Date().getFullYear();
             loading="lazy"
           />
         </a>
-      </div>
+        <p class="text-white/70 max-w-md leading-relaxed">
+          Professional property management in Metro Vancouver for commercial,
+          nonprofit, rental, and mixed-use properties.
+        </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-        <!-- Contact Info -->
-        <div>
-          <Text as="h3" variant="headingSm" tone="inverted" class="mb-4">
-            Contact Us
-          </Text>
-
-          <div class="space-y-3">
-            {
-              data.phoneNumber && (
-                <div>
-                  <SmartLink
-                    href={`tel:${data.phoneNumber.replace(/\s/g, "")}`}
-                    class="inline-flex items-center gap-2 hover:text-turquoise transition-colors"
-                  >
-                    <Icon name="phone" size={18} />
-                    <Text as="span" variant="body" tone="inherit">
-                      {data.phoneNumber}
-                    </Text>
-                  </SmartLink>
-                </div>
-              )
-            }
-
-            {
-              data.email && (
-                <div>
-                  <SmartLink
-                    href={`mailto:${data.email}`}
-                    class="inline-flex items-center gap-2 hover:text-turquoise transition-colors"
-                  >
-                    <Icon name="envelope" size={18} />
-                    <Text as="span" variant="body" tone="inherit">
-                      {data.email}
-                    </Text>
-                  </SmartLink>
-                </div>
-              )
-            }
-
-            {
-              data.address && (
-                <div>
-                  <Text
-                    as="p"
-                    variant="body"
-                    tone="inverted"
-                    class="whitespace-pre-line"
-                  >
-                    {data.address}
-                  </Text>
-                </div>
-              )
-            }
+        {data.socialLinks && data.socialLinks.length > 0 && (
+          <div class="flex gap-4 mt-6">
+            {data.socialLinks.map((link) => {
+              const iconName = platformToIcon[link.platform] || "link";
+              return (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-white/70 hover:text-white transition-colors"
+                  aria-label={link.platform}
+                >
+                  <Icon name={iconName} size={20} aria-label={link.platform} />
+                </a>
+              );
+            })}
           </div>
-        </div>
-
-        <!-- Social Links -->
-        {
-          data.socialLinks && data.socialLinks.length > 0 && (
-            <div>
-              <Text as="h3" variant="headingSm" tone="inverted" class="mb-4">
-                Follow Us
-              </Text>
-
-              <div class="flex gap-4">
-                {data.socialLinks.map((link) => {
-                  const iconName = platformToIcon[link.platform] || "link";
-                  return (
-                    <SmartLink
-                      href={link.url}
-                      external
-                      class="hover:text-turquoise transition-colors"
-                      aria-label={link.platform}
-                    >
-                      <Icon name={iconName} size={24} aria-label={link.platform} />
-                    </SmartLink>
-                  );
-                })}
-              </div>
-            </div>
-          )
-        }
-
-        <!-- Land Acknowledgement -->
-        {
-          data.landAcknowledgement && (
-            <div>
-              <Text as="h3" variant="headingSm" tone="inverted" class="mb-4">
-                Land Acknowledgement
-              </Text>
-              <Text as="p" variant="small" tone="inverted">
-                {data.landAcknowledgement}
-              </Text>
-            </div>
-          )
-        }
+        )}
       </div>
 
-      <!-- Copyright -->
-      <div class="mt-12 pt-8 border-t border-gray-700 text-center">
-        <Text as="p" variant="small" tone="inverted">
-          {data.copyrightText ||
-            `© ${currentYear} Community Impact Property Management. All rights reserved.`}
-        </Text>
+      <!-- Contact Information -->
+      <div>
+        <h3 class="text-base font-bold mb-3 text-turquoise-light">Contact</h3>
+        <ul class="space-y-3">
+          {data.phoneNumber && (
+            <li>
+              <a
+                href={`tel:${data.phoneNumber.replace(/[^0-9+]/g, '')}`}
+                class="text-white/70 hover:text-white transition-colors flex items-center gap-2"
+              >
+                <Icon name="phone-call" size={16} class="flex-shrink-0" />
+                {data.phoneNumber}
+              </a>
+            </li>
+          )}
+
+          {data.email && (
+            <li>
+              <a
+                href={`mailto:${data.email}`}
+                class="text-white/70 hover:text-white transition-colors flex items-center gap-2"
+              >
+                <Icon name="mail" size={16} class="flex-shrink-0" />
+                {data.email}
+              </a>
+            </li>
+          )}
+
+          {data.address && (
+            <li class="text-white/70 flex items-start gap-2">
+              <Icon name="map-pin" size={16} class="flex-shrink-0 mt-1" />
+              <span>{data.address}</span>
+            </li>
+          )}
+        </ul>
       </div>
-    </Container>
-  </Section>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-base font-bold mb-3 text-turquoise-light">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="/about" class="text-white/70 hover:text-white transition-colors">About Us</a></li>
+          <li><a href="/services" class="text-white/70 hover:text-white transition-colors">Services</a></li>
+          <li><a href="/blog" class="text-white/70 hover:text-white transition-colors">Blog</a></li>
+          <li><a href="/contact" class="text-white/70 hover:text-white transition-colors">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Land Acknowledgement & Copyright -->
+    <div class="mt-12 pt-8 border-t border-white/10">
+      {data.landAcknowledgement && (
+        <p class="text-white/50 text-xs mb-4 max-w-3xl">
+          {data.landAcknowledgement}
+        </p>
+      )}
+      <p class="text-white/50 text-xs">
+        {data.copyrightText ||
+          `© ${currentYear} Community Impact Property Management. All rights reserved.`}
+      </p>
+    </div>
+  </Container>
 </footer>
