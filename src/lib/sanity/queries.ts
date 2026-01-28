@@ -247,14 +247,14 @@ export const BLOG_POST_QUERY = /* groq */ `
   },
   content[]{
     _type,
-    // textBlock
+    textBlock
     content,
-    // imageBlock
+    imageBlock
     image,
     alt,
     caption,
     size,
-    // videoBlock
+    videoBlock
     videoType,
     url,
     upload,
