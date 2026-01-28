@@ -7,7 +7,6 @@
  */
 
 import Container from "../layout/Container.astro";
-import Text from "../ui/Text.astro";
 import Icon from "../ui/Icon.astro";
 
 interface Props {
@@ -25,38 +24,34 @@ if (!data?.enabled) {
 }
 ---
 
-<div class="bg-navy text-white py-2">
+<div class="bg-navy-dark text-white py-2.5">
   <Container>
-    <div
-      class="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm"
-    >
-      {
-        data.phoneNumber && (
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        {data.phoneNumber && (
           <a
-            href={`tel:${data.phoneNumber.replace(/\s/g, "")}`}
-            class="flex items-center gap-2 hover:text-turquoise transition-colors"
+            href={`tel:${data.phoneNumber.replace(/[^0-9+]/g, '')}`}
+            class="text-turquoise-light hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
           >
-            <Icon name="phone" size={16} />
-            <Text as="span" variant="small" tone="inherit">
-              {data.phoneNumber}
-            </Text>
+            <Icon name="phone-call" size={16} />
+            <span>{data.phoneNumber}</span>
           </a>
-        )
-      }
+        )}
 
-      {
-        data.email && (
+        {data.email && (
           <a
             href={`mailto:${data.email}`}
-            class="flex items-center gap-2 hover:text-turquoise transition-colors"
+            class="text-turquoise-light hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
           >
-            <Icon name="envelope" size={16} />
-            <Text as="span" variant="small" tone="inherit">
-              {data.email}
-            </Text>
+            <Icon name="mail" size={16} />
+            <span>{data.email}</span>
           </a>
-        )
-      }
+        )}
+      </div>
+
+      <span class="text-sm text-white/60 hidden md:inline">
+        Serving Metro Vancouver
+      </span>
     </div>
   </Container>
 </div>
