@@ -2,43 +2,40 @@
 import Container from "../../layout/Container.astro";
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
-import SanityImage from "../../content/SanityImage.astro";
-
+import Button from "../../ui/Button.astro";
 interface Props {
   hero?: {
     heading?: string;
     subheading?: string;
     backgroundImage?: any;
+    ctaText?: string;
+    ctaLink?: any;
   };
 }
 
 const { hero } = Astro.props;
 ---
 
-<Section>
-  <Container>
-    <div class="grid gap-8 md:grid-cols-2 md:items-center">
-      <div>
-        <Text as="h1" variant="hero">
-          {hero?.heading || "Welcome to CIPM"}
+<Section size="md" tone="inverted" class="relative overflow-hidden min-h-[80vh] flex items-center">
+  <div class="absolute bottom-0 right-0 w-2/3 h-1/2 bg-turquoise/20 transform skew-y-6 translate-y-1/4" aria-hidden="true"></div>
+
+  <Container class="relative z-10">
+    <div class="max-w-3xl">
+      <Text as="h1" variant="hero" tone="inverted">
+        {hero?.heading || "Welcome to CIPM"}
+      </Text>
+
+      {hero?.subheading && (
+        <Text as="p" variant="bodyLg" class="mt-4 text-white/80">
+          {hero.subheading}
         </Text>
+      )}
 
-        {hero?.subheading && (
-          <Text as="p" variant="bodyLg" class="mt-4 text-gray-600">
-            {hero.subheading}
-          </Text>
-        )}
-      </div>
-
-      {hero?.backgroundImage && (
-        <div class="w-full">
-          <SanityImage
-            image={hero.backgroundImage}
-            alt={hero.backgroundImage?.alt || ""}
-            width={800}
-            class="w-full rounded-2xl"
-            loading="eager"
-          />
+      {hero?.ctaText && hero?.ctaLink && (
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <Button href={hero.ctaLink} variant="outlineWhite" size="md">
+            {hero.ctaText}
+          </Button>
         </div>
       )}
     </div>
