@@ -3,7 +3,7 @@
  * ContactFormSection Component
  *
  * Contact form with Netlify Forms integration.
- * Includes name, email, phone, and message fields.
+ * Variant A style with generous spacing and rounded inputs.
  */
 
 import Text from "../../ui/Text.astro";
@@ -25,19 +25,19 @@ const { heading, description, buttonText, successMessage } = Astro.props;
 const isSuccess = Astro.url.searchParams.get('success') === 'true';
 ---
 
-<div>
-  <Text as="h2" variant="headingLg">
+<div class="space-y-6">
+  <Text as="h2" variant="heading" class="text-2xl font-bold text-navy mb-6">
     {heading || "Send us a Message"}
   </Text>
 
   {description && (
-    <Text as="p" variant="body" class="mt-2 text-gray-600">
+    <Text as="p" variant="body" class="text-gray-600">
       {description}
     </Text>
   )}
 
   {isSuccess ? (
-    <div class="mt-6 rounded-lg bg-green-50 border border-green-200 p-6">
+    <div class="rounded-xl bg-green-50 border border-green-200 p-6">
       <div class="flex items-center gap-3">
         <div class="flex-shrink-0 text-green-600">
           <Icon name="check-circle" size={24} />
@@ -54,7 +54,7 @@ const isSuccess = Astro.url.searchParams.get('success') === 'true';
       data-netlify="true"
       netlify-honeypot="bot-field"
       action="/contact?success=true"
-      class="mt-6 space-y-4"
+      class="space-y-4"
     >
       <input type="hidden" name="form-name" value="contact" />
 
@@ -97,10 +97,11 @@ const isSuccess = Astro.url.searchParams.get('success') === 'true';
       />
 
       <div class="pt-2">
-        <Button type="submit" variant="primary" size="md">
+        <Button type="submit" variant="primary" size="lg">
           {buttonText || "Send Message"}
         </Button>
       </div>
     </form>
   )}
 </div>
+

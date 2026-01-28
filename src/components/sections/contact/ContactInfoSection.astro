@@ -3,10 +3,12 @@
  * ContactInfoSection Component
  *
  * Displays contact information including heading, address, phone, email, and optional map.
+ * Variant A style with generous spacing and turquoise icon circles.
  */
 
 import Text from "../../ui/Text.astro";
 import Icon from "../../ui/Icon.astro";
+import SmartLink from "../../ui/SmartLink.astro";
 
 interface Props {
   heading?: string;
@@ -19,61 +21,55 @@ interface Props {
 const { heading, address, phone, email, mapEmbedUrl } = Astro.props;
 ---
 
-<div>
-  <Text as="h2" variant="headingLg">
-    {heading || "Get in Touch"}
+<div class="space-y-8">
+  <Text as="h2" variant="heading" class="text-2xl font-bold text-navy mb-6">
+    {heading || "Contact Information"}
   </Text>
 
-  <div class="mt-6 space-y-4">
-    {address && (
-      <div class="flex items-start gap-3">
-        <div class="mt-1 flex-shrink-0 text-turquoise">
-          <Icon name="map-pin" size={20} />
-        </div>
-        <div>
-          <Text as="p" variant="body" class="font-medium">Address</Text>
-          <Text as="p" variant="body" class="text-gray-600 whitespace-pre-line">
-            {address}
-          </Text>
-        </div>
+  {phone && (
+    <div class="flex items-start gap-4">
+      <div class="w-12 h-12 rounded-full bg-turquoise/10 flex items-center justify-center flex-shrink-0">
+        <Icon name="phone-call" size={20} class="text-turquoise" />
       </div>
-    )}
+      <div>
+        <Text as="p" variant="small" class="text-sm text-gray-500 font-medium uppercase tracking-wide">Phone</Text>
+        <SmartLink href={`tel:${phone}`} class="text-lg text-navy font-semibold mt-1 hover:text-turquoise transition-colors">
+          {phone}
+        </SmartLink>
+      </div>
+    </div>
+  )}
 
-    {phone && (
-      <div class="flex items-start gap-3">
-        <div class="mt-1 flex-shrink-0 text-turquoise">
-          <Icon name="phone-call" size={20} />
-        </div>
-        <div>
-          <Text as="p" variant="body" class="font-medium">Phone</Text>
-          <a href={`tel:${phone}`} class="text-gray-600 hover:text-turquoise transition-colors">
-            <Text as="span" variant="body">
-              {phone}
-            </Text>
-          </a>
-        </div>
+  {email && (
+    <div class="flex items-start gap-4">
+      <div class="w-12 h-12 rounded-full bg-turquoise/10 flex items-center justify-center flex-shrink-0">
+        <Icon name="mail" size={20} class="text-turquoise" />
       </div>
-    )}
+      <div>
+        <Text as="p" variant="small" class="text-sm text-gray-500 font-medium uppercase tracking-wide">Email</Text>
+        <SmartLink href={`mailto:${email}`} class="text-lg text-navy font-semibold mt-1 hover:text-turquoise transition-colors">
+          {email}
+        </SmartLink>
+      </div>
+    </div>
+  )}
 
-    {email && (
-      <div class="flex items-start gap-3">
-        <div class="mt-1 flex-shrink-0 text-turquoise">
-          <Icon name="mail" size={20} />
-        </div>
-        <div>
-          <Text as="p" variant="body" class="font-medium">Email</Text>
-          <a href={`mailto:${email}`} class="text-gray-600 hover:text-turquoise transition-colors">
-            <Text as="span" variant="body">
-              {email}
-            </Text>
-          </a>
-        </div>
+  {address && (
+    <div class="flex items-start gap-4">
+      <div class="w-12 h-12 rounded-full bg-turquoise/10 flex items-center justify-center flex-shrink-0">
+        <Icon name="map-pin" size={20} class="text-turquoise" />
       </div>
-    )}
-  </div>
+      <div>
+        <Text as="p" variant="small" class="text-sm text-gray-500 font-medium uppercase tracking-wide">Address</Text>
+        <Text as="p" variant="body" class="text-lg text-navy font-semibold mt-1 whitespace-pre-line">
+          {address}
+        </Text>
+      </div>
+    </div>
+  )}
 
   {mapEmbedUrl && (
-    <div class="mt-8 aspect-video overflow-hidden rounded-xl">
+    <div class="mt-8 rounded-2xl overflow-hidden h-64">
       <iframe
         src={mapEmbedUrl}
         width="100%"
