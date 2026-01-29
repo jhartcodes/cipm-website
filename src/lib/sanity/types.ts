@@ -195,9 +195,13 @@ export interface Service extends SanityDocument {
 }
 
 export interface PropertyType {
-  _key: string;
+  _key?: string;
   title?: string;
+  slug?: { current: string };
   icon?: SanityImage;
+  image?: SanityImage;
+  shortDescription?: string;
+  enableDetailPage?: boolean;
 }
 
 export interface TeamMember {

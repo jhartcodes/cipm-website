@@ -16,6 +16,7 @@ const ROUTE_MAP: Record<string, string> = {
   blogPage: "/blog",
   blogPost: "/blog",
   service: "/services",
+  propertyType: "/property-types",
 };
 
 interface InternalReference {

@@ -70,9 +70,19 @@ export const HOME_PAGE_QUERY = /* groq */ `
   },
   whatWeManageHeading,
   whatWeManageContent,
-  propertyTypes[]{
+  propertyTypes[]->{
     title,
-    icon
+    slug,
+    shortDescription,
+    image{
+      asset,
+      alt
+    },
+    icon{
+      asset,
+      alt
+    },
+    enableDetailPage
   },
   whatWeOfferHeading,
   whatWeOfferIntro,

@@ -1,4 +1,11 @@
 ---
+/**
+ * WhatWeManageSection Component
+ *
+ * Displays property types managed by CIPM.
+ * Each property type is a referenced document with image, title, and description.
+ */
+
 import Container from "../../layout/Container.astro";
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
@@ -7,7 +14,11 @@ import SanityImage from "../../content/SanityImage.astro";
 
 interface PropertyType {
   title?: string;
+  slug?: { current: string };
   icon?: any;
+  image?: any;
+  shortDescription?: string;
+  enableDetailPage?: boolean;
 }
 
 interface Props {
@@ -21,33 +32,64 @@ const { heading, content, propertyTypes = [] } = Astro.props;
 
 <Section size="lg">
   <Container>
-    <Text as="h2" variant="headingLg">
-      {heading || "What We Manage"}
-    </Text>
+    <div class="text-center max-w-2xl mx-auto">
+      <Text as="h2" variant="headingLg">
+        {heading || "What We Manage"}
+      </Text>
 
-    {content && (
-      <div class="mt-4">
-        <PortableText value={content} class="richtext" />
-      </div>
-    )}
+      {content && (
+        <div class="mt-4">
+          <PortableText value={content} class="richtext" />
+        </div>
+      )}
+    </div>
 
     {propertyTypes.length > 0 && (
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {propertyTypes.map((item) => (
-          <div class="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-            {item.icon && (
-              <SanityImage
-                image={item.icon}
-                alt={item.title || ""}
-                width={80}
-                class="h-16 w-16"
-              />
-            )}
-            {item.title && (
-              <Text as="h3" variant="headingSm" class="mt-4">
-                {item.title}
-              </Text>
-            )}
+          <div class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+            {/* Image */}
+            <div class="aspect-[4/3] overflow-hidden">
+              {item.image ? (
+                <SanityImage
+                  image={item.image}
+                  alt={item.image?.alt || item.title || ""}
+                  width={600}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              ) : (
+                <div class="w-full h-full bg-gradient-to-br from-navy to-navy-dark" />
+              )}
+            </div>
+
+            {/* Gradient overlay */}
+            <div class="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/40 to-transparent" />
+
+            {/* Content overlay */}
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              {item.icon && (
+                <div class="h-10 w-10 rounded-lg bg-turquoise/20 backdrop-blur-sm flex items-center justify-center mb-3">
+                  <SanityImage
+                    image={item.icon}
+                    alt=""
+                    width={24}
+                    class="h-6 w-6 [filter:brightness(0)_invert(1)]"
+                  />
+                </div>
+              )}
+
+              {item.title && (
+                <Text as="h3" variant="heading" tone="inverted" class="mb-1">
+                  {item.title}
+                </Text>
+              )}
+
+              {item.shortDescription && (
+                <p class="text-sm text-white/80 leading-relaxed line-clamp-2">
+                  {item.shortDescription}
+                </p>
+              )}
+            </div>
           </div>
         ))}
       </div>
