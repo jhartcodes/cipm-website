@@ -6,7 +6,7 @@
  */
 
 import { getSanityClient } from "../lib/sanity/client";
-import { ABOUT_PAGE_QUERY } from "../lib/sanity/queries";
+import { ABOUT_PAGE_QUERY, CTA_SECTION_QUERY } from "../lib/sanity/queries";
 import AboutPage from "../components/pages/AboutPage.astro";
 
 // Static generation for production
@@ -15,6 +15,7 @@ export const prerender = true;
 // Fetch published content
 const client = getSanityClient({ preview: false });
 const data = await client.fetch(ABOUT_PAGE_QUERY);
+const ctaData = data?.showCta ? await client.fetch(CTA_SECTION_QUERY) : null;
 ---
 
-<AboutPage data={data} />
+<AboutPage data={data} ctaData={ctaData} />

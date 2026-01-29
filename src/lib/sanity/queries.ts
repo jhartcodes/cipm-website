@@ -59,6 +59,23 @@ hero{
 }
 `;
 
+export const CTA_SECTION_QUERY = /* groq */ `
+*[_type == "ctaSection"][0]{
+  heading,
+  subheading,
+  buttonText,
+  buttonLink{
+    linkType,
+    internalLink->{
+      _type,
+      slug
+    },
+    externalUrl,
+    openInNewTab
+  }
+}
+`;
+
 export const HOME_PAGE_QUERY = /* groq */ `
 *[_type == "homePage"][0]{
   ${HERO_PROJECTION},
@@ -144,6 +161,7 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
     question,
     answer
   },
+  showCta,
   seo
 }
 `;
@@ -194,6 +212,7 @@ export const CONTACT_PAGE_QUERY = /* groq */ `
   submitButtonText,
   successMessage,
   recipientEmail,
+  showCta,
   seo
 }
 `;
@@ -205,6 +224,7 @@ export const BLOG_PAGE_QUERY = /* groq */ `
   introText,
   postsPerPageDesktop,
   postsPerPageMobile,
+  showCta,
   seo
 }
 `;

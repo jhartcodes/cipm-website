@@ -11,13 +11,15 @@ import Section from "../layout/Section.astro";
 import HeroSection from "../sections/shared/HeroSection.astro";
 import ContactInfoSection from "../sections/contact/ContactInfoSection.astro";
 import ContactFormSection from "../sections/contact/ContactFormSection.astro";
+import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
 
 interface Props {
   data?: any;
+  ctaData?: any;
   preview?: boolean;
 }
 
-const { data, preview = false } = Astro.props;
+const { data, ctaData, preview = false } = Astro.props;
 ---
 
 <BaseLayout title="Contact Us" seo={data?.seo} preview={preview}>
@@ -43,4 +45,12 @@ const { data, preview = false } = Astro.props;
       </div>
     </div>
   </Section>
+  {ctaData && (
+    <ContactCtaSection
+      heading={ctaData.heading}
+      subheading={ctaData.subheading}
+      buttonText={ctaData.buttonText}
+      buttonLink={ctaData.buttonLink}
+    />
+  )}
 </BaseLayout>

@@ -10,9 +10,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import HeroSection from "../sections/shared/HeroSection.astro";
 import BlogIntroSection from "../sections/blog/BlogIntroSection.astro";
 import BlogGridSection from "../sections/blog/BlogGridSection.astro";
+import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
 
 interface Props {
   data?: any;
+  ctaData?: any;
   posts?: any[];
   categories?: any[];
   currentPage?: number;
@@ -23,6 +25,7 @@ interface Props {
 
 const {
   data,
+  ctaData,
   posts = [],
   categories = [],
   currentPage = 1,
@@ -47,4 +50,12 @@ const {
       activeCategory={activeCategory}
     />
   </div>
+  {ctaData && (
+    <ContactCtaSection
+      heading={ctaData.heading}
+      subheading={ctaData.subheading}
+      buttonText={ctaData.buttonText}
+      buttonLink={ctaData.buttonLink}
+    />
+  )}
 </BaseLayout>

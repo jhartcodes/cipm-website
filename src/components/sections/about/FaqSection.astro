@@ -23,8 +23,13 @@ interface Props {
 const { heading, faqs = [] } = Astro.props;
 ---
 
-<Section size="lg">
-  <div class="mx-auto max-w-3xl">
+<Section size="lg" class="relative overflow-hidden">
+  {/* Rotated turquoise shade, coming in from the top right, rotated the other way */}
+  <div
+    class="absolute top-[-8%] right-[-10%] w-[60vw] h-[40vh] bg-turquoise/20 transform -rotate-12 skew-y-6 pointer-events-none z-0"
+    aria-hidden="true"
+  />
+  <div class="mx-auto max-w-3xl relative z-10">
     <Text as="h2" variant="headingLg" align="center">
       {heading || "Frequently Asked Questions"}
     </Text>

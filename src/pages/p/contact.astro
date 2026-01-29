@@ -7,7 +7,7 @@
  */
 
 import { getSanityClient } from "../../lib/sanity/client";
-import { CONTACT_PAGE_QUERY } from "../../lib/sanity/queries";
+import { CONTACT_PAGE_QUERY, CTA_SECTION_QUERY } from "../../lib/sanity/queries";
 import { isPreviewMode, validatePreviewSecret } from "../../lib/preview/cookies";
 import ContactPage from "../../components/pages/ContactPage.astro";
 import PreviewBanner from "../../components/sections/PreviewBanner.astro";
@@ -23,7 +23,8 @@ if (!isPreviewMode(Astro.cookies) || !validatePreviewSecret(Astro.cookies)) {
 // Fetch draft content
 const client = getSanityClient({ preview: true });
 const data = await client.fetch(CONTACT_PAGE_QUERY);
+const ctaData = data?.showCta ? await client.fetch(CTA_SECTION_QUERY) : null;
 ---
 
 <PreviewBanner />
-<ContactPage data={data} preview={true} />
+<ContactPage data={data} ctaData={ctaData} preview={true} />

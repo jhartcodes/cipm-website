@@ -1,14 +1,12 @@
 ---
 /**
  * ContactCtaSection Component (Shared)
- *
- * Generic CTA section that can be used across pages.
- * Features heading, subheading, and call-to-action button.
- * Can be used with or without Container wrapping via useContainer prop.
+ * todo maybe rename to reusable cta section?
+ * Reusable CTA banner for the bottom of pages.
+ * Variant C style: turquoise background, compact spacing, white button.
  */
 
 import Container from "../../layout/Container.astro";
-import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
 import { resolveLink } from "../../../lib/routing/resolveLink";
@@ -18,54 +16,35 @@ interface Props {
   subheading?: string;
   buttonText?: string;
   buttonLink?: any;
-  useContainer?: boolean; // Whether to wrap in Container (default: false for backward compat with shared usage)
 }
 
-const { heading, subheading, buttonText, buttonLink, useContainer = false } = Astro.props;
+const { heading, subheading, buttonText, buttonLink } = Astro.props;
+
+const resolvedHref = resolveLink(buttonLink);
 ---
 
-<Section size="lg">
-  {useContainer ? (
-    <Container>
-      <div class="rounded-2xl bg-navy px-6 py-10 text-center text-white">
-        <Text as="h2" variant="headingLg" tone="inverted">
-          {heading || "Have a property that needs management?"}
-        </Text>
-
-        {subheading && (
-          <Text as="p" variant="body" tone="inverted" class="mt-3">
-            {subheading}
-          </Text>
-        )}
-
-        {buttonText && buttonLink && (
-          <div class="mt-6 flex justify-center">
-            <Button href={resolveLink(buttonLink)} variant="secondary" size="md">
-              {buttonText}
-            </Button>
-          </div>
-        )}
-      </div>
-    </Container>
-  ) : (
-    <div class="rounded-2xl bg-navy px-6 py-10 text-center text-white">
-      <Text as="h2" variant="headingLg" tone="inverted">
+<section class="py-12 lg:py-16 bg-turquoise">
+  <Container>
+    <div class="text-center">
+      <Text as="h2" variant="headingLg" tone="inverted" class="mb-4">
         {heading || "Have a property that needs management?"}
       </Text>
 
-      {subheading && (
-        <Text as="p" variant="body" tone="inverted" class="mt-3">
-          {subheading}
-        </Text>
-      )}
+      {
+        subheading && (
+          <p class="text-white/90 max-w-xl mx-auto mb-8 text-lg leading-relaxed">
+            {subheading}
+          </p>
+        )
+      }
 
-      {buttonText && buttonLink && (
-        <div class="mt-6 flex justify-center">
-          <Button href={resolveLink(buttonLink)} variant="secondary" size="md">
+      {
+        buttonText && resolvedHref && (
+          <Button href={resolvedHref} variant="white" size="lg">
             {buttonText}
           </Button>
-        </div>
-      )}
+        )
+      }
     </div>
-  )}
-</Section>
+  </Container>
+</section>
