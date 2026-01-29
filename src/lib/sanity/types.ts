@@ -234,6 +234,8 @@ export interface HomePage extends SanityDocument {
   _type: "homePage";
   seo?: SeoData;
   hero?: HeroSection;
+  introductionHeadline?: string;
+  introductionText?: string;
   whoWeAreHeading?: string;
   whoWeAreContent?: PortableTextContent;
   whoWeAreImage?: SanityImage;

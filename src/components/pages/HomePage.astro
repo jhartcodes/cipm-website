@@ -8,6 +8,7 @@
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import HeroSection from "../sections/home/HeroSection.astro";
+import IntroductionSection from "../sections/home/IntroductionSection.astro";
 import WhoWeAreSection from "../sections/home/WhoWeAreSection.astro";
 import WhatWeManageSection from "../sections/home/WhatWeManageSection.astro";
 import WhatWeOfferSection from "../sections/home/WhatWeOfferSection.astro";
@@ -24,6 +25,10 @@ const { data, preview = false } = Astro.props;
 
 <BaseLayout title="Home" seo={data?.seo} preview={preview}>
   <HeroSection hero={data?.hero} />
+  <IntroductionSection
+    headline={data?.introductionHeadline}
+    supportingText={data?.introductionText}
+  />
   <WhoWeAreSection
     heading={data?.whoWeAreHeading}
     content={data?.whoWeAreContent}

@@ -79,6 +79,8 @@ export const CTA_SECTION_QUERY = /* groq */ `
 export const HOME_PAGE_QUERY = /* groq */ `
 *[_type == "homePage"][0]{
   ${HERO_PROJECTION},
+  introductionHeadline,
+  introductionText,
   whoWeAreHeading,
   whoWeAreContent,
   whoWeAreImage{
