@@ -16,13 +16,12 @@ import BlogBlocks from "../content/BlogBlocks.astro";
 
 interface Props {
   post: any;
-  preview?: boolean;
 }
 
-const { post, preview = false } = Astro.props;
+const { post } = Astro.props;
 ---
 
-<BaseLayout title={post.title} seo={post.seo} preview={preview}>
+<BaseLayout title={post.title} seo={post.seo}>
   <BlogPostHeroSection
     title={post.title}
     category={post.category}

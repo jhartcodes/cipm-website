@@ -1,20 +1,13 @@
 ---
 /**
- * Services Page (Production - Static)
- *
- * Fetches published content from Sanity at build time.
+ * Services Page
  */
 
-import { getSanityClient } from "../../lib/sanity/client";
+import { loadQuery } from "../../lib/sanity/loadQuery";
 import { SERVICES_PAGE_QUERY } from "../../lib/sanity/queries";
 import ServicesPage from "../../components/pages/ServicesPage.astro";
 
-// Static generation for production
-export const prerender = true;
-
-// Fetch published content
-const client = getSanityClient({ preview: false });
-const data = await client.fetch(SERVICES_PAGE_QUERY);
+const { data } = await loadQuery({ query: SERVICES_PAGE_QUERY });
 ---
 
 <ServicesPage data={data} />

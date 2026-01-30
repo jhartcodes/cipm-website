@@ -1,12 +1,9 @@
 ---
 /**
- * Blog Page (Production - SSR)
- *
- * SSR to handle pagination and category filtering via query params.
- * Fetches published content from Sanity.
+ * Blog Page (SSR for pagination/filtering)
  */
 
-import { getSanityClient } from "../../lib/sanity/client";
+import { loadQuery } from "../../lib/sanity/loadQuery";
 import {
   BLOG_PAGE_QUERY,
   BLOG_LIST_QUERY,
@@ -19,15 +16,17 @@ import BlogPage from "../../components/pages/BlogPage.astro";
 // SSR for pagination/filtering
 export const prerender = false;
 
-// Fetch published content
-const client = getSanityClient({ preview: false });
-
 // Fetch page data, all posts, and categories in parallel
-const [pageData, allPosts, categories, totalCount] = await Promise.all([
-  client.fetch(BLOG_PAGE_QUERY),
-  client.fetch(BLOG_LIST_QUERY),
-  client.fetch(BLOG_CATEGORIES_QUERY),
-  client.fetch(BLOG_COUNT_QUERY),
+const [
+  { data: pageData },
+  { data: allPosts },
+  { data: categories },
+  { data: totalCount },
+] = await Promise.all([
+  loadQuery({ query: BLOG_PAGE_QUERY }),
+  loadQuery({ query: BLOG_LIST_QUERY }),
+  loadQuery({ query: BLOG_CATEGORIES_QUERY }),
+  loadQuery({ query: BLOG_COUNT_QUERY }),
 ]);
 
 // Get pagination params from URL
@@ -54,7 +53,9 @@ const totalPages = Math.ceil(totalFilteredPosts / postsPerPage);
 const startIndex = (currentPage - 1) * postsPerPage;
 const endIndex = startIndex + postsPerPage;
 const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
-const ctaData = pageData?.showCta ? await client.fetch(CTA_SECTION_QUERY) : null;
+const { data: ctaData } = pageData?.showCta
+  ? await loadQuery({ query: CTA_SECTION_QUERY })
+  : { data: null };
 ---
 
 <BlogPage

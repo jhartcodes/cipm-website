@@ -7,10 +7,9 @@
 
 import { createImageUrlBuilder } from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import { getSanityClient } from "./client";
+import { sanityClient } from "sanity:client";
 
-const client = getSanityClient();
-const builder = createImageUrlBuilder(client);
+const builder = createImageUrlBuilder(sanityClient);
 
 /**
  * Get image URL builder for a Sanity image

@@ -2,7 +2,6 @@
 /**
  * BlogPage Component
  *
- * Shared component for both production and preview routes.
  * Receives data as props (fetched by the route).
  */
 
@@ -20,7 +19,6 @@ interface Props {
   currentPage?: number;
   totalPages?: number;
   activeCategory?: string;
-  preview?: boolean;
 }
 
 const {
@@ -31,16 +29,12 @@ const {
   currentPage = 1,
   totalPages = 1,
   activeCategory,
-  preview = false,
 } = Astro.props;
 ---
 
-<BaseLayout title="Blog" seo={data?.seo} preview={preview}>
+<BaseLayout title="Blog" seo={data?.seo}>
   <HeroSection hero={data?.hero} defaultHeading="Blog" />
-  <BlogIntroSection
-    heading={data?.heading}
-    intro={data?.introText}
-  />
+  <BlogIntroSection heading={data?.heading} intro={data?.introText} />
   <div transition:name="blog-grid" transition:animate="initial">
     <BlogGridSection
       posts={posts}
@@ -50,12 +44,15 @@ const {
       activeCategory={activeCategory}
     />
   </div>
-  {ctaData && (
-    <ContactCtaSection
-      heading={ctaData.heading}
-      subheading={ctaData.subheading}
-      buttonText={ctaData.buttonText}
-      buttonLink={ctaData.buttonLink}
-    />
-  )}
+
+  {
+    ctaData && (
+      <ContactCtaSection
+        heading={ctaData.heading}
+        subheading={ctaData.subheading}
+        buttonText={ctaData.buttonText}
+        buttonLink={ctaData.buttonLink}
+      />
+    )
+  }
 </BaseLayout>

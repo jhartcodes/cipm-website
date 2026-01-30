@@ -1,22 +1,19 @@
 ---
 /**
- * Contact Page (Production - SSR)
- *
- * SSR to handle form success query param.
- * Fetches published content from Sanity.
+ * Contact Page (SSR for form handling)
  */
 
-import { getSanityClient } from "../lib/sanity/client";
+import { loadQuery } from "../lib/sanity/loadQuery";
 import { CONTACT_PAGE_QUERY, CTA_SECTION_QUERY } from "../lib/sanity/queries";
 import ContactPage from "../components/pages/ContactPage.astro";
 
 // SSR for form handling
 export const prerender = false;
 
-// Fetch published content
-const client = getSanityClient({ preview: false });
-const data = await client.fetch(CONTACT_PAGE_QUERY);
-const ctaData = data?.showCta ? await client.fetch(CTA_SECTION_QUERY) : null;
+const { data } = await loadQuery({ query: CONTACT_PAGE_QUERY });
+const { data: ctaData } = data?.showCta
+  ? await loadQuery({ query: CTA_SECTION_QUERY })
+  : { data: null };
 ---
 
 <ContactPage data={data} ctaData={ctaData} />

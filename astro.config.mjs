@@ -1,13 +1,25 @@
 import { defineConfig } from "astro/config";
 import netlify from "@astrojs/netlify";
 import tailwindcss from "@tailwindcss/vite";
+import sanity from "@sanity/astro";
+import react from "@astrojs/react";
 
 export default defineConfig({
-  // Use "static" (default in Astro 5) - pages prerender by default
-  // Pages that need SSR (like preview) use: export const prerender = false
   output: "static",
   adapter: netlify(),
   vite: {
     plugins: [tailwindcss()],
   },
+  integrations: [
+    sanity({
+      projectId: "sv0c67ot",
+      dataset: "production",
+      useCdn: false,
+      apiVersion: "2026-01-01",
+      stega: {
+        studioUrl: "https://cipm.sanity.studio",
+      },
+    }),
+    react(),
+  ],
 });

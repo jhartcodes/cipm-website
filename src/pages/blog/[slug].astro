@@ -5,49 +5,17 @@
 
 export const prerender = false;
 
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Container from "../../components/layout/Container.astro";
-import Section from "../../components/layout/Section.astro";
-import Text from "../../components/ui/Text.astro";
-import RichText from "../../components/content/RichText.astro";
-import { getSanityClient } from "../../lib/sanity/client";
+import { loadQuery } from "../../lib/sanity/loadQuery";
 import { BLOG_POST_QUERY } from "../../lib/sanity/queries";
-import { isPreviewMode } from "../../lib/preview/cookies";
+import BlogPostPage from "../../components/pages/BlogPostPage.astro";
 
 const { slug } = Astro.params;
 
-const preview = isPreviewMode(Astro.cookies);
-const client = getSanityClient({ preview });
-
-const post = await client.fetch(BLOG_POST_QUERY, { slug });
+const { data: post } = await loadQuery({ query: BLOG_POST_QUERY, params: { slug } });
 
 if (!post) {
   return Astro.redirect("/404");
 }
 ---
 
-<BaseLayout title={post.title} seo={post.seo}>
-  <Section size="xl">
-    <Container class="max-w-3xl">
-      <Text as="h1" variant="displayLg">
-        {post.title}
-      </Text>
-
-      {post.publishedAt && (
-        <Text as="p" variant="small" class="mt-4 text-gray-500">
-          {new Date(post.publishedAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </Text>
-      )}
-
-      {post.content && (
-        <div class="mt-8">
-          <RichText content={post.content} />
-        </div>
-      )}
-    </Container>
-  </Section>
-</BaseLayout>
+<BlogPostPage post={post} />

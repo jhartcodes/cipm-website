@@ -6,61 +6,35 @@
  * Fetches global chrome data (navigation, footer, site settings)
  * Provides consistent SEO, navigation, and footer
  *
- * Architecture Rules:
- * - Fetches global data once at layout level
- * - Passes data down to components
- * - Pages only fetch page-specific data
- *
- * Preview Mode:
- * - Static pages (prerender=true): Pass preview={false} explicitly
- * - SSR pages (prerender=false): Omit preview prop to auto-detect from cookies
+ * Visual Editing:
+ * - Uses loadQuery() for draft-aware data fetching
+ * - VisualEditing component enables click-to-edit overlays
+ * - Controlled by PUBLIC_SANITY_VISUAL_EDITING_ENABLED env var
  */
 
+import { VisualEditing } from "@sanity/astro/visual-editing";
 import { ViewTransitions } from "astro:transitions";
-import { getSanityClient } from "../lib/sanity/client";
+import { loadQuery } from "../lib/sanity/loadQuery";
 import { GLOBAL_CHROME_QUERY } from "../lib/sanity/queries";
-import { isPreviewMode } from "../lib/preview/cookies";
 import SeoHead from "../components/seo/SeoHead.astro";
 import TopRibbon from "../components/sections/TopRibbon.astro";
 import Navigation from "../components/sections/Navigation.astro";
 import Footer from "../components/sections/Footer.astro";
 import "../styles/global.css";
 
+const visualEditingEnabled =
+  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
+
 interface Props {
   title?: string;
   description?: string;
   seo?: any;
   class?: string;
-  /**
-   * Override preview mode detection.
-   * - Pass `false` for static/prerendered pages
-   * - Omit to auto-detect from cookies (SSR only)
-   */
-  preview?: boolean;
 }
 
-const { title, description, seo, class: className, preview: previewProp } = Astro.props;
+const { title, description, seo, class: className } = Astro.props;
 
-// Determine preview mode:
-// - If explicitly passed, use that value
-// - Otherwise, try to detect from cookies (only works in SSR)
-let preview = false;
-if (typeof previewProp === "boolean") {
-  preview = previewProp;
-} else {
-  // Only check cookies in SSR context (when not prerendering)
-  try {
-    preview = isPreviewMode(Astro.cookies);
-  } catch {
-    // Cookies not available (prerendered page) - default to no preview
-    preview = false;
-  }
-}
-
-const client = getSanityClient({ preview });
-
-// Fetch global chrome data
-const globalData = await client.fetch(GLOBAL_CHROME_QUERY);
+const { data: globalData } = await loadQuery({ query: GLOBAL_CHROME_QUERY });
 const { site, nav, topRibbon, footer } = globalData;
 ---
 
@@ -91,5 +65,7 @@ const { site, nav, topRibbon, footer } = globalData;
     </main>
 
     <Footer data={footer} transition:persist />
+
+    <VisualEditing enabled={visualEditingEnabled} />
   </body>
 </html>

@@ -1,20 +1,13 @@
 ---
 /**
- * Home Page (Production - Static)
- * 
- * Fetches published content from Sanity at build time
+ * Home Page
  */
 
-import { getSanityClient } from "../lib/sanity/client";
+import { loadQuery } from "../lib/sanity/loadQuery";
 import { HOME_PAGE_QUERY } from "../lib/sanity/queries";
 import HomePage from "../components/pages/HomePage.astro";
 
-// Static generation for production
-export const prerender = true;
-
-// Fetch published content
-const client = getSanityClient({ preview: false });
-const data = await client.fetch(HOME_PAGE_QUERY);
+const { data } = await loadQuery({ query: HOME_PAGE_QUERY });
 ---
 
 <HomePage data={data} />

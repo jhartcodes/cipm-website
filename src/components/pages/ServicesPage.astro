@@ -2,7 +2,6 @@
 /**
  * ServicesPage Component
  *
- * Shared component for both production and preview routes.
  * Receives data as props (fetched by the route).
  */
 
@@ -14,13 +13,12 @@ import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
 
 interface Props {
   data?: any;
-  preview?: boolean;
 }
 
-const { data, preview = false } = Astro.props;
+const { data } = Astro.props;
 ---
 
-<BaseLayout title="Our Services" seo={data?.seo} preview={preview}>
+<BaseLayout title="Our Services" seo={data?.seo}>
   <HeroSection hero={data?.hero} defaultHeading="Our Services" />
   <IntroSection
     heading={data?.introHeading}

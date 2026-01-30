@@ -1,21 +1,16 @@
 ---
 /**
- * About Page (Production - Static)
- *
- * Fetches published content from Sanity at build time.
+ * About Page
  */
 
-import { getSanityClient } from "../lib/sanity/client";
+import { loadQuery } from "../lib/sanity/loadQuery";
 import { ABOUT_PAGE_QUERY, CTA_SECTION_QUERY } from "../lib/sanity/queries";
 import AboutPage from "../components/pages/AboutPage.astro";
 
-// Static generation for production
-export const prerender = true;
-
-// Fetch published content
-const client = getSanityClient({ preview: false });
-const data = await client.fetch(ABOUT_PAGE_QUERY);
-const ctaData = data?.showCta ? await client.fetch(CTA_SECTION_QUERY) : null;
+const { data } = await loadQuery({ query: ABOUT_PAGE_QUERY });
+const { data: ctaData } = data?.showCta
+  ? await loadQuery({ query: CTA_SECTION_QUERY })
+  : { data: null };
 ---
 
 <AboutPage data={data} ctaData={ctaData} />

@@ -10,17 +10,12 @@ import Container from "../../components/layout/Container.astro";
 import Section from "../../components/layout/Section.astro";
 import Text from "../../components/ui/Text.astro";
 import RichText from "../../components/content/RichText.astro";
-import { getSanityClient } from "../../lib/sanity/client";
-import { isPreviewMode } from "../../lib/preview/cookies";
+import { loadQuery } from "../../lib/sanity/loadQuery";
 
 const { slug } = Astro.params;
 
-const preview = isPreviewMode(Astro.cookies);
-const client = getSanityClient({ preview });
-
-// Fetch individual service
-const service = await client.fetch(
-  `*[_type == "service" && slug.current == $slug][0]{
+const { data: service } = await loadQuery({
+  query: `*[_type == "service" && slug.current == $slug][0]{
     title,
     slug,
     shortDescription,
@@ -28,8 +23,8 @@ const service = await client.fetch(
     image,
     seo
   }`,
-  { slug }
-);
+  params: { slug },
+});
 
 if (!service) {
   return Astro.redirect("/404");

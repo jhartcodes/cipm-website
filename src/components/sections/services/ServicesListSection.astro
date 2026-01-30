@@ -3,12 +3,13 @@
  * ServicesListSection Component
  *
  * Displays services in an alternating left/right layout.
- * Each service has title, description, bullet points, image, and optional link.
+ * Variant C style with card wrappers and navy icon boxes.
  */
 
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
+import Icon from "../../ui/Icon.astro";
 import SanityImage from "../../content/SanityImage.astro";
 import { resolveLink } from "../../../lib/routing/resolveLink";
 
@@ -29,63 +30,67 @@ const { services = [] } = Astro.props;
 ---
 
 <Section size="lg">
-  <div class="space-y-16 md:space-y-24">
+  <div class="space-y-12 md:space-y-16">
     {services.map((service, index) => {
       const isReversed = index % 2 === 1;
       return (
-        <div class={`grid gap-8 md:grid-cols-2 md:items-center ${isReversed ? 'md:[&>*:first-child]:order-2' : ''}`}>
-          <div>
-            {service.title && (
-              <Text as="h3" variant="headingLg">
-                {service.title}
-              </Text>
-            )}
+        <div class="bg-white rounded-lg p-8 shadow-md border border-gray-200">
+          <div class={`grid gap-8 md:grid-cols-2 md:items-center ${isReversed ? 'md:[&>*:first-child]:order-2' : ''}`}>
+            <div>
+              {service.title && (
+                <Text as="h3" variant="headingLg" class="text-xl font-bold text-navy">
+                  {service.title}
+                </Text>
+              )}
 
-            {service.shortDescription && (
-              <Text as="p" variant="body" class="mt-4 text-gray-600">
-                {service.shortDescription}
-              </Text>
-            )}
+              {service.shortDescription && (
+                <Text as="p" variant="body" class="mt-4 text-gray-600">
+                  {service.shortDescription}
+                </Text>
+              )}
 
-            {service.bulletPoints && service.bulletPoints.length > 0 && (
-              <ul class="mt-4 space-y-2">
-                {service.bulletPoints.map((point) => (
-                  <li class="flex items-start gap-2">
-                    <span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-turquoise"></span>
-                    <Text as="span" variant="body" class="text-gray-600">
-                      {point}
-                    </Text>
-                  </li>
-                ))}
-              </ul>
-            )}
+              {service.bulletPoints && service.bulletPoints.length > 0 && (
+                <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+                  {service.bulletPoints.map((point) => (
+                    <li class="flex items-start gap-3">
+                      <span class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-turquoise/10 flex items-center justify-center">
+                        <Icon name="check" size={12} class="text-turquoise" />
+                      </span>
+                      <Text as="span" variant="body" class="text-gray-600">
+                        {point}
+                      </Text>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-            {service.enableDetailPage && service.slug?.current && (
-              <div class="mt-6">
-                <Button
-                  href={resolveLink({
-                    linkType: "internal",
-                    internalLink: { _type: "service", slug: service.slug }
-                  })}
-                  variant="outline"
-                  size="md"
-                >
-                  Learn more
-                </Button>
+              {service.enableDetailPage && service.slug?.current && (
+                <div class="mt-6">
+                  <Button
+                    href={resolveLink({
+                      linkType: "internal",
+                      internalLink: { _type: "service", slug: service.slug }
+                    })}
+                    variant="outline"
+                    size="md"
+                  >
+                    Learn more
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {service.image && (
+              <div>
+                <SanityImage
+                  image={service.image}
+                  alt={service.image?.alt || service.title || "Service image"}
+                  width={700}
+                  class="w-full rounded-lg"
+                />
               </div>
             )}
           </div>
-
-          {service.image && (
-            <div>
-              <SanityImage
-                image={service.image}
-                alt={service.image?.alt || service.title || "Service image"}
-                width={700}
-                class="w-full rounded-2xl"
-              />
-            </div>
-          )}
         </div>
       );
     })}
