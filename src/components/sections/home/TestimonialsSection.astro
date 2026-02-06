@@ -1,5 +1,11 @@
 ---
-import Container from "../../layout/Container.astro";
+/**
+ * TestimonialsSection Component
+ *
+ * Displays client testimonials in a grid.
+ * Uses Section's built-in Container - do not nest another Container.
+ */
+
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import SanityImage from "../../content/SanityImage.astro";
@@ -20,50 +26,48 @@ const { heading, testimonials = [] } = Astro.props;
 ---
 
 <Section size="lg" tone="default">
-  <Container>
-    <Text as="h2" variant="headingLg" align="center">
-      {heading || "What Our Clients Say"}
-    </Text>
+  <Text as="h2" variant="headingLg" align="center">
+    {heading || "What Our Clients Say"}
+  </Text>
 
-    {testimonials.length > 0 && (
-      <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {testimonials.map((item) => (
-          <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md hover:border-turquoise transition-colors">
-            {/* Turquoise quote mark */}
-            <span class="text-4xl text-turquoise font-serif leading-none" aria-hidden="true">"</span>
+  {testimonials.length > 0 && (
+    <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {testimonials.map((item) => (
+        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md hover:border-turquoise transition-colors">
+          {/* Turquoise quote mark */}
+          <span class="text-4xl text-turquoise font-serif leading-none" aria-hidden="true">"</span>
 
-            {item.quote && (
-              <Text as="p" variant="body" class="text-sm text-gray-700 mt-2">
-                {item.quote}
-              </Text>
+          {item.quote && (
+            <Text as="p" variant="body" class="text-sm text-gray-700 mt-2">
+              {item.quote}
+            </Text>
+          )}
+
+          <div class="mt-4 flex items-center gap-3">
+            {item.image && (
+              <SanityImage
+                image={item.image}
+                alt={item.authorName || ""}
+                width={64}
+                height={64}
+                class="h-10 w-10 rounded-full object-cover"
+              />
             )}
-
-            <div class="mt-4 flex items-center gap-3">
-              {item.image && (
-                <SanityImage
-                  image={item.image}
-                  alt={item.authorName || ""}
-                  width={64}
-                  height={64}
-                  class="h-10 w-10 rounded-full object-cover"
-                />
+            <div>
+              {item.authorName && (
+                <Text as="p" variant="body" class="text-sm text-navy font-semibold">
+                  {item.authorName}
+                </Text>
               )}
-              <div>
-                {item.authorName && (
-                  <Text as="p" variant="body" class="text-sm text-navy font-semibold">
-                    {item.authorName}
-                  </Text>
-                )}
-                {item.authorTitle && (
-                  <Text as="p" variant="small" class="text-xs text-gray-500">
-                    {item.authorTitle}
-                  </Text>
-                )}
-              </div>
+              {item.authorTitle && (
+                <Text as="p" variant="small" class="text-xs text-gray-500">
+                  {item.authorTitle}
+                </Text>
+              )}
             </div>
           </div>
-        ))}
-      </div>
-    )}
-  </Container>
+        </div>
+      ))}
+    </div>
+  )}
 </Section>

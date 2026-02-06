@@ -3,9 +3,10 @@ interface Props {
   size?: "narrow" | "base" | "wide";
   bleed?: boolean; // removes max-width for full-bleed content
   class?: string;
+  id?: string;
 }
 
-const { size = "base", bleed = false, class: className } = Astro.props;
+const { size = "base", bleed = false, class: className, id } = Astro.props;
 
 const maxWidthClasses = {
   narrow: "max-w-3xl", // ~768px
@@ -24,6 +25,6 @@ const classes = [
   .join(" ");
 ---
 
-<div class={classes}>
+<div class={classes} id={id}>
   <slot />
 </div>

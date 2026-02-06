@@ -1,45 +1,77 @@
 ---
-import Container from './Container.astro';
+/**
+ * Section Component
+ *
+ * Standard page section wrapper with vertical padding and background tones.
+ *
+ * IMPORTANT: Section already includes Container internally.
+ * Do NOT nest another Container inside Section - this causes double horizontal padding.
+ *
+ * @example Correct usage:
+ * ```astro
+ * <Section size="lg" tone="muted">
+ *   <div class="grid md:grid-cols-2">
+ *     <!-- content -->
+ *   </div>
+ * </Section>
+ * ```
+ *
+ * @example For narrow content, use containerSize prop:
+ * ```astro
+ * <Section size="lg" containerSize="narrow">
+ *   <!-- content constrained to max-w-3xl -->
+ * </Section>
+ * ```
+ *
+ * @example For custom backgrounds, use raw <section> + Container instead:
+ * ```astro
+ * <section class="py-12 bg-turquoise">
+ *   <Container>
+ *     <!-- content -->
+ *   </Container>
+ * </section>
+ * ```
+ */
 
-type SectionSize = 'sm' | 'md' | 'lg';
-type SectionTone = 'default' | 'muted' | 'inverted';
-type ContainerSize = 'narrow' | 'base' | 'wide';
+import Container from "./Container.astro";
+
+type SectionSize = "sm" | "md" | "lg";
+type SectionTone = "default" | "muted" | "inverted";
+type ContainerSize = "narrow" | "base" | "wide";
 
 interface Props {
   size?: SectionSize;
   tone?: SectionTone; // background color: default (white), muted (gray), inverted (navy)
-  containerSize?: ContainerSize;
+  containerSize?: ContainerSize; // width constraint: narrow (max-w-3xl), base (max-w-6xl), wide (max-w-7xl)
   bleed?: boolean; // removes max-width constraint
   id?: string;
   class?: string;
 }
 
 const {
-  size = 'md',
-  tone = 'default',
-  containerSize = 'wide',
+  size = "md",
+  tone = "default",
+  containerSize = "wide",
   bleed = false,
   id,
   class: className,
 } = Astro.props;
 
 const sizeClasses: Record<SectionSize, string> = {
-  sm: 'py-8 md:py-12',
-  md: 'py-12 md:py-16 lg:py-20',
-  lg: 'py-16 md:py-24 lg:py-32',
+  sm: "py-6 md:py-10 lg:py-12",
+  md: "py-8 md:py-12 lg:py-16",
+  lg: "py-10 md:py-18 lg:py-24",
 };
 
 const toneClasses: Record<SectionTone, string> = {
-  default: 'bg-white',
-  muted: 'bg-gray-50',
-  inverted: 'bg-navy text-white',
+  default: "bg-white",
+  muted: "bg-gray-50",
+  inverted: "bg-navy text-white",
 };
 
-const classes = [
-  sizeClasses[size],
-  toneClasses[tone],
-  className,
-].filter(Boolean).join(' ');
+const classes = [sizeClasses[size], toneClasses[tone], className]
+  .filter(Boolean)
+  .join(" ");
 ---
 
 <section id={id} class={classes}>

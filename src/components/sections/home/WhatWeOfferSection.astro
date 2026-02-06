@@ -1,5 +1,11 @@
 ---
-import Container from "../../layout/Container.astro";
+/**
+ * WhatWeOfferSection Component
+ *
+ * Displays featured services in a grid.
+ * Uses Section's built-in Container - do not nest another Container.
+ */
+
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
@@ -24,8 +30,7 @@ const { heading, intro, services = [] } = Astro.props;
 ---
 
 <Section size="lg">
-  <Container>
-    <Text as="h2" variant="headingLg">
+  <Text as="h2" variant="headingLg">
       {heading || "What We Offer"}
     </Text>
 
@@ -71,5 +76,4 @@ const { heading, intro, services = [] } = Astro.props;
         ))}
       </div>
     )}
-  </Container>
 </Section>

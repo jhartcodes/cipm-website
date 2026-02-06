@@ -4,10 +4,10 @@
  *
  * Page assembly for individual blog posts.
  * Composes hero, featured image, content blocks, and back link.
+ * Uses Section's containerSize prop - do not nest another Container.
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Container from "../layout/Container.astro";
 import Section from "../layout/Section.astro";
 import Button from "../ui/Button.astro";
 import BlogPostHeroSection from "../sections/blog/BlogPostHeroSection.astro";
@@ -34,19 +34,17 @@ const { post } = Astro.props;
     alt={post.featuredImage?.alt || post.title}
   />
 
-  <Section size="lg">
-    <Container class="max-w-3xl">
-      {post.content && Array.isArray(post.content) && post.content.length > 0 && (
-        <article class="richtext">
-          <BlogBlocks blocks={post.content} />
-        </article>
-      )}
+  <Section size="lg" containerSize="narrow">
+    {post.content && Array.isArray(post.content) && post.content.length > 0 && (
+      <article class="richtext">
+        <BlogBlocks blocks={post.content} />
+      </article>
+    )}
 
-      <div class="mt-16 pt-8 border-t border-gray-200">
-        <Button href="/blog" variant="outline" size="md">
-          &larr; Back to Blog
-        </Button>
-      </div>
-    </Container>
+    <div class="mt-16 pt-8 border-t border-gray-200">
+      <Button href="/blog" variant="outline" size="md">
+        &larr; Back to Blog
+      </Button>
+    </div>
   </Section>
 </BaseLayout>

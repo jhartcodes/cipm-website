@@ -4,9 +4,9 @@
  *
  * Displays property types managed by CIPM.
  * Each property type is a referenced document with image, title, and description.
+ * Uses Section's built-in Container - do not nest another Container.
  */
 
-import Container from "../../layout/Container.astro";
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import PortableText from "../../PortableText.astro";
@@ -31,8 +31,7 @@ const { heading, content, propertyTypes = [] } = Astro.props;
 ---
 
 <Section size="lg">
-  <Container>
-    <div class="text-center max-w-2xl mx-auto">
+  <div class="text-center max-w-2xl mx-auto">
       <Text as="h2" variant="headingLg">
         {heading || "What We Manage"}
       </Text>
@@ -94,5 +93,4 @@ const { heading, content, propertyTypes = [] } = Astro.props;
         ))}
       </div>
     )}
-  </Container>
 </Section>

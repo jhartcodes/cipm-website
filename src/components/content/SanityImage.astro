@@ -22,6 +22,7 @@ interface Props {
   sizes?: string;
   quality?: number;
   loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
   class?: string;
 }
 
@@ -33,6 +34,7 @@ const {
   sizes = '100vw',
   quality = 80,
   loading = 'lazy',
+  fetchpriority,
   class: className,
 } = Astro.props;
 
@@ -61,5 +63,7 @@ const src = getImageUrl(image, width, quality);
   width={aspectWidth}
   height={aspectHeight}
   loading={loading}
-  class={className}
+  decoding="async"
+  fetchpriority={fetchpriority ?? (loading === 'eager' ? 'high' : undefined)}
+  class:list={["max-w-full h-auto", className]}
 />

@@ -54,7 +54,9 @@ hero{
   subheading,
   backgroundImage{
     asset,
-    alt
+    alt,
+    hotspot,
+    crop
   }
 }
 `;
@@ -85,7 +87,9 @@ export const HOME_PAGE_QUERY = /* groq */ `
   whoWeAreContent,
   whoWeAreImage{
     asset,
-    alt
+    alt,
+    hotspot,
+    crop
   },
   whatWeManageHeading,
   whatWeManageContent,
@@ -95,7 +99,9 @@ export const HOME_PAGE_QUERY = /* groq */ `
     shortDescription,
     image{
       asset,
-      alt
+      alt,
+      hotspot,
+      crop
     },
     icon{
       asset,
@@ -111,7 +117,9 @@ export const HOME_PAGE_QUERY = /* groq */ `
     shortDescription,
     image{
       asset,
-      alt
+      alt,
+      hotspot,
+      crop
     },
     enableDetailPage
   },
@@ -120,7 +128,12 @@ export const HOME_PAGE_QUERY = /* groq */ `
     quote,
     authorName,
     authorTitle,
-    image
+    image{
+      asset,
+      alt,
+      hotspot,
+      crop
+    }
   },
   contactHeading,
   contactSubheading,
@@ -145,7 +158,9 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
   ourStoryContent,
   ourStoryImage{
     asset,
-    alt
+    alt,
+    hotspot,
+    crop
   },
   teamHeading,
   teamIntro,
@@ -154,7 +169,9 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
     title,
     headshot{
       asset,
-      alt
+      alt,
+      hotspot,
+      crop
     },
     bio
   },
@@ -180,7 +197,9 @@ export const SERVICES_PAGE_QUERY = /* groq */ `
     bulletPoints,
     image{
       asset,
-      alt
+      alt,
+      hotspot,
+      crop
     },
     enableDetailPage
   },
@@ -247,7 +266,9 @@ export const BLOG_LIST_QUERY = /* groq */ `
   excerpt,
   featuredImage{
     asset,
-    alt
+    alt,
+    hotspot,
+    crop
   },
   author,
   showAuthor,
@@ -269,7 +290,12 @@ export const BLOG_POST_QUERY = /* groq */ `
   slug,
   publishedAt,
   excerpt,
-  featuredImage,
+  featuredImage{
+    asset,
+    alt,
+    hotspot,
+    crop
+  },
   author,
   showAuthor,
   category->{

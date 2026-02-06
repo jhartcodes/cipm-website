@@ -12,7 +12,7 @@
  * - Supports inline images and link annotations
  */
 
-import { getImageUrl } from "../../lib/sanity/image";
+import { getImageUrl, getImageSrcSet, getImageDimensions } from "../../lib/sanity/image";
 import { resolveLink } from "../../lib/routing/resolveLink";
 
 interface Props {
@@ -118,13 +118,15 @@ function renderPortableText(blocks: any[]): string {
 
       // Inline image block
       if (block._type === "image" && block.asset) {
-        const imageUrl = getImageUrl(block.asset, 800);
+        const imageUrl = getImageUrl(block, 800);
+        const srcSet = getImageSrcSet(block, [400, 800, 1200], 80);
+        const dims = getImageDimensions(block);
         const alt = block.alt || "";
         const caption = block.caption || "";
 
         return `
           <figure class="my-6">
-            <img src="${imageUrl}" alt="${escapeHtml(alt)}" class="rounded-lg" loading="lazy" />
+            <img src="${imageUrl}" srcset="${srcSet}" sizes="100vw" alt="${escapeHtml(alt)}"${dims ? ` width="${dims.width}" height="${dims.height}"` : ""} class="rounded-lg" loading="lazy" decoding="async" />
             ${caption ? `<figcaption class="mt-2 text-sm text-gray-600 text-center">${escapeHtml(caption)}</figcaption>` : ""}
           </figure>
         `;
@@ -168,9 +170,9 @@ function renderChildren(children: any[], markDefs: any[] = []): string {
 
       // Inline image (within text)
       if (child._type === "image" && child.asset) {
-        const imageUrl = getImageUrl(child.asset, 400);
+        const imageUrl = getImageUrl(child, 400);
         const alt = child.alt || "";
-        return `<img src="${imageUrl}" alt="${escapeHtml(alt)}" class="inline-image" loading="lazy" />`;
+        return `<img src="${imageUrl}" alt="${escapeHtml(alt)}" class="inline-image" loading="lazy" decoding="async" />`;
       }
 
       return "";
