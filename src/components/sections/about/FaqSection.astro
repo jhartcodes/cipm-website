@@ -48,12 +48,12 @@ const { heading, faqs = [] } = Astro.props;
   /**
    * Accordion Controller
    * Single-open behavior with keyboard navigation
+   * Uses data-expanded attribute for CSS Grid height transitions
    */
   (function() {
     const groups = document.querySelectorAll('[data-accordion-group]');
 
     groups.forEach((group) => {
-      const items = group.querySelectorAll('[data-accordion-item]');
       const buttons = group.querySelectorAll('[data-accordion-trigger]');
 
       // Single-open: close others when one opens
@@ -68,7 +68,7 @@ const { heading, faqs = [] } = Astro.props;
               const otherId = otherButton.getAttribute('aria-controls');
               const otherContent = document.getElementById(otherId || '');
               if (otherContent) {
-                otherContent.hidden = true;
+                otherContent.setAttribute('data-expanded', 'false');
               }
             }
           });
@@ -77,8 +77,9 @@ const { heading, faqs = [] } = Astro.props;
           const contentId = button.getAttribute('aria-controls');
           const content = document.getElementById(contentId || '');
           if (content) {
-            button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-            content.hidden = isExpanded;
+            const newState = !isExpanded;
+            button.setAttribute('aria-expanded', String(newState));
+            content.setAttribute('data-expanded', String(newState));
           }
         });
       });

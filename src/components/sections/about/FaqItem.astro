@@ -5,6 +5,9 @@
  * Accordion-style FAQ item with question and answer.
  * Variant A design with generous padding and shadow.
  * Uses button/div pattern with ARIA for accessibility.
+ *
+ * Uses CSS Grid transition (grid-template-rows: 0fr -> 1fr) for smooth
+ * height animation without JavaScript height calculations.
  */
 
 import Text from "../../ui/Text.astro";
@@ -37,7 +40,7 @@ const getPlainText = (value: string | any[] | undefined): string => {
 const contentId = `${id}-content`;
 ---
 
-<div class="rounded-2xl bg-white shadow-lg overflow-hidden" data-accordion-item>
+<div class="rounded-2xl bg-white shadow-lg" data-accordion-item>
   <button
     type="button"
     class="w-full flex items-center justify-between gap-4 px-8 py-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-turquoise focus-visible:ring-inset"
@@ -49,7 +52,7 @@ const contentId = `${id}-content`;
       {getPlainText(question) || "Question"}
     </Text>
     <span
-      class="flex-shrink-0 text-turquoise transition-transform duration-200"
+      class="flex-shrink-0 text-turquoise transition-transform duration-300 ease-out"
       aria-hidden="true"
       data-accordion-icon
     >
@@ -57,21 +60,26 @@ const contentId = `${id}-content`;
     </span>
   </button>
 
+  <!-- Grid wrapper for smooth height transition -->
   <div
     id={contentId}
     role="region"
     aria-labelledby={id}
-    hidden
-    class="px-8 pb-6"
+    class="accordion-content grid transition-[grid-template-rows] duration-300 ease-out"
     data-accordion-content
   >
-    {isPortableText(answer) ? (
-      <PortableTextRenderer value={answer} class="richtext text-gray-600 leading-relaxed" />
-    ) : (
-      <Text as="p" variant="body" class="text-gray-600 leading-relaxed">
-        {answer || "Answer"}
-      </Text>
-    )}
+    <!-- Inner wrapper with overflow hidden for the animation -->
+    <div class="overflow-hidden">
+      <div class="px-8 pb-6">
+        {isPortableText(answer) ? (
+          <PortableTextRenderer value={answer} class="richtext text-gray-600 leading-relaxed" />
+        ) : (
+          <Text as="p" variant="body" class="text-gray-600 leading-relaxed">
+            {answer || "Answer"}
+          </Text>
+        )}
+      </div>
+    </div>
   </div>
 </div>
 
@@ -79,5 +87,19 @@ const contentId = `${id}-content`;
   /* Rotate chevron when expanded */
   [aria-expanded="true"] [data-accordion-icon] {
     transform: rotate(180deg);
+  }
+
+  /* CSS Grid height animation technique */
+  .accordion-content {
+    grid-template-rows: 0fr;
+  }
+
+  .accordion-content[data-expanded="true"] {
+    grid-template-rows: 1fr;
+  }
+
+  /* The direct child needs min-height: 0 for the grid animation to work */
+  .accordion-content > div {
+    min-height: 0;
   }
 </style>
