@@ -1,0 +1,87 @@
+---
+/**
+ * SecondaryHeroSection Component (Shared)
+ *
+ * Simple, compact hero with gray background and H1 title.
+ * Includes a decorative CubeHouse mark that animates on load.
+ */
+
+import { Image } from "astro:assets";
+import Container from "../../layout/Container.astro";
+import Text from "../../ui/Text.astro";
+import CubeHouse from "../../../assets/cube-house.svg";
+
+interface Props {
+  title: string;
+  class?: string;
+}
+
+const { title, class: className } = Astro.props;
+---
+
+<section
+  class={`relative overflow-hidden  min-h-[30vh] md:min-h-[40vh] lg:min-h-[50vh] max-h-120 bg-gray-50 py-16 lg:py-20 ${className ?? ""}`}
+>
+  <Container>
+    <div class="relative z-10 max-w-3xl">
+      <Text as="h1" variant="hero">
+        {title}
+      </Text>
+    </div>
+  </Container>
+
+  <Image
+    src={CubeHouse}
+    alt=""
+    aria-hidden="true"
+    class="hero-cube"
+    loading="eager"
+    width={384}
+    height={384}
+  />
+</section>
+
+<style>
+  .hero-cube {
+    position: absolute;
+    right: -4%;
+    bottom: calc(-10% + 80px);
+    width: 10.5rem;
+    opacity: 0.9;
+    pointer-events: none;
+    transform-origin: center;
+    animation: cube-enter 1.2s ease-out both;
+  }
+
+  @media (min-width: 768px) {
+    .hero-cube {
+      width: 13.5rem;
+      bottom: calc(-12% + 80px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-cube {
+      width: 18rem;
+      bottom: calc(-14% + 80px);
+    }
+  }
+
+  @keyframes cube-enter {
+    0% {
+      transform: translate(30%, -10%) rotate(-40deg);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0.9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cube {
+      animation: none;
+      transform: translate(0, 0) rotate(0deg);
+    }
+  }
+</style>

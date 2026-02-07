@@ -6,9 +6,11 @@
  * Uses Section's built-in Container - do not nest another Container.
  */
 
+import { Image } from "astro:assets";
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
+import CubeHouse from "../../../assets/cube-house.svg";
 
 interface Props {
   hero?: {
@@ -27,7 +29,7 @@ const { hero } = Astro.props;
   id="hero-section"
   size="md"
   tone="inverted"
-  class="relative overflow-hidden min-h-[60vh] flex"
+  class="relative overflow-hidden sm:min-h-[30vh] lg:min-h-[60vh] max-h-200 flex"
 >
   <div
     class="absolute bottom-0 right-0 w-2/3 h-1/2 bg-turquoise/20 transform skew-y-6 translate-y-1/4"
@@ -60,4 +62,59 @@ const { hero } = Astro.props;
       }
     </div>
   </div>
+
+  <Image
+    src={CubeHouse}
+    alt=""
+    aria-hidden="true"
+    class="hero-cube"
+    loading="eager"
+    width={384}
+    height={384}
+  />
 </Section>
+
+<style>
+  .hero-cube {
+    position: absolute;
+    right: -4%;
+    bottom: calc(-6% + 80px);
+    width: 10.5rem;
+    opacity: 0.9;
+    pointer-events: none;
+    transform-origin: center;
+    animation: cube-enter 1.2s ease-out both;
+  }
+
+  @media (min-width: 768px) {
+    .hero-cube {
+      width: 13.5rem;
+      bottom: calc(-8% + 80px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-cube {
+      width: 18rem;
+      bottom: calc(-10% + 80px);
+    }
+  }
+
+  @keyframes cube-enter {
+    0% {
+      transform: translate(30%, -10%) rotate(-40deg);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0.9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cube {
+      animation: none;
+      transform: translate(0, 0) rotate(0deg);
+    }
+  }
+</style>

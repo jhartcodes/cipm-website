@@ -6,7 +6,7 @@
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import HeroSection from "../sections/shared/HeroSection.astro";
+import SecondaryHeroSection from "../sections/shared/SecondaryHeroSection.astro";
 import AboutStorySections from "../sections/about/AboutStorySections.astro";
 import TeamSection from "../sections/about/TeamSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
@@ -20,7 +20,7 @@ const { data, ctaData } = Astro.props;
 ---
 
 <BaseLayout title="About Us" seo={data?.seo}>
-  <HeroSection hero={data?.hero} defaultHeading="About Us" />
+  <SecondaryHeroSection title="About Us" />
   <AboutStorySections sections={data?.storySections} />
   <TeamSection
     eyebrow={data?.teamEyebrow}
