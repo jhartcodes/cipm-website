@@ -233,11 +233,6 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
     },
     bio
   },
-  faqHeading,
-  faqs[]{
-    question,
-    answer
-  },
   showCta,
   "ctaData": select(
     showCta => *[_type == "ctaSection"][0]${CTA_SECTION_PROJECTION},
@@ -264,6 +259,11 @@ export const SERVICES_PAGE_QUERY = /* groq */ `
       crop
     },
     enableDetailPage
+  },
+  faqHeading,
+  faqs[]{
+    question,
+    answer
   },
   showCta,
   "ctaData": select(

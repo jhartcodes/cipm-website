@@ -54,7 +54,8 @@ const { heading, faqs = [] } = Astro.props;
       const triggers = group.querySelectorAll('[data-accordion-trigger]');
 
       triggers.forEach((trigger) => {
-        trigger.addEventListener('click', () => {
+        // Property assignment overwrites handler (no stacking)
+        trigger.onclick = () => {
           const isOpen = trigger.getAttribute('aria-expanded') === 'true';
 
           // Close all others
@@ -70,7 +71,7 @@ const { heading, faqs = [] } = Astro.props;
             const id = trigger.getAttribute('aria-controls');
             document.getElementById(id)?.setAttribute('data-expanded', 'true');
           }
-        });
+        };
       });
     });
   });

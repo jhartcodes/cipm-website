@@ -9,7 +9,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import HeroSection from "../sections/shared/HeroSection.astro";
 import AboutStorySections from "../sections/about/AboutStorySections.astro";
 import TeamSection from "../sections/about/TeamSection.astro";
-import FaqSection from "../sections/about/FaqSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
 
 interface Props {
@@ -31,10 +30,6 @@ const { data, ctaData } = Astro.props;
     sidebarContent={data?.teamSidebarContent}
     image={data?.teamImage}
     members={data?.teamMembers}
-  />
-  <FaqSection
-    heading={data?.faqHeading}
-    faqs={data?.faqs}
   />
   {ctaData && (
     <ContactCtaSection

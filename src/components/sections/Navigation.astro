@@ -209,58 +209,44 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
 <script>
   /**
    * Mobile Menu Controller
-   * View Transitions compatible (Navigation uses transition:persist)
+   * View Transitions compatible - uses property assignment to overwrite handlers
    */
   document.addEventListener('astro:page-load', () => {
     const button = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
-
     if (!button || !menu) return;
-
-    // Skip if already initialized (element persists across navigations)
-    if (button.dataset.initialized === 'true') return;
-    button.dataset.initialized = 'true';
 
     const openIcon = button.querySelector('.menu-icon-open');
     const closeIcon = button.querySelector('.menu-icon-close');
 
-    function closeMenu() {
+    const closeMenu = () => {
       menu.classList.add('hidden');
       openIcon?.classList.remove('hidden');
       closeIcon?.classList.add('hidden');
       button.setAttribute('aria-expanded', 'false');
-    }
+    };
 
-    function openMenu() {
+    const openMenu = () => {
       menu.classList.remove('hidden');
       openIcon?.classList.add('hidden');
       closeIcon?.classList.remove('hidden');
       button.setAttribute('aria-expanded', 'true');
-    }
+    };
 
-    // Toggle on button click
-    button.addEventListener('click', (e) => {
+    // Property assignment overwrites handlers (no stacking)
+    button.onclick = (e) => {
       e.stopPropagation();
-      if (menu.classList.contains('hidden')) {
-        openMenu();
-      } else {
-        closeMenu();
-      }
-    });
+      menu.classList.contains('hidden') ? openMenu() : closeMenu();
+    };
 
-    // Close on Escape
-    menu.addEventListener('keydown', (e) => {
+    document.onclick = (e) => {
+      if (!button.contains(e.target) && !menu.contains(e.target)) closeMenu();
+    };
+
+    document.onkeydown = (e) => {
       if (e.key === 'Escape') closeMenu();
-    });
+    };
 
-    // Close when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!button.contains(e.target) && !menu.contains(e.target)) {
-        closeMenu();
-      }
-    });
-
-    // Close menu before View Transitions navigation
-    document.addEventListener('astro:before-swap', closeMenu);
+    document.addEventListener('astro:before-swap', closeMenu, { once: true });
   });
 </script>

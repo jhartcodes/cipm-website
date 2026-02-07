@@ -80,41 +80,67 @@ document.addEventListener("astro:page-load", () => {
 
 ---
 
-### 2. Persisted Elements Need Initialization Guard
+### 2. Use Property Assignment to Prevent Listener Stacking
 
-**Problem:** Elements with `transition:persist` stay in the DOM across navigations. If using `astro:page-load`, listeners would be added multiple times.
+**Problem:** `addEventListener` stacks handlers - calling it multiple times adds multiple listeners. This causes issues with:
 
-**Solution:** Check for initialization flag on persisted elements:
+- Persisted elements (listeners added on each navigation)
+- Document-level listeners (`document.onclick`, etc.)
 
-> ! If you add document-level listeners inside astro:page-load, they can stack unless guarded or registered with { once: true }, or replaced via onclick.
+**Solution:** Use property assignment (`.onclick =`) which **overwrites** instead of stacking:
+
+```javascript
+// BAD - addEventListener stacks handlers
+button.addEventListener("click", handler); // listener 1
+button.addEventListener("click", handler); // listener 2 (both fire!)
+
+// GOOD - property assignment overwrites
+button.onclick = handler; // sets handler
+button.onclick = handler; // replaces handler (only one fires)
+```
+
+**Recommended pattern:**
 
 ```javascript
 document.addEventListener("astro:page-load", () => {
   const button = document.getElementById("menu-button");
-  if (!button) return;
+  const menu = document.getElementById("menu");
+  if (!button || !menu) return;
 
-  // Skip if already initialized (element persisted from previous page)
-  if (button.dataset.initialized === "true") return;
-  button.dataset.initialized = "true";
+  const closeMenu = () => menu.classList.add("hidden");
+  const openMenu = () => menu.classList.remove("hidden");
 
-  // Attach listeners only once
-  button.addEventListener("click", handleClick);
+  // Property assignment - overwrites, no stacking
+  button.onclick = (e) => {
+    e.stopPropagation();
+    menu.classList.contains("hidden") ? openMenu() : closeMenu();
+  };
+
+  document.onclick = (e) => {
+    if (!button.contains(e.target) && !menu.contains(e.target)) closeMenu();
+  };
+
+  document.onkeydown = (e) => {
+    if (e.key === "Escape") closeMenu();
+  };
+
+  // Self-cleaning listener for cleanup
+  document.addEventListener("astro:before-swap", closeMenu, { once: true });
 });
 ```
 
-````javascript
-// Avoid stacking global listeners:
-document.addEventListener('astro:before-swap', closeMenu, { once: true });
-or:
+**Benefits:**
 
-// Replace instead of stacking:
-document.onclick = onDocClick;
-document.onkeydown = onDocKeydown;
-```
+- No initialization guard (`dataset.initialized`) needed
+- Simpler, more predictable code
+- Works for both persisted and swapped elements
+- `{ once: true }` makes cleanup listeners self-removing
 
 **Files using this pattern:**
 
-- `src/components/sections/Navigation.astro` (uses `transition:persist`)
+- `src/components/sections/Navigation.astro`
+- `src/components/sections/about/FaqSection.astro`
+- `src/components/sections/about/TeamSection.astro`
 
 ---
 
@@ -131,7 +157,7 @@ document.onkeydown = onDocKeydown;
 <header class="sticky top-0 shadow-md" transition:animate="none">
   <!-- Header content -->
 </header>
-````
+```
 
 **Files fixed:**
 

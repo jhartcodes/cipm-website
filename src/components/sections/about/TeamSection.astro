@@ -150,7 +150,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
 <script>
   /**
    * Team Modal Controller
-   * View Transitions compatible
+   * View Transitions compatible - uses property assignment
    */
   document.addEventListener('astro:page-load', () => {
     const modal = document.querySelector('[data-team-modal]');
@@ -166,7 +166,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
 
     let previousFocus = null;
 
-    function openModal(card) {
+    const openModal = (card) => {
       if (modalName) modalName.textContent = card.dataset.name || '';
       if (modalTitle) modalTitle.textContent = card.dataset.title || '';
       if (modalBio) modalBio.textContent = card.dataset.bio || '';
@@ -179,32 +179,31 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       closeButton.focus();
-    }
+    };
 
-    function closeModal() {
+    const closeModal = () => {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       if (previousFocus) previousFocus.focus();
-    }
+    };
 
-    // Open on card click or Enter/Space
+    // Property assignment overwrites handlers (no stacking)
     cards.forEach((card) => {
-      card.addEventListener('click', () => openModal(card));
-      card.addEventListener('keydown', (e) => {
+      card.onclick = () => openModal(card);
+      card.onkeydown = (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           openModal(card);
         }
-      });
+      };
     });
 
-    // Close handlers
-    closeButton.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
+    closeButton.onclick = closeModal;
+    modal.onclick = (e) => {
       if (e.target === modal) closeModal();
-    });
-    modal.addEventListener('keydown', (e) => {
+    };
+    modal.onkeydown = (e) => {
       if (e.key === 'Escape') closeModal();
-    });
+    };
   });
 </script>
