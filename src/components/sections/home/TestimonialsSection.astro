@@ -26,55 +26,48 @@ const { heading, testimonials = [] } = Astro.props;
 ---
 
 <Section size="md" tone="default">
-  <Text as="h2" variant="headingLg" align="center">
+  <Text
+    as="h2"
+    variant="headingLg"
+    align="center"
+    class="mb-12 text-3xl md:text-4xl font-bold text-navy"
+  >
     {heading || "What Our Clients Say"}
   </Text>
 
   {
     testimonials.length > 0 && (
-      <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {testimonials.map((item) => (
-          <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md hover:border-turquoise transition-colors">
-            {/* Turquoise quote mark */}
+          <div class="bg-white rounded-2xl p-8 shadow-lg relative group">
             <span
-              class="text-4xl text-turquoise font-serif leading-none"
+              class="absolute -top-4 left-8 text-6xl text-turquoise/20 font-serif transition-colors group-hover:text-navy/80"
               aria-hidden="true"
             >
               "
             </span>
 
             {item.quote && (
-              <Text as="p" variant="body" class="text-sm text-gray-700 mt-2">
-                {item.quote}
+              <Text
+                as="p"
+                variant="body"
+                class="text-lg text-gray-700 leading-relaxed italic"
+              >
+                "{item.quote}"
               </Text>
             )}
 
-            <div class="mt-4 flex items-center gap-3">
-              {item.image && (
-                <SanityImage
-                  image={item.image}
-                  alt={item.authorName || ""}
-                  width={64}
-                  height={64}
-                  class="h-10 w-10 rounded-full object-cover"
-                />
+            <div class="mt-6 pt-6 border-t border-gray-100">
+              {item.authorName && (
+                <Text as="p" variant="body" class="font-semibold text-navy">
+                  {item.authorName}
+                </Text>
               )}
-              <div>
-                {item.authorName && (
-                  <Text
-                    as="p"
-                    variant="body"
-                    class="text-sm text-navy font-semibold"
-                  >
-                    {item.authorName}
-                  </Text>
-                )}
-                {item.authorTitle && (
-                  <Text as="p" variant="small" class="text-xs text-gray-500">
-                    {item.authorTitle}
-                  </Text>
-                )}
-              </div>
+              {item.authorTitle && (
+                <Text as="p" variant="small" class="text-sm text-gray-500">
+                  {item.authorTitle}
+                </Text>
+              )}
             </div>
           </div>
         ))}
