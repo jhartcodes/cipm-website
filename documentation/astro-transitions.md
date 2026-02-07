@@ -214,27 +214,39 @@ document.addEventListener("astro:before-swap", () => {
 
 ## Script Pattern Summary
 
-### For components inside `<main>` (swapped on navigation):
-
-```javascript
-document.addEventListener("astro:page-load", () => {
-  // Query fresh DOM elements
-  // Attach event listeners
-  // No initialization guard needed - elements are new each time
-});
-```
-
-### For persisted components (Navigation, Footer, etc.):
+**Preferred pattern for all components (swapped or persisted):**
 
 ```javascript
 document.addEventListener("astro:page-load", () => {
   const element = document.getElementById("my-element");
-  if (!element || element.dataset.initialized === "true") return;
-  element.dataset.initialized = "true";
+  if (!element) return;
 
-  // Attach event listeners once
+  // Property assignment overwrites - no stacking, no guards needed
+  element.onclick = () => {
+    /* handler */
+  };
+  element.onkeydown = (e) => {
+    /* handler */
+  };
+
+  // Document-level listeners
+  document.onclick = (e) => {
+    /* handler */
+  };
+  document.onkeydown = (e) => {
+    /* handler */
+  };
+
+  // Cleanup before navigation (self-removing)
+  document.addEventListener("astro:before-swap", cleanup, { once: true });
 });
 ```
+
+**Why property assignment over addEventListener:**
+
+- **Simpler** - No initialization guards needed
+- **Predictable** - Overwrites instead of stacking
+- **Universal** - Same pattern works for swapped and persisted elements
 
 ---
 
