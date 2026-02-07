@@ -17,18 +17,22 @@ interface Props {
 const { heading, content } = Astro.props;
 ---
 
-<Section size="md">
+<Section size="md" class="pb-8">
   <div class="mx-auto max-w-3xl text-center">
-    {heading && (
-      <Text as="h2" variant="headingLg">
-        {heading}
-      </Text>
-    )}
+    {
+      heading && (
+        <Text as="h2" variant="headingLg">
+          {heading}
+        </Text>
+      )
+    }
 
-    {content && (
-      <div class="mt-4">
-        <RichText content={content} />
-      </div>
-    )}
+    {
+      content && (
+        <div class="mt-4">
+          <RichText content={content} />
+        </div>
+      )
+    }
   </div>
 </Section>
