@@ -22,6 +22,7 @@ import { ClientRouter } from "astro:transitions";
 ```
 
 **Options used:**
+
 - `prefetch="viewport"` - Prefetch links when they enter the viewport
 - `fallback="swap"` - Full page swap if View Transitions API not supported
 
@@ -35,7 +36,8 @@ Elements that stay in the DOM across navigations use `transition:persist`:
   <Navigation data={nav} transition:persist />
 
   <main transition:animate="fade">
-    <slot /> <!-- Page content swapped here -->
+    <slot />
+    <!-- Page content swapped here -->
   </main>
 
   <Footer data={footer} transition:persist />
@@ -48,7 +50,7 @@ Elements that stay in the DOM across navigations use `transition:persist`:
 
 ### 1. JavaScript Not Running After Navigation
 
-**Problem:** Inline `<script>` tags in components use IIFEs that run once on initial page load. After View Transitions navigation, the DOM is swapped but scripts don't re-execute.
+**Problem:** IIFEs only run when the script is evaluated. With view transitions, scripts may not re-run for swapped content, so use astro:page-load for initialization.
 
 **Symptom:** Interactive components (accordions, modals, menus) work on first page load but break after navigating to/from the page.
 
@@ -56,21 +58,22 @@ Elements that stay in the DOM across navigations use `transition:persist`:
 
 ```javascript
 // BAD - runs once, never again after navigation
-(function() {
-  const buttons = document.querySelectorAll('[data-trigger]');
-  buttons.forEach(btn => btn.addEventListener('click', handleClick));
+(function () {
+  const buttons = document.querySelectorAll("[data-trigger]");
+  buttons.forEach((btn) => btn.addEventListener("click", handleClick));
 })();
 
 // GOOD - runs on initial load AND after every navigation
-document.addEventListener('astro:page-load', () => {
-  const buttons = document.querySelectorAll('[data-trigger]');
-  buttons.forEach(btn => btn.addEventListener('click', handleClick));
+document.addEventListener("astro:page-load", () => {
+  const buttons = document.querySelectorAll("[data-trigger]");
+  buttons.forEach((btn) => btn.addEventListener("click", handleClick));
 });
 ```
 
 **Why it works:** When View Transitions swap the DOM, old elements (with their listeners) are removed and new elements are inserted. `astro:page-load` fires after the swap, allowing you to attach listeners to fresh elements.
 
 **Files fixed:**
+
 - `src/components/sections/about/FaqSection.astro`
 - `src/components/sections/about/TeamSection.astro`
 - `src/components/sections/Navigation.astro`
@@ -83,21 +86,34 @@ document.addEventListener('astro:page-load', () => {
 
 **Solution:** Check for initialization flag on persisted elements:
 
+> ! If you add document-level listeners inside astro:page-load, they can stack unless guarded or registered with { once: true }, or replaced via onclick.
+
 ```javascript
-document.addEventListener('astro:page-load', () => {
-  const button = document.getElementById('menu-button');
+document.addEventListener("astro:page-load", () => {
+  const button = document.getElementById("menu-button");
   if (!button) return;
 
   // Skip if already initialized (element persisted from previous page)
-  if (button.dataset.initialized === 'true') return;
-  button.dataset.initialized = 'true';
+  if (button.dataset.initialized === "true") return;
+  button.dataset.initialized = "true";
 
   // Attach listeners only once
-  button.addEventListener('click', handleClick);
+  button.addEventListener("click", handleClick);
 });
 ```
 
+````javascript
+// Avoid stacking global listeners:
+document.addEventListener('astro:before-swap', closeMenu, { once: true });
+or:
+
+// Replace instead of stacking:
+document.onclick = onDocClick;
+document.onkeydown = onDocKeydown;
+```
+
 **Files using this pattern:**
+
 - `src/components/sections/Navigation.astro` (uses `transition:persist`)
 
 ---
@@ -112,15 +128,13 @@ document.addEventListener('astro:page-load', () => {
 
 ```astro
 <!-- The shadow stays intact because no animation is applied -->
-<header
-  class="sticky top-0 shadow-md"
-  transition:animate="none"
->
+<header class="sticky top-0 shadow-md" transition:animate="none">
   <!-- Header content -->
 </header>
-```
+````
 
 **Files fixed:**
+
 - `src/components/sections/Navigation.astro` - Added `transition:animate="none"` to `<header>`
 
 ---
@@ -132,7 +146,7 @@ document.addEventListener('astro:page-load', () => {
 **Solution:** Listen for `astro:before-swap` event:
 
 ```javascript
-document.addEventListener('astro:before-swap', () => {
+document.addEventListener("astro:before-swap", () => {
   closeModal();
   closeMenu();
   resetState();
@@ -140,19 +154,20 @@ document.addEventListener('astro:before-swap', () => {
 ```
 
 **Files using this pattern:**
+
 - `src/components/sections/Navigation.astro` - Closes mobile menu before swap
 
 ---
 
 ## View Transitions Lifecycle Events
 
-| Event | When it fires | Use case |
-|-------|--------------|----------|
+| Event                      | When it fires              | Use case                        |
+| -------------------------- | -------------------------- | ------------------------------- |
 | `astro:before-preparation` | Before new page is fetched | Cancel navigation, show loading |
-| `astro:after-preparation` | After new page is fetched | Access new document |
-| `astro:before-swap` | Before DOM is swapped | Cleanup, close modals |
-| `astro:after-swap` | After DOM is swapped | Low-level DOM access |
-| `astro:page-load` | After swap + scripts run | **Initialize components** |
+| `astro:after-preparation`  | After new page is fetched  | Access new document             |
+| `astro:before-swap`        | Before DOM is swapped      | Cleanup, close modals           |
+| `astro:after-swap`         | After DOM is swapped       | Low-level DOM access            |
+| `astro:page-load`          | After swap + scripts run   | **Initialize components**       |
 
 **Most common:** Use `astro:page-load` for component initialization.
 
@@ -160,14 +175,14 @@ document.addEventListener('astro:before-swap', () => {
 
 ## Transition Directives Reference
 
-| Directive | Purpose |
-|-----------|---------|
-| `transition:persist` | Keep element in DOM across navigations |
-| `transition:persist="id"` | Persist with explicit ID (for matching) |
-| `transition:animate="fade"` | Fade in/out animation |
-| `transition:animate="slide"` | Slide animation |
-| `transition:animate="none"` | No animation (prevents style flicker) |
-| `transition:name="unique"` | Named transition for custom CSS |
+| Directive                    | Purpose                                 |
+| ---------------------------- | --------------------------------------- |
+| `transition:persist`         | Keep element in DOM across navigations  |
+| `transition:persist="id"`    | Persist with explicit ID (for matching) |
+| `transition:animate="fade"`  | Fade in/out animation                   |
+| `transition:animate="slide"` | Slide animation                         |
+| `transition:animate="none"`  | No animation (prevents style flicker)   |
+| `transition:name="unique"`   | Named transition for custom CSS         |
 
 ---
 
@@ -176,7 +191,7 @@ document.addEventListener('astro:before-swap', () => {
 ### For components inside `<main>` (swapped on navigation):
 
 ```javascript
-document.addEventListener('astro:page-load', () => {
+document.addEventListener("astro:page-load", () => {
   // Query fresh DOM elements
   // Attach event listeners
   // No initialization guard needed - elements are new each time
@@ -186,10 +201,10 @@ document.addEventListener('astro:page-load', () => {
 ### For persisted components (Navigation, Footer, etc.):
 
 ```javascript
-document.addEventListener('astro:page-load', () => {
-  const element = document.getElementById('my-element');
-  if (!element || element.dataset.initialized === 'true') return;
-  element.dataset.initialized = 'true';
+document.addEventListener("astro:page-load", () => {
+  const element = document.getElementById("my-element");
+  if (!element || element.dataset.initialized === "true") return;
+  element.dataset.initialized = "true";
 
   // Attach event listeners once
 });
