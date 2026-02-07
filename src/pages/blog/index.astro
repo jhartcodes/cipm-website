@@ -30,8 +30,8 @@ const [
 
 // Get pagination params from URL
 const url = Astro.url;
-const currentPage = Math.max(1, parseInt(url.searchParams.get('page') || '1'));
-const activeCategory = url.searchParams.get('category') || undefined;
+const currentPage = Math.max(1, parseInt(url.searchParams.get("page") || "1"));
+const activeCategory = url.searchParams.get("category") || undefined;
 
 // Posts per page (default to 9 if not set in Sanity)
 const postsPerPage = pageData?.postsPerPageDesktop || 9;
@@ -40,7 +40,7 @@ const postsPerPage = pageData?.postsPerPageDesktop || 9;
 let filteredPosts = allPosts || [];
 if (activeCategory) {
   filteredPosts = filteredPosts.filter(
-    (post: any) => post.category?.slug?.current === activeCategory
+    (post: any) => post.category?.slug?.current === activeCategory,
   );
 }
 

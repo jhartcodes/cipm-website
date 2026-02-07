@@ -47,12 +47,14 @@ const { data, ctaData } = Astro.props;
     heading={data?.testimonialsHeading}
     testimonials={data?.featuredTestimonials}
   />
-  {ctaData && (
-    <ContactCtaSection
-      heading={ctaData.heading}
-      subheading={ctaData.subheading}
-      buttonText={ctaData.buttonText}
-      buttonLink={ctaData.buttonLink}
-    />
-  )}
+  {
+    ctaData && (
+      <ContactCtaSection
+        heading={ctaData.heading}
+        subheading={ctaData.subheading}
+        buttonText={ctaData.buttonText}
+        buttonLink={ctaData.buttonLink}
+      />
+    )
+  }
 </BaseLayout>
