@@ -1,0 +1,49 @@
+---
+/**
+ * AboutSplitImageSection Component
+ *
+ * Two-column split with image and long-form content.
+ */
+
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import RichText from "../../content/RichText.astro";
+import SanityImage from "../../content/SanityImage.astro";
+
+interface Props {
+  section?: any;
+}
+
+const { section } = Astro.props;
+
+const background = section?.background === "gray" ? "gray" : "white";
+const tone = background === "gray" ? "muted" : "default";
+const imageOnRight = section?.imageSide === "right";
+---
+
+<Section size="lg" tone={tone}>
+  <div class="grid gap-10 lg:grid-cols-2 items-start">
+    <div class={imageOnRight ? "lg:order-2" : undefined}>
+      {section?.image && (
+        <SanityImage
+          image={section.image}
+          alt={section?.image?.alt || ""}
+          width={900}
+          class="w-full aspect-[4/3] rounded-2xl object-cover"
+        />
+      )}
+    </div>
+    <div class={imageOnRight ? "lg:order-1" : undefined}>
+      {section?.headline && (
+        <Text as="h2" variant="headingLg">
+          {section.headline}
+        </Text>
+      )}
+      {section?.content && (
+        <div class={section?.headline ? "mt-4" : undefined}>
+          <RichText content={section.content} />
+        </div>
+      )}
+    </div>
+  </div>
+</Section>

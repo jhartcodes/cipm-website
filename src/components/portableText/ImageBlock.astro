@@ -1,5 +1,6 @@
 ---
-import { getImageUrl, getImageSrcSet, getImageDimensions } from "../../lib/sanity/image";
+import { Image } from "astro:assets";
+import { getImageUrl, getImageDimensions } from "../../lib/sanity/image";
 
 const { value } = Astro.props;
 
@@ -7,22 +8,22 @@ if (!value?.asset) {
   return null;
 }
 
-const url = getImageUrl(value, 800);
-const srcSet = getImageSrcSet(value, [400, 800, 1200], 80);
 const dims = getImageDimensions(value);
+const width = dims?.width ?? 800;
+const height = dims?.height ?? 600;
+const url = getImageUrl(value, width);
 ---
 
 <figure class="my-6">
-  <img
+  <Image
     src={url}
-    srcset={srcSet}
-    sizes="100vw"
     alt={value?.alt ?? ""}
-    width={dims?.width}
-    height={dims?.height}
-    class="rounded-lg"
+    width={width}
+    height={height}
+    sizes="100vw"
     loading="lazy"
     decoding="async"
+    class="rounded-lg"
   />
   {value?.caption && (
     <figcaption class="mt-2 text-sm text-gray-600 text-center">

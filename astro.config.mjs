@@ -7,6 +7,9 @@ import react from "@astrojs/react";
 export default defineConfig({
   output: "static",
   adapter: netlify(),
+  image: {
+    domains: ["cdn.sanity.io"],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

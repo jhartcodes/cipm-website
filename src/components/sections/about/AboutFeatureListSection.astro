@@ -1,0 +1,93 @@
+---
+/**
+ * AboutFeatureListSection Component
+ *
+ * Feature list rendered as cards or list rows.
+ */
+
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import RichText from "../../content/RichText.astro";
+
+interface Props {
+  section?: any;
+}
+
+const { section } = Astro.props;
+
+const layout = section?.layout === "list" ? "list" : "cards";
+const background = section?.background || "gray";
+const tone = background === "navy" ? "inverted" : background === "gray" ? "muted" : "default";
+const textTone = tone === "inverted" ? "inverted" : "default";
+const richTextClass = tone === "inverted" ? "richtext richtext--inverted" : undefined;
+---
+
+<Section size="lg" tone={tone}>
+  <div>
+    {section?.headline && (
+      <Text as="h2" variant="headingLg" tone={textTone}>
+        {section.headline}
+      </Text>
+    )}
+    {section?.intro && (
+      <div class={section?.headline ? "mt-4" : undefined}>
+        <RichText content={section.intro} class={richTextClass} />
+      </div>
+    )}
+
+    {Array.isArray(section?.items) && section.items.length > 0 && (
+      <div class={section?.intro || section?.headline ? "mt-8" : undefined}>
+        {layout === "cards" ? (
+          <div class="grid gap-6 md:grid-cols-2">
+            {section.items.map((item: any) => (
+              <div class:list={[
+                "rounded-2xl border p-6",
+                tone === "inverted"
+                  ? "border-white/20 bg-white/10"
+                  : "border-gray-100 bg-white shadow-sm",
+              ]}>
+                {item?.title && (
+                  <Text as="h3" variant="headingSm" tone={textTone}>
+                    {item.title}
+                  </Text>
+                )}
+                {item?.description && (
+                  <Text
+                    as="p"
+                    variant="body"
+                    tone={tone === "inverted" ? "inverted" : "muted"}
+                    class={item?.title ? "mt-3" : undefined}
+                  >
+                    {item.description}
+                  </Text>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class:list={["divide-y", tone === "inverted" ? "divide-white/20" : "divide-gray-100"]}>
+            {section.items.map((item: any) => (
+              <div class="py-4">
+                {item?.title && (
+                  <Text as="h3" variant="headingSm" tone={textTone}>
+                    {item.title}
+                  </Text>
+                )}
+                {item?.description && (
+                  <Text
+                    as="p"
+                    variant="body"
+                    tone={tone === "inverted" ? "inverted" : "muted"}
+                    class={item?.title ? "mt-2" : undefined}
+                  >
+                    {item.description}
+                  </Text>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+</Section>

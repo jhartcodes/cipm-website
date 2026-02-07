@@ -6,10 +6,13 @@
  * Main site navigation with dynamic menu items and CTA
  */
 
+import { Image } from "astro:assets";
 import Container from "../layout/Container.astro";
 import SmartLink from "../ui/SmartLink.astro";
 import Button from "../ui/Button.astro";
 import { resolveLink } from "../../lib/routing/resolveLink";
+import logoLongColor from "../../assets/cipm-logo-long-colour.svg";
+import cubeHouse from "../../assets/cube-house.svg";
 
 interface MenuItem {
   title: string;
@@ -56,18 +59,22 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
       <!-- Logo -->
       <SmartLink href="/" class="flex items-center">
         <!-- Desktop: Full logo -->
-        <img
-          src="/CIPM logo long colour.svg"
+        <Image
+          src={logoLongColor}
           alt={siteName || "CIPM - Community Impact Property Management"}
-          class="h-10 w-auto hidden md:block"
+          width={180}
+          height={30}
           loading="eager"
+          class="h-10 w-auto hidden md:block"
         />
         <!-- Mobile: Cube icon only -->
-        <img
-          src="/cube_house.svg"
+        <Image
+          src={cubeHouse}
           alt={siteName || "CIPM"}
-          class="h-10 w-auto md:hidden"
+          width={260}
+          height={310}
           loading="eager"
+          class="h-10 w-auto md:hidden"
         />
       </SmartLink>
 

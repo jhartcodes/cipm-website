@@ -11,7 +11,8 @@
  * - Provides responsive, optimized images
  */
 
-import { getImageUrl, getImageSrcSet, getImageDimensions } from '../../lib/sanity/image';
+import { Image } from "astro:assets";
+import { getImageUrl, getImageDimensions } from "../../lib/sanity/image";
 import type { SanityImageSource } from '@sanity/image-url';
 
 interface Props {
@@ -31,9 +32,9 @@ const {
   alt,
   width,
   height,
-  sizes = '100vw',
+  sizes = "100vw",
   quality = 80,
-  loading = 'lazy',
+  loading = "lazy",
   fetchpriority,
   class: className,
 } = Astro.props;
@@ -45,25 +46,30 @@ if (!image || !image.asset || !image.asset._ref) {
 
 // Get image dimensions from Sanity metadata
 const dimensions = getImageDimensions(image);
-const aspectWidth = width || dimensions?.width;
-const aspectHeight = height || dimensions?.height;
+const baseWidth = dimensions?.width;
+const baseHeight = dimensions?.height;
 
-// Generate responsive srcset
-const srcSet = getImageSrcSet(image, [400, 800, 1200, 1600], quality);
+const resolvedWidth = width ?? baseWidth;
+const resolvedHeight = height ?? (resolvedWidth && baseWidth && baseHeight
+  ? Math.round((resolvedWidth * baseHeight) / baseWidth)
+  : baseHeight);
 
-// Fallback src
-const src = getImageUrl(image, width, quality);
+const inferSize = !resolvedWidth || !resolvedHeight;
+
+// Sanity URL (Astro Image will handle optimization)
+const src = getImageUrl(image, resolvedWidth ?? baseWidth, quality);
 ---
 
-<img
+<Image
   src={src}
-  srcset={srcSet}
-  sizes={sizes}
   alt={alt}
-  width={aspectWidth}
-  height={aspectHeight}
+  width={resolvedWidth}
+  height={resolvedHeight}
+  inferSize={inferSize}
+  sizes={sizes}
+  quality={quality}
   loading={loading}
   decoding="async"
-  fetchpriority={fetchpriority ?? (loading === 'eager' ? 'high' : undefined)}
+  fetchpriority={fetchpriority ?? (loading === "eager" ? "high" : undefined)}
   class:list={["max-w-full h-auto", className]}
 />

@@ -6,9 +6,11 @@
  * Variant A design with circular images and modal bio display.
  */
 
+import { Image } from "astro:assets";
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import TeamMemberCard from "./TeamMemberCard.astro";
+import { urlFor } from "../../../lib/sanity/image";
 
 interface TeamMember {
   name?: string;
@@ -24,6 +26,11 @@ interface Props {
 }
 
 const { heading, intro, members = [] } = Astro.props;
+
+const modalFallbackMember = members.find((member) => member?.headshot?.asset);
+const modalFallbackSrc = modalFallbackMember?.headshot?.asset
+  ? urlFor(modalFallbackMember.headshot).width(400).url()
+  : "/favicon.svg";
 ---
 
 <Section size="lg" tone="muted">
@@ -76,7 +83,14 @@ const { heading, intro, members = [] } = Astro.props;
 
     <div class="text-center">
       <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full ring-4 ring-turquoise/30">
-        <img id="modal-image" src="" alt="" class="h-full w-full object-cover" />
+        <Image
+          id="modal-image"
+          src={modalFallbackSrc}
+          alt=""
+          width={400}
+          height={400}
+          class="h-full w-full object-cover"
+        />
       </div>
 
       <h3 id="team-modal-title" class="text-xl font-bold text-navy"></h3>
@@ -117,6 +131,7 @@ const { heading, intro, members = [] } = Astro.props;
       if (modalBio) modalBio.textContent = bio;
       if (modalImage) {
         modalImage.src = image;
+        modalImage.srcset = '';
         modalImage.alt = name;
       }
 

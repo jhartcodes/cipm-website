@@ -189,13 +189,31 @@ export const HOME_PAGE_QUERY = /* groq */ `
 export const ABOUT_PAGE_QUERY = /* groq */ `
 *[_type == "aboutPage"][0]{
   ${HERO_PROJECTION},
-  ourStoryHeading,
-  ourStoryContent,
-  ourStoryImage{
-    asset,
-    alt,
-    hotspot,
-    crop
+  storySections[]{
+    _key,
+    _type,
+    eyebrow,
+    headline,
+    content,
+    layout,
+    background,
+    sidebar{
+      title,
+      content
+    },
+    imagePosition,
+    imageSide,
+    image{
+      asset,
+      alt,
+      hotspot,
+      crop
+    },
+    intro,
+    items[]{
+      title,
+      description
+    }
   },
   teamHeading,
   teamIntro,
