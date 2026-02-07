@@ -24,8 +24,12 @@ const { data, ctaData } = Astro.props;
   <HeroSection hero={data?.hero} defaultHeading="About Us" />
   <AboutStorySections sections={data?.storySections} />
   <TeamSection
+    eyebrow={data?.teamEyebrow}
     heading={data?.teamHeading}
     intro={data?.teamIntro}
+    sidebarTitle={data?.teamSidebarTitle}
+    sidebarContent={data?.teamSidebarContent}
+    image={data?.teamImage}
     members={data?.teamMembers}
   />
   <FaqSection

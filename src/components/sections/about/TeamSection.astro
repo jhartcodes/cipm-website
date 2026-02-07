@@ -2,14 +2,15 @@
 /**
  * TeamSection Component
  *
- * Displays a grid of team members with heading and optional intro text.
- * Variant A design with circular images and modal bio display.
+ * Displays a grid of team members with AlternateTextLayout Variant C intro.
+ * Features headline, 2-column text, navy sidebar box, and team grid.
  */
 
 import { Image } from "astro:assets";
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import TeamMemberCard from "./TeamMemberCard.astro";
+import SanityImage from "../../content/SanityImage.astro";
 import { urlFor } from "../../../lib/sanity/image";
 
 interface TeamMember {
@@ -20,12 +21,18 @@ interface TeamMember {
 }
 
 interface Props {
+  eyebrow?: string;
   heading?: string;
   intro?: string;
+  sidebarTitle?: string;
+  sidebarContent?: string;
+  image?: any;
   members?: TeamMember[];
 }
 
-const { heading, intro, members = [] } = Astro.props;
+const { eyebrow, heading, intro, sidebarTitle, sidebarContent, image, members = [] } = Astro.props;
+
+const hasSidebar = sidebarTitle || sidebarContent;
 
 const modalFallbackMember = members.find((member) => member?.headshot?.asset);
 const modalFallbackSrc = modalFallbackMember?.headshot?.asset
@@ -34,18 +41,58 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
 ---
 
 <Section size="lg" tone="muted">
-  <Text as="h2" variant="headingLg" align="center">
-    {heading || "Our Team"}
-  </Text>
+  {/* AlternateTextLayout Variant C intro */}
+  <div class="space-y-8 mb-12">
+    {/* Main content area with floating image */}
+    <div>
+      {/* Inline floating image - right side */}
+      {image?.asset && (
+        <div class="float-right ml-8 mb-4 w-2/5 hidden lg:block rounded-lg overflow-hidden shadow-lg">
+          <div class="aspect-[4/3]">
+            <SanityImage
+              image={image}
+              alt={image?.alt || ""}
+              width={600}
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      )}
 
-  {intro && (
-    <Text as="p" variant="body" align="center" class="mt-4 mx-auto max-w-2xl text-gray-600">
-      {intro}
-    </Text>
-  )}
+      {/* Eyebrow + Headline */}
+      {eyebrow && (
+        <p class="text-turquoise font-bold tracking-wide uppercase text-sm mb-3">
+          {eyebrow}
+        </p>
+      )}
+      <h2 class="text-2xl md:text-3xl font-bold text-navy leading-tight mb-6">
+        {heading || "Our Team"}
+      </h2>
 
+      {/* Main content - 2 columns on lg */}
+      {intro && (
+        <div class="text-base text-gray-600 leading-relaxed columns-1 lg:columns-2 gap-8">
+          {intro}
+        </div>
+      )}
+    </div>
+
+    {/* Navy sidebar box */}
+    {hasSidebar && (
+      <aside class="bg-navy text-white rounded-lg p-6">
+        {sidebarTitle && (
+          <h3 class="text-lg font-bold text-white mb-3">{sidebarTitle}</h3>
+        )}
+        {sidebarContent && (
+          <p class="text-white/80 leading-relaxed text-sm">{sidebarContent}</p>
+        )}
+      </aside>
+    )}
+  </div>
+
+  {/* Team grid */}
   {members.length > 0 && (
-    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
       {members.map((member, index) => (
         <TeamMemberCard
           name={member.name}
