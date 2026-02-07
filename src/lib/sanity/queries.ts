@@ -130,15 +130,11 @@ export const HOME_PAGE_QUERY = /* groq */ `
   whatWeOfferIntro,
   featuredServices[]-> {
     title,
-    slug,
     shortDescription,
-    image{
+    icon{
       asset,
-      alt,
-      hotspot,
-      crop
-    },
-    enableDetailPage
+      alt
+    }
   },
   testimonialsHeading,
   featuredTestimonials[]-> {
@@ -215,8 +211,17 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
       description
     }
   },
+  teamEyebrow,
   teamHeading,
   teamIntro,
+  teamSidebarTitle,
+  teamSidebarContent,
+  teamImage{
+    asset,
+    alt,
+    hotspot,
+    crop
+  },
   teamMembers[]{
     name,
     title,

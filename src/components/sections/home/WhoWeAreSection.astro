@@ -2,8 +2,8 @@
 /**
  * WhoWeAreSection Component
  *
- * Two-column section with heading, content, and image.
- * Uses Section's built-in Container - do not nest another Container.
+ * Centered text block with heading, content, and image below.
+ * Variant C style from TextBlockCentered prototype.
  */
 
 import Section from "../../layout/Section.astro";
@@ -20,27 +20,41 @@ interface Props {
 const { heading, content, image } = Astro.props;
 ---
 
-<Section size="lg">
-  <div class="grid gap-8 md:grid-cols-2 md:items-center">
-      <div>
-        <Text as="h2" variant="headingLg">
-          {heading || "Who We Are"}
-        </Text>
+<Section size="md">
+  {/* Centered text content */}
+  <div class="text-center mx-auto">
+    {/* Eyebrow */}
+    <p class="text-turquoise font-bold tracking-wide uppercase text-sm mb-3">
+      {heading || "Who We Are"}
+    </p>
 
-        {content && (
-          <div class="mt-4">
-            <RichText content={content} />
-          </div>
-        )}
+    {/* Headline */}
+    <Text as="h2" class="text-2xl md:text-3xl font-bold text-navy leading-tight">
+      Develop a title here
+    </Text>
+
+    {
+      content && (
+        <div class="mt-4 text-base text-gray-600 leading-relaxed">
+          <RichText content={content} />
+        </div>
+      )
+    }
+  </div>
+
+  {/* Image below */}
+  {
+    image && (
+      <div class="mt-8 rounded-lg overflow-hidden shadow-lg max-w-3xl mx-auto">
+        <div class="aspect-[21/9]">
+          <SanityImage
+            image={image}
+            alt={image?.alt || ""}
+            width={1200}
+            class="w-full h-full object-cover"
+          />
+        </div>
       </div>
-
-      {image && (
-        <SanityImage
-          image={image}
-          alt={image?.alt || ""}
-          width={700}
-          class="w-full rounded-lg shadow-lg"
-        />
-      )}
-    </div>
+    )
+  }
 </Section>
