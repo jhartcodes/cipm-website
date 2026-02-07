@@ -50,7 +50,7 @@ const ctaLink = resolveLink({
 const showCta = data.showCtaButton && data.ctaText && ctaLink;
 ---
 
-<header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-md">
+<header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-md" transition:animate="none">
   <Container size="wide">
     <nav
       class="flex items-center justify-between h-16"
@@ -208,128 +208,59 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
 
 <script>
   /**
-   * Mobile Menu Controller with Focus Trap
-   *
-   * With transition:persist, the Navigation element is preserved across navigations.
-   * We use a data attribute to track if we've already initialized to prevent
-   * duplicate event listeners.
+   * Mobile Menu Controller
+   * View Transitions compatible (Navigation uses transition:persist)
    */
-  (function () {
-    const button = document.getElementById("mobile-menu-button");
-    const menu = document.getElementById("mobile-menu");
+  document.addEventListener('astro:page-load', () => {
+    const button = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
 
     if (!button || !menu) return;
 
-    // Only initialize once - check for flag
-    if (button.dataset.initialized === "true") return;
-    button.dataset.initialized = "true";
+    // Skip if already initialized (element persists across navigations)
+    if (button.dataset.initialized === 'true') return;
+    button.dataset.initialized = 'true';
 
-    const openIcon = button.querySelector(".menu-icon-open");
-    const closeIcon = button.querySelector(".menu-icon-close");
-
-    // Get all focusable elements in the menu
-    function getFocusableElements(): HTMLElement[] {
-      const selector =
-        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
-      return Array.from(menu.querySelectorAll<HTMLElement>(selector));
-    }
-
-    // Store the element that had focus before opening menu
-    let previousFocusedElement: HTMLElement | null = null;
+    const openIcon = button.querySelector('.menu-icon-open');
+    const closeIcon = button.querySelector('.menu-icon-close');
 
     function closeMenu() {
-      menu.classList.add("hidden");
-      openIcon?.classList.remove("hidden");
-      closeIcon?.classList.add("hidden");
-      button.setAttribute("aria-expanded", "false");
-
-      // Return focus to the button that opened the menu
-      if (previousFocusedElement) {
-        previousFocusedElement.focus();
-        previousFocusedElement = null;
-      }
+      menu.classList.add('hidden');
+      openIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      button.setAttribute('aria-expanded', 'false');
     }
 
     function openMenu() {
-      // Store current focused element
-      previousFocusedElement = document.activeElement as HTMLElement;
-
-      menu.classList.remove("hidden");
-      openIcon?.classList.add("hidden");
-      closeIcon?.classList.remove("hidden");
-      button.setAttribute("aria-expanded", "true");
-
-      // Focus first menu item
-      const focusableElements = getFocusableElements();
-      if (focusableElements.length > 0) {
-        focusableElements[0].focus();
-      }
-    }
-
-    // Handle Tab key for focus trap
-    function handleTabKey(e: KeyboardEvent) {
-      if (menu.classList.contains("hidden")) return;
-
-      const focusableElements = getFocusableElements();
-      if (focusableElements.length === 0) return;
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (e.shiftKey) {
-        // Shift + Tab: moving backwards
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement.focus();
-        }
-      } else {
-        // Tab: moving forwards
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
-      }
+      menu.classList.remove('hidden');
+      openIcon?.classList.add('hidden');
+      closeIcon?.classList.remove('hidden');
+      button.setAttribute('aria-expanded', 'true');
     }
 
     // Toggle on button click
-    button.addEventListener("click", (e) => {
+    button.addEventListener('click', (e) => {
       e.stopPropagation();
-      const isOpen = !menu.classList.contains("hidden");
-      if (isOpen) {
-        closeMenu();
-      } else {
+      if (menu.classList.contains('hidden')) {
         openMenu();
+      } else {
+        closeMenu();
       }
     });
 
-    // Handle keyboard navigation
-    document.addEventListener("keydown", (e) => {
-      // Close on Escape
-      if (e.key === "Escape" && !menu.classList.contains("hidden")) {
-        e.preventDefault();
-        closeMenu();
-        button.focus();
-      }
-
-      // Trap focus with Tab
-      if (e.key === "Tab") {
-        handleTabKey(e);
-      }
+    // Close on Escape
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
     });
 
     // Close when clicking outside
-    document.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (
-        !button.contains(target) &&
-        !menu.contains(target) &&
-        !menu.classList.contains("hidden")
-      ) {
+    document.addEventListener('click', (e) => {
+      if (!button.contains(e.target) && !menu.contains(e.target)) {
         closeMenu();
       }
     });
 
     // Close menu before View Transitions navigation
-    document.addEventListener("astro:before-swap", closeMenu);
-  })();
+    document.addEventListener('astro:before-swap', closeMenu);
+  });
 </script>

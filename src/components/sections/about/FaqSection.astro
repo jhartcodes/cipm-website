@@ -47,76 +47,31 @@ const { heading, faqs = [] } = Astro.props;
 <script>
   /**
    * Accordion Controller
-   * Single-open behavior with keyboard navigation
-   * Uses data-expanded attribute for CSS Grid height transitions
+   * Single-open behavior with View Transitions support
    */
-  (function() {
-    const groups = document.querySelectorAll('[data-accordion-group]');
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('[data-accordion-group]').forEach((group) => {
+      const triggers = group.querySelectorAll('[data-accordion-trigger]');
 
-    groups.forEach((group) => {
-      const buttons = group.querySelectorAll('[data-accordion-trigger]');
+      triggers.forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const isOpen = trigger.getAttribute('aria-expanded') === 'true';
 
-      // Single-open: close others when one opens
-      buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-          const isExpanded = button.getAttribute('aria-expanded') === 'true';
-
-          // Close all other items first
-          buttons.forEach((otherButton) => {
-            if (otherButton !== button) {
-              otherButton.setAttribute('aria-expanded', 'false');
-              const otherId = otherButton.getAttribute('aria-controls');
-              const otherContent = document.getElementById(otherId || '');
-              if (otherContent) {
-                otherContent.setAttribute('data-expanded', 'false');
-              }
-            }
+          // Close all others
+          triggers.forEach((t) => {
+            t.setAttribute('aria-expanded', 'false');
+            const id = t.getAttribute('aria-controls');
+            document.getElementById(id)?.setAttribute('data-expanded', 'false');
           });
 
-          // Toggle current item
-          const contentId = button.getAttribute('aria-controls');
-          const content = document.getElementById(contentId || '');
-          if (content) {
-            const newState = !isExpanded;
-            button.setAttribute('aria-expanded', String(newState));
-            content.setAttribute('data-expanded', String(newState));
+          // Toggle clicked one
+          if (!isOpen) {
+            trigger.setAttribute('aria-expanded', 'true');
+            const id = trigger.getAttribute('aria-controls');
+            document.getElementById(id)?.setAttribute('data-expanded', 'true');
           }
         });
       });
-
-      // Keyboard navigation
-      group.addEventListener('keydown', (e) => {
-        const target = e.target as HTMLElement;
-        if (!target.matches('[data-accordion-trigger]')) return;
-
-        const buttonList = Array.from(buttons) as HTMLElement[];
-        const currentIndex = buttonList.indexOf(target);
-
-        let nextIndex = -1;
-
-        switch (e.key) {
-          case 'ArrowDown':
-            e.preventDefault();
-            nextIndex = (currentIndex + 1) % buttonList.length;
-            break;
-          case 'ArrowUp':
-            e.preventDefault();
-            nextIndex = (currentIndex - 1 + buttonList.length) % buttonList.length;
-            break;
-          case 'Home':
-            e.preventDefault();
-            nextIndex = 0;
-            break;
-          case 'End':
-            e.preventDefault();
-            nextIndex = buttonList.length - 1;
-            break;
-        }
-
-        if (nextIndex >= 0) {
-          buttonList[nextIndex].focus();
-        }
-      });
     });
-  })();
+  });
 </script>

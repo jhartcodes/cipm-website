@@ -150,108 +150,61 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
 <script>
   /**
    * Team Modal Controller
-   * Opens modal on card click, handles keyboard navigation and focus trap
+   * View Transitions compatible
    */
-  (function() {
-    const modal = document.querySelector('[data-team-modal]') as HTMLElement;
-    const modalContent = modal?.querySelector('[data-modal-content]');
+  document.addEventListener('astro:page-load', () => {
+    const modal = document.querySelector('[data-team-modal]');
     const closeButton = modal?.querySelector('[data-modal-close]');
     const cards = document.querySelectorAll('[data-team-card]');
 
-    if (!modal || !modalContent || !closeButton) return;
+    if (!modal || !closeButton) return;
 
-    const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+    const modalImage = document.getElementById('modal-image');
     const modalName = document.getElementById('team-modal-title');
     const modalTitle = document.getElementById('modal-title');
     const modalBio = document.getElementById('modal-bio');
 
-    let previousFocusedElement: HTMLElement | null = null;
+    let previousFocus = null;
 
-    function openModal(card: Element) {
-      const name = card.getAttribute('data-name') || '';
-      const title = card.getAttribute('data-title') || '';
-      const bio = card.getAttribute('data-bio') || '';
-      const image = card.getAttribute('data-image') || '';
-
-      if (modalName) modalName.textContent = name;
-      if (modalTitle) modalTitle.textContent = title;
-      if (modalBio) modalBio.textContent = bio;
+    function openModal(card) {
+      if (modalName) modalName.textContent = card.dataset.name || '';
+      if (modalTitle) modalTitle.textContent = card.dataset.title || '';
+      if (modalBio) modalBio.textContent = card.dataset.bio || '';
       if (modalImage) {
-        modalImage.src = image;
-        modalImage.srcset = '';
-        modalImage.alt = name;
+        modalImage.src = card.dataset.image || '';
+        modalImage.alt = card.dataset.name || '';
       }
 
-      previousFocusedElement = document.activeElement as HTMLElement;
+      previousFocus = document.activeElement;
       modal.classList.remove('hidden');
       modal.classList.add('flex');
-
-      // Focus the close button
-      (closeButton as HTMLElement).focus();
+      closeButton.focus();
     }
 
     function closeModal() {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
-
-      // Restore focus
-      if (previousFocusedElement) {
-        previousFocusedElement.focus();
-        previousFocusedElement = null;
-      }
+      if (previousFocus) previousFocus.focus();
     }
 
-    // Open modal on card click
+    // Open on card click or Enter/Space
     cards.forEach((card) => {
       card.addEventListener('click', () => openModal(card));
-
-      // Also handle Enter/Space for keyboard users
       card.addEventListener('keydown', (e) => {
-        if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+        if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           openModal(card);
         }
       });
     });
 
-    // Close on close button click
+    // Close handlers
     closeButton.addEventListener('click', closeModal);
-
-    // Close on backdrop click
     modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
+      if (e.target === modal) closeModal();
     });
-
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-        closeModal();
-      }
-    });
-
-    // Focus trap
     modal.addEventListener('keydown', (e) => {
-      if (e.key !== 'Tab') return;
-
-      const focusableElements = modalContent.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement.focus();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
-      }
+      if (e.key === 'Escape') closeModal();
     });
-  })();
+  });
 </script>
