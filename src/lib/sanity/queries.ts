@@ -78,6 +78,23 @@ export const CTA_SECTION_QUERY = /* groq */ `
 }
 `;
 
+const CTA_SECTION_PROJECTION = /* groq */ `
+{
+  heading,
+  subheading,
+  buttonText,
+  buttonLink{
+    linkType,
+    internalLink->{
+      _type,
+      slug
+    },
+    externalUrl,
+    openInNewTab
+  }
+}
+`;
+
 export const HOME_PAGE_QUERY = /* groq */ `
 *[_type == "homePage"][0]{
   ${HERO_PROJECTION},
@@ -135,6 +152,24 @@ export const HOME_PAGE_QUERY = /* groq */ `
       crop
     }
   },
+  showCta,
+  "ctaData": select(
+    showCta => *[_type == "ctaSection"][0]${CTA_SECTION_PROJECTION},
+    {
+      "heading": contactHeading,
+      "subheading": contactSubheading,
+      "buttonText": contactButtonText,
+      "buttonLink": contactButtonLink{
+        linkType,
+        internalLink->{
+          _type,
+          slug
+        },
+        externalUrl,
+        openInNewTab
+      }
+    }
+  ),
   contactHeading,
   contactSubheading,
   contactButtonText,
@@ -181,6 +216,10 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
     answer
   },
   showCta,
+  "ctaData": select(
+    showCta => *[_type == "ctaSection"][0]${CTA_SECTION_PROJECTION},
+    null
+  ),
   seo
 }
 `;
@@ -204,18 +243,10 @@ export const SERVICES_PAGE_QUERY = /* groq */ `
     enableDetailPage
   },
   showCta,
-  ctaHeading,
-  ctaText,
-  ctaButtonText,
-  ctaButtonLink{
-    linkType,
-    internalLink->{
-      _type,
-      slug
-    },
-    externalUrl,
-    openInNewTab
-  },
+  "ctaData": select(
+    showCta => *[_type == "ctaSection"][0]${CTA_SECTION_PROJECTION},
+    null
+  ),
   seo
 }
 `;
@@ -234,6 +265,10 @@ export const CONTACT_PAGE_QUERY = /* groq */ `
   successMessage,
   recipientEmail,
   showCta,
+  "ctaData": select(
+    showCta => *[_type == "ctaSection"][0]${CTA_SECTION_PROJECTION},
+    null
+  ),
   seo
 }
 `;
@@ -246,6 +281,10 @@ export const BLOG_PAGE_QUERY = /* groq */ `
   postsPerPageDesktop,
   postsPerPageMobile,
   showCta,
+  "ctaData": select(
+    showCta => *[_type == "ctaSection"][0]${CTA_SECTION_PROJECTION},
+    null
+  ),
   seo
 }
 `;

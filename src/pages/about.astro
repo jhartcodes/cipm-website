@@ -4,13 +4,10 @@
  */
 
 import { loadQuery } from "../lib/sanity/loadQuery";
-import { ABOUT_PAGE_QUERY, CTA_SECTION_QUERY } from "../lib/sanity/queries";
+import { ABOUT_PAGE_QUERY } from "../lib/sanity/queries";
 import AboutPage from "../components/pages/AboutPage.astro";
 
 const { data } = await loadQuery({ query: ABOUT_PAGE_QUERY });
-const { data: ctaData } = data?.showCta
-  ? await loadQuery({ query: CTA_SECTION_QUERY })
-  : { data: null };
 ---
 
-<AboutPage data={data} ctaData={ctaData} />
+<AboutPage data={data} ctaData={data?.ctaData} />

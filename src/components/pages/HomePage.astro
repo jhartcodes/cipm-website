@@ -16,9 +16,10 @@ import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
 
 interface Props {
   data?: any;
+  ctaData?: any;
 }
 
-const { data } = Astro.props;
+const { data, ctaData } = Astro.props;
 ---
 
 <BaseLayout title="Home" seo={data?.seo}>
@@ -46,10 +47,12 @@ const { data } = Astro.props;
     heading={data?.testimonialsHeading}
     testimonials={data?.featuredTestimonials}
   />
-  <ContactCtaSection
-    heading={data?.contactHeading}
-    subheading={data?.contactSubheading}
-    buttonText={data?.contactButtonText}
-    buttonLink={data?.contactButtonLink}
-  />
+  {ctaData && (
+    <ContactCtaSection
+      heading={ctaData.heading}
+      subheading={ctaData.subheading}
+      buttonText={ctaData.buttonText}
+      buttonLink={ctaData.buttonLink}
+    />
+  )}
 </BaseLayout>

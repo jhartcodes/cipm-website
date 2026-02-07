@@ -10,4 +10,4 @@ import ServicesPage from "../../components/pages/ServicesPage.astro";
 const { data } = await loadQuery({ query: SERVICES_PAGE_QUERY });
 ---
 
-<ServicesPage data={data} />
+<ServicesPage data={data} ctaData={data?.ctaData} />

@@ -4,16 +4,13 @@
  */
 
 import { loadQuery } from "../lib/sanity/loadQuery";
-import { CONTACT_PAGE_QUERY, CTA_SECTION_QUERY } from "../lib/sanity/queries";
+import { CONTACT_PAGE_QUERY } from "../lib/sanity/queries";
 import ContactPage from "../components/pages/ContactPage.astro";
 
 // SSR for form handling
 export const prerender = false;
 
 const { data } = await loadQuery({ query: CONTACT_PAGE_QUERY });
-const { data: ctaData } = data?.showCta
-  ? await loadQuery({ query: CTA_SECTION_QUERY })
-  : { data: null };
 ---
 
-<ContactPage data={data} ctaData={ctaData} />
+<ContactPage data={data} ctaData={data?.ctaData} />
