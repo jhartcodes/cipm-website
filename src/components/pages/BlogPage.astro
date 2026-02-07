@@ -15,20 +15,16 @@ interface Props {
   data?: any;
   ctaData?: any;
   posts?: any[];
-  categories?: any[];
   currentPage?: number;
   totalPages?: number;
-  activeCategory?: string;
 }
 
 const {
   data,
   ctaData,
   posts = [],
-  categories = [],
   currentPage = 1,
   totalPages = 1,
-  activeCategory,
 } = Astro.props;
 ---
 
@@ -38,10 +34,8 @@ const {
   <div transition:name="blog-grid" transition:animate="initial">
     <BlogGridSection
       posts={posts}
-      categories={categories}
       currentPage={currentPage}
       totalPages={totalPages}
-      activeCategory={activeCategory}
     />
   </div>
 

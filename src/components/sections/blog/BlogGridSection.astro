@@ -2,20 +2,13 @@
 /**
  * BlogGridSection Component
  *
- * Displays blog posts in a grid with optional category filter and pagination.
+ * Displays blog posts in a grid with pagination.
  */
 
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import Icon from "../../ui/Icon.astro";
 import BlogCard from "./BlogCard.astro";
-import CategoryFilter from "./CategoryFilter.astro";
-
-interface Category {
-  title?: string;
-  slug?: { current?: string };
-  color?: string;
-}
 
 interface Post {
   title?: string;
@@ -30,25 +23,20 @@ interface Post {
 
 interface Props {
   posts?: Post[];
-  categories?: Category[];
   currentPage?: number;
   totalPages?: number;
-  activeCategory?: string;
 }
 
 const {
   posts = [],
-  categories = [],
   currentPage = 1,
   totalPages = 1,
-  activeCategory,
 } = Astro.props;
 
 // Build pagination URLs
 const buildPageUrl = (page: number) => {
   const params = new URLSearchParams();
   if (page > 1) params.set('page', String(page));
-  if (activeCategory) params.set('category', activeCategory);
   const queryString = params.toString();
   return `/blog${queryString ? `?${queryString}` : ''}`;
 };
@@ -98,12 +86,6 @@ const paginationPages = getPaginationPages(currentPage, totalPages);
 
 <Section size="lg">
   <div class="min-h-64">
-    {categories.length > 0 && (
-      <div class="mb-8">
-        <CategoryFilter categories={categories} activeCategory={activeCategory} />
-      </div>
-    )}
-
     {posts.length > 0 ? (
       <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (

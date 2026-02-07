@@ -312,16 +312,8 @@ export const BLOG_PAGE_QUERY = /* groq */ `
 }
 `;
 
-export const BLOG_CATEGORIES_QUERY = /* groq */ `
-*[_type == "blogCategory"] | order(title asc){
-  title,
-  slug,
-  color
-}
-`;
-
 export const BLOG_LIST_QUERY = /* groq */ `
-*[_type == "blogPost"] | order(publishedAt desc){
+*[_type == "blogPost"] | order(publishedAt desc)[$start...$end]{
   title,
   slug,
   publishedAt,
