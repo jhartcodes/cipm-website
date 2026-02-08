@@ -30,7 +30,15 @@ interface Props {
   members?: TeamMember[];
 }
 
-const { eyebrow, heading, intro, sidebarTitle, sidebarContent, image, members = [] } = Astro.props;
+const {
+  eyebrow,
+  heading,
+  intro,
+  sidebarTitle,
+  sidebarContent,
+  image,
+  members = [],
+} = Astro.props;
 
 const hasSidebar = sidebarTitle || sidebarContent;
 
@@ -46,64 +54,88 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
     {/* Main content area with floating image */}
     <div>
       {/* Inline floating image - right side */}
-      {image?.asset && (
-        <div class="float-right ml-8 mb-4 w-2/5 hidden lg:block rounded-lg overflow-hidden shadow-lg">
-          <div class="aspect-[4/3]">
-            <SanityImage
-              image={image}
-              alt={image?.alt || ""}
-              width={600}
-              class="w-full h-full object-cover"
-            />
+      {
+        image?.asset && (
+          <div class="float-right ml-8 mb-4 w-2/5 hidden lg:block opacity-0 pointer-events-none">
+            <div class="aspect-4/3 w-full h-full">
+              <SanityImage
+                image={image}
+                alt={image?.alt || ""}
+                width={600}
+                class="w-full h-full object-cover"
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Eyebrow + Headline */}
-      {eyebrow && (
-        <p class="text-turquoise font-bold tracking-wide uppercase text-sm mb-3">
-          {eyebrow}
-        </p>
-      )}
+      {
+        eyebrow && (
+          <p class="text-turquoise font-bold tracking-wide uppercase text-sm mb-3">
+            {eyebrow}
+          </p>
+        )
+      }
       <h2 class="text-2xl md:text-3xl font-bold text-navy leading-tight mb-6">
         {heading || "Our Team"}
       </h2>
 
       {/* Main content - 2 columns on lg */}
-      {intro && (
-        <div class="text-base text-gray-600 leading-relaxed columns-1 lg:columns-2 gap-8">
-          {intro}
-        </div>
-      )}
+      {
+        intro && (
+          <div class="text-base text-gray-600 leading-relaxed columns-1 lg:columns-2 gap-8">
+            {intro}
+          </div>
+        )
+      }
     </div>
 
     {/* Navy sidebar box */}
-    {hasSidebar && (
-      <aside class="bg-navy text-white rounded-lg p-6">
-        {sidebarTitle && (
-          <h3 class="text-lg font-bold text-white mb-3">{sidebarTitle}</h3>
-        )}
-        {sidebarContent && (
-          <p class="text-white/80 leading-relaxed text-sm">{sidebarContent}</p>
-        )}
-      </aside>
-    )}
+    {
+      hasSidebar && (
+        <aside class="relative bg-navy text-white rounded-lg p-6 lg:pt-12">
+          {image?.asset && (
+            <div class="hidden lg:block absolute bottom-28 right-0 w-2/5 rounded-lg overflow-hidden shadow-lg">
+              <div class="aspect-4/3 w-full h-full">
+                <SanityImage
+                  image={image}
+                  alt={image?.alt || ""}
+                  width={600}
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          )}
+          {sidebarTitle && (
+            <h3 class="text-lg font-bold text-white mb-3">{sidebarTitle}</h3>
+          )}
+          {sidebarContent && (
+            <p class="text-white/80 leading-relaxed text-sm">
+              {sidebarContent}
+            </p>
+          )}
+        </aside>
+      )
+    }
   </div>
 
   {/* Team grid */}
-  {members.length > 0 && (
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-      {members.map((member, index) => (
-        <TeamMemberCard
-          name={member.name}
-          title={member.title}
-          headshot={member.headshot}
-          bio={member.bio}
-          id={`team-member-${index}`}
-        />
-      ))}
-    </div>
-  )}
+  {
+    members.length > 0 && (
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {members.map((member, index) => (
+          <TeamMemberCard
+            name={member.name}
+            title={member.title}
+            headshot={member.headshot}
+            bio={member.bio}
+            id={`team-member-${index}`}
+          />
+        ))}
+      </div>
+    )
+  }
 </Section>
 
 {/* Modal for team member bio */}
@@ -115,21 +147,36 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
   aria-labelledby="team-modal-title"
   data-team-modal
 >
-  <div class="relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-xl" data-modal-content>
+  <div
+    class="relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-xl"
+    data-modal-content
+  >
     <button
       type="button"
       class="absolute top-4 right-4 p-2 text-gray-400 hover:text-navy transition-colors"
       aria-label="Close dialog"
       data-modal-close
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </button>
 
     <div class="text-center">
-      <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full ring-4 ring-turquoise/30">
+      <div
+        class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full ring-4 ring-turquoise/30"
+      >
         <Image
           id="modal-image"
           src={modalFallbackSrc}
@@ -152,38 +199,38 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
    * Team Modal Controller
    * View Transitions compatible - uses property assignment
    */
-  document.addEventListener('astro:page-load', () => {
-    const modal = document.querySelector('[data-team-modal]');
-    const closeButton = modal?.querySelector('[data-modal-close]');
-    const cards = document.querySelectorAll('[data-team-card]');
+  document.addEventListener("astro:page-load", () => {
+    const modal = document.querySelector("[data-team-modal]");
+    const closeButton = modal?.querySelector("[data-modal-close]");
+    const cards = document.querySelectorAll("[data-team-card]");
 
     if (!modal || !closeButton) return;
 
-    const modalImage = document.getElementById('modal-image');
-    const modalName = document.getElementById('team-modal-title');
-    const modalTitle = document.getElementById('modal-title');
-    const modalBio = document.getElementById('modal-bio');
+    const modalImage = document.getElementById("modal-image");
+    const modalName = document.getElementById("team-modal-title");
+    const modalTitle = document.getElementById("modal-title");
+    const modalBio = document.getElementById("modal-bio");
 
     let previousFocus = null;
 
     const openModal = (card) => {
-      if (modalName) modalName.textContent = card.dataset.name || '';
-      if (modalTitle) modalTitle.textContent = card.dataset.title || '';
-      if (modalBio) modalBio.textContent = card.dataset.bio || '';
+      if (modalName) modalName.textContent = card.dataset.name || "";
+      if (modalTitle) modalTitle.textContent = card.dataset.title || "";
+      if (modalBio) modalBio.textContent = card.dataset.bio || "";
       if (modalImage) {
-        modalImage.src = card.dataset.image || '';
-        modalImage.alt = card.dataset.name || '';
+        modalImage.src = card.dataset.image || "";
+        modalImage.alt = card.dataset.name || "";
       }
 
       previousFocus = document.activeElement;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
       closeButton.focus();
     };
 
     const closeModal = () => {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
       if (previousFocus) previousFocus.focus();
     };
 
@@ -191,7 +238,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
     cards.forEach((card) => {
       card.onclick = () => openModal(card);
       card.onkeydown = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           openModal(card);
         }
@@ -203,7 +250,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
       if (e.target === modal) closeModal();
     };
     modal.onkeydown = (e) => {
-      if (e.key === 'Escape') closeModal();
+      if (e.key === "Escape") closeModal();
     };
   });
 </script>

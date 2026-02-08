@@ -6,7 +6,7 @@
  * Variant C style with card wrappers and navy icon boxes.
  */
 
-import Container from "../../layout/Container.astro";
+import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
 import Icon from "../../ui/Icon.astro";
@@ -29,22 +29,23 @@ interface Props {
 const { services = [] } = Astro.props;
 ---
 
-<section class="py-10 md:py-18 lg:py-24">
-  <div class="space-y-16 lg:space-y-24">
-    {
-      services.map((service, index) => {
-        const isReversed = index % 2 === 1;
-        const rowBgClass = index % 2 === 0 ? "bg-gray-50" : "bg-white";
-        const gridColsClass = isReversed
-          ? "md:grid-cols-[3fr_7fr]"
-          : "md:grid-cols-[7fr_3fr]";
-        return (
-          <div class={`${rowBgClass}`}>
-            <div class="py-10 md:py-12">
-              <Container size="wide">
-                <div
-                  class={`grid gap-10 lg:gap-16 md:items-start ${gridColsClass} ${isReversed ? "md:[&>*:first-child]:order-2" : ""}`}
-                >
+<div>
+  {services.map((service, index) => {
+    const isReversed = index % 2 === 1;
+    const rowTone = index % 2 === 0 ? "muted" : "default";
+    const gridColsClass = isReversed
+      ? "md:grid-cols-[4fr_6fr]"
+      : "md:grid-cols-[6fr_4fr]";
+    return (
+      <Section
+        size="lg"
+        tone={rowTone}
+        containerSize="wide"
+        class={index === 0 ? "pt-0" : undefined}
+      >
+        <div
+          class={`grid gap-10 lg:gap-16 md:items-start ${gridColsClass} ${isReversed ? "md:[&>*:first-child]:order-2" : ""}`}
+        >
                   <div class="relative">
                     <div
                       class="absolute -top-6 -left-6 h-24 w-24 rounded-full bg-turquoise/10 blur-2xl"
@@ -60,21 +61,11 @@ const { services = [] } = Astro.props;
                       </Text>
                     )}
 
-                    {service.shortDescription && (
-                      <Text
-                        as="p"
-                        variant="body"
-                        class="mt-4 text-gray-600 text-lg leading-relaxed"
-                      >
-                        {service.shortDescription}
-                      </Text>
-                    )}
-
                     {service.bulletPoints &&
                       service.bulletPoints.length > 0 && (
-                        <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+                        <ul class="mt-6 grid gap-y-3">
                           {service.bulletPoints.map((point) => (
-                            <li class="flex items-start gap-3">
+                            <li class="flex items-start gap-2.5">
                               <span
                                 class="mt-1 shrink-0 text-turquoise"
                                 aria-hidden="true"
@@ -91,7 +82,7 @@ const { services = [] } = Astro.props;
                               <Text
                                 as="span"
                                 variant="body"
-                                class="text-gray-700 text-sm md:text-base leading-relaxed font-medium"
+                                class="text-gray-700 text-sm md:text-base leading-snug md:leading-relaxed font-medium"
                               >
                                 {point}
                               </Text>
@@ -141,12 +132,8 @@ const { services = [] } = Astro.props;
                       </div>
                     </div>
                   )}
-                </div>
-              </Container>
-            </div>
-          </div>
-        );
-      })
-    }
-  </div>
-</section>
+        </div>
+      </Section>
+    );
+  })}
+</div>

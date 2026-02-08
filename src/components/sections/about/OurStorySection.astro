@@ -26,20 +26,24 @@ const { heading, content, image } = Astro.props;
         {heading || "Our Story"}
       </Text>
 
-      {content && (
-        <div class="mt-4">
-          <RichText content={content} />
-        </div>
-      )}
+      {
+        content && (
+          <div class="mt-4">
+            <RichText content={content} />
+          </div>
+        )
+      }
     </div>
 
-    {image && (
-      <SanityImage
-        image={image}
-        alt={image?.alt || ""}
-        width={700}
-        class="w-full rounded-2xl"
-      />
-    )}
+    {
+      image && (
+        <SanityImage
+          image={image}
+          alt={image?.alt || ""}
+          width={700}
+          class="w-full rounded-2xl"
+        />
+      )
+    }
   </div>
 </Section>

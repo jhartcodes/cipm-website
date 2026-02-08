@@ -20,8 +20,13 @@ const { headline, supportingText } = Astro.props;
 if (!headline) return;
 ---
 
-<section class="py-12 lg:py-16 bg-turquoise">
-  <Container size="wide">
+<section class="relative overflow-visible bg-turquoise py-12 lg:py-16">
+  <div
+    class="pointer-events-none absolute inset-x-0 -top-28 h-48 bg-gradient-to-t from-turquoise/100 via-turquoise-light/25 to-transparent blur-2xl"
+    aria-hidden="true"
+  ></div>
+
+  <Container size="wide" class="relative z-10">
     <div>
       <Text as="h2" variant="headingLg" tone="inverted">
         {headline}

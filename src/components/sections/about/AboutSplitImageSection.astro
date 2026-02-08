@@ -24,26 +24,32 @@ const imageOnRight = section?.imageSide === "right";
 <Section size="lg" tone={tone}>
   <div class="grid gap-10 lg:grid-cols-2 items-start">
     <div class={imageOnRight ? "lg:order-2" : undefined}>
-      {section?.image && (
-        <SanityImage
-          image={section.image}
-          alt={section?.image?.alt || ""}
-          width={900}
-          class="w-full aspect-[4/3] rounded-2xl object-cover"
-        />
-      )}
+      {
+        section?.image && (
+          <SanityImage
+            image={section.image}
+            alt={section?.image?.alt || ""}
+            width={900}
+            class="w-full aspect-4/3 rounded-2xl object-cover"
+          />
+        )
+      }
     </div>
     <div class={imageOnRight ? "lg:order-1" : undefined}>
-      {section?.headline && (
-        <Text as="h2" variant="headingLg">
-          {section.headline}
-        </Text>
-      )}
-      {section?.content && (
-        <div class={section?.headline ? "mt-4" : undefined}>
-          <RichText content={section.content} />
-        </div>
-      )}
+      {
+        section?.headline && (
+          <Text as="h2" variant="headingLg">
+            {section.headline}
+          </Text>
+        )
+      }
+      {
+        section?.content && (
+          <div class={section?.headline ? "mt-4" : undefined}>
+            <RichText content={section.content} />
+          </div>
+        )
+      }
     </div>
   </div>
 </Section>
