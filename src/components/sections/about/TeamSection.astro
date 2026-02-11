@@ -48,7 +48,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
   : "/favicon.svg";
 ---
 
-<Section size="lg" tone="muted">
+<Section size="lg" tone="default">
   {/* AlternateTextLayout Variant C intro */}
   <div class="space-y-8 mb-12">
     {/* Main content area with floating image */}
@@ -123,7 +123,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
   {/* Team grid */}
   {
     members.length > 0 && (
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 sm: py-6 md:py-12 lg:py-16 ">
         {members.map((member, index) => (
           <TeamMemberCard
             name={member.name}
