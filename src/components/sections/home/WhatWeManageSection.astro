@@ -4,6 +4,7 @@
  *
  * Displays property types managed by CIPM in a responsive grid.
  * Uses Section's built-in Container - do not nest another Container.
+ * Features scroll-triggered fade-in and hover animations.
  */
 
 import Section from "../../layout/Section.astro";
@@ -33,12 +34,10 @@ const validPropertyTypes = propertyTypes.filter((pt) => pt != null);
 
 <Section size="md" tone="muted">
   <div class="text-center mx-auto">
-    {/* Eyebrow */}
     <p class="text-turquoise font-bold tracking-wide uppercase text-sm mb-3">
       {heading || "What We Manage"}
     </p>
 
-    {/* Headline */}
     <Text
       as="h2"
       class="text-2xl md:text-3xl font-bold text-navy leading-tight"
@@ -57,41 +56,102 @@ const validPropertyTypes = propertyTypes.filter((pt) => pt != null);
 
   {
     validPropertyTypes.length > 0 && (
-      <div class="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-        {validPropertyTypes.map((item) => (
-          <div class="group relative rounded-xl md:rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow aspect-[3/4]">
-            {/* Image */}
-            {item.image ? (
-              <SanityImage
-                image={item.image}
-                alt={item.image?.alt || item.title || ""}
-                width={400}
-                class="w-full h-full object-cover"
-              />
-            ) : (
-              <div class="w-full h-full bg-gradient-to-br from-navy to-navy-dark" />
-            )}
+      <div class="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
+        {validPropertyTypes.map((item, index) => (
+          <div
+            class="property-card group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4]"
+            style={`--delay: ${index * 100}ms`}
+          >
+            {/* Image with zoom effect */}
+            <div class="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-105">
+              {item.image ? (
+                <SanityImage
+                  image={item.image}
+                  alt={item.image?.alt || item.title || ""}
+                  width={400}
+                  class="w-full h-full object-cover"
+                />
+              ) : (
+                <div class="w-full h-full bg-gradient-to-br from-navy to-navy-dark" />
+              )}
+            </div>
 
             {/* Gradient overlay */}
             <div class="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/40 to-transparent" />
 
-            {/* Content overlay */}
-            <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4">
-              {/* Title */}
+            {/* Hover overlay - darkens */}
+            <div class="absolute inset-0 bg-navy/0 transition-colors duration-300 group-hover:bg-navy/20" />
+
+            {/* Content */}
+            <div class="absolute bottom-0 left-0 right-0 p-4 md:p-5 transition-transform duration-300 group-hover:-translate-y-1">
               {item.title && (
-                <Text
-                  as="h3"
-                  variant="body"
-                  tone="inverted"
-                  class="font-semibold"
-                >
+                <h3 class="text-white text-base md:text-lg font-bold leading-tight">
                   {item.title}
-                </Text>
+                </h3>
               )}
             </div>
+
+            {/* Glow ring on hover */}
+            <div class="absolute inset-0 rounded-2xl ring-0 ring-turquoise/0 transition-all duration-300 group-hover:ring-2 group-hover:ring-turquoise/40 group-hover:shadow-lg" />
           </div>
         ))}
       </div>
     )
   }
 </Section>
+
+<style>
+  /* Scroll-triggered animation */
+  .property-card {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .property-card.animate-in {
+    animation: fadeSlideUp 0.6s ease-out forwards;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .property-card {
+      opacity: 1;
+      transform: none;
+    }
+    .property-card.animate-in {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const cards = document.querySelectorAll('.property-card');
+    if (!cards.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    cards.forEach((card) => observer.observe(card));
+  });
+</script>
