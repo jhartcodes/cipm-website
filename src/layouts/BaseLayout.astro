@@ -62,15 +62,19 @@ const { site, nav, topRibbon, footer } = globalData;
     <ClientRouter prefetch="viewport" fallback="swap" />
   </head>
 
-  <body class="min-h-screen flex flex-col">
-    {topRibbon?.enabled && <TopRibbon data={topRibbon} transition:persist />}
+  <body class="min-h-screen">
+    <!-- Main content wrapper - sits above footer -->
+    <div class="site-content relative z-10 bg-white pb-8">
+      {topRibbon?.enabled && <TopRibbon data={topRibbon} transition:persist />}
 
-    <Navigation data={nav} siteName={site?.siteName} transition:persist />
+      <Navigation data={nav} siteName={site?.siteName} transition:persist />
 
-    <main class={className} transition:animate="fade">
-      <slot />
-    </main>
+      <main class={className} transition:animate="fade">
+        <slot />
+      </main>
+    </div>
 
+    <!-- Footer - sticky behind content, reveals on scroll -->
     <Footer data={footer} transition:persist />
 
     <VisualEditing enabled={visualEditingEnabled} />
