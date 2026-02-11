@@ -13,6 +13,7 @@ const ROUTE_MAP: Record<string, string> = {
   aboutPage: "/about",
   servicesPage: "/services",
   contactPage: "/contact",
+  requestProposalPage: "/request-proposal",
   blogPage: "/blog",
   blogPost: "/blog",
   service: "/services",
@@ -66,10 +67,7 @@ export function resolveLink(
 /**
  * Resolve internal route from document type and optional slug
  */
-function resolveInternalRoute(
-  docType: string,
-  slug?: string,
-): string | null {
+function resolveInternalRoute(docType: string, slug?: string): string | null {
   const basePath = ROUTE_MAP[docType];
 
   if (!basePath) {

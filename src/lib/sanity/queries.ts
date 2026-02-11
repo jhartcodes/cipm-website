@@ -281,7 +281,7 @@ export const CONTACT_PAGE_QUERY = /* groq */ `
   address,
   phone,
   email,
-  mapEmbedUrl,
+  "mapEmbedUrl": mapEmbed,
   formHeading,
   formDescription,
   submitButtonText,
@@ -373,6 +373,25 @@ export const BLOG_POST_QUERY = /* groq */ `
     "upload": uploadedVideo,
     "title": caption
   },
+  seo
+}
+`;
+
+export const PROPERTY_TYPE_OPTIONS_QUERY = /* groq */ `
+*[_type == "propertyType"] | order(title asc){
+  _id,
+  title,
+  slug
+}
+`;
+
+export const REQUEST_PROPOSAL_PAGE_QUERY = /* groq */ `
+*[_type == "requestProposalPage"][0]{
+  ${HERO_PROJECTION},
+  formHeading,
+  formDescription,
+  submitButtonText,
+  successMessage,
   seo
 }
 `;

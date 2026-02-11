@@ -1,38 +1,43 @@
 ---
-/**
- * ContactFormSection Component
- *
- * Contact form with server-side API submission.
- * Uses Turnstile + honeypot for bot protection.
- */
-
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
 import Icon from "../../ui/Icon.astro";
 import TextField from "../../forms/TextField.astro";
 import TextArea from "../../forms/TextArea.astro";
 
+interface PropertyTypeOption {
+  _id: string;
+  title?: string;
+  slug?: { current?: string };
+}
+
 interface Props {
+  propertyTypes?: PropertyTypeOption[];
   heading?: string;
   description?: string;
   buttonText?: string;
   successMessage?: string;
 }
 
-const { heading, description, buttonText, successMessage } = Astro.props;
+const {
+  propertyTypes = [],
+  heading,
+  description,
+  buttonText,
+  successMessage,
+} = Astro.props;
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <div class="space-y-6">
-  <Text as="h2" variant="heading" class="text-2xl font-bold text-navy mb-6">
-    {heading || "Send us a Message"}
-  </Text>
-
-  {description && (
-    <Text as="p" variant="body" class="text-gray-600">
-      {description}
+  <div>
+    <Text as="h2" variant="heading" class="text-2xl font-bold text-navy">
+      {heading || "Request a Proposal"}
     </Text>
-  )}
+    <Text as="p" variant="body" class="mt-2 text-gray-600">
+      {description || "Tell us a bit about your property and we will follow up with a proposal."}
+    </Text>
+  </div>
 
   <div class="rounded-xl bg-green-50 border border-green-200 p-6 hidden" data-form-success>
     <div class="flex items-center gap-3">
@@ -40,7 +45,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         <Icon name="check-circle" size={24} />
       </div>
       <Text as="p" variant="body" class="text-green-800" data-form-success-text>
-        {successMessage || "Thank you for your message! We'll be in touch soon."}
+        {successMessage || "Thanks for your proposal request. We'll be in touch soon."}
       </Text>
     </div>
   </div>
@@ -51,9 +56,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     </Text>
   </div>
 
-  <form class="space-y-4" data-lead-form="contact">
-    <input type="hidden" name="formId" value="contact" />
-    <input type="hidden" name="sourcePage" value="/contact" />
+  <form class="space-y-4" data-lead-form="request-proposal">
+    <input type="hidden" name="formId" value="request_proposal" />
+    <input type="hidden" name="sourcePage" value="/request-proposal" />
 
     <p class="hidden" aria-hidden="true">
       <label>
@@ -62,35 +67,86 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       </label>
     </p>
 
+    <div class="grid gap-4 md:grid-cols-2">
+      <TextField
+        name="name"
+        label="Name"
+        type="text"
+        required
+        placeholder="Your name"
+      />
+      <TextField
+        name="email"
+        label="Email"
+        type="email"
+        required
+        placeholder="your@email.com"
+      />
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <TextField
+        name="phone"
+        label="Phone"
+        type="tel"
+        required
+        placeholder="(123) 456-7890"
+      />
+      <div>
+        <label for="field-propertyType" class="mb-2 block text-sm font-semibold text-navy">
+          Property Type
+          <span class="ml-1 text-red-500">*</span>
+        </label>
+        <select
+          id="field-propertyType"
+          name="propertyType"
+          required
+          class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all hover:border-gray-400 focus:border-turquoise focus:outline-none focus:ring-2 focus:ring-turquoise/20"
+        >
+          <option value="">Select a property type</option>
+          {
+            propertyTypes.map((type) => (
+              <option value={type._id}>{type.title || "Untitled"}</option>
+            ))
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <TextField
+        name="bestTimeToCall"
+        label="Best Time To Call"
+        type="text"
+        placeholder="Morning / Afternoon / Evening"
+      />
+      <TextField
+        name="buildingSize"
+        label="Building Size"
+        type="text"
+        placeholder="e.g. 15 units or 25,000 sq ft"
+      />
+    </div>
+
     <TextField
-      name="name"
-      label="Name"
+      name="buildingAddress"
+      label="Building Address"
       type="text"
-      required
-      placeholder="Your name"
+      placeholder="Street, City, Province"
     />
 
     <TextField
-      name="email"
-      label="Email"
-      type="email"
-      required
-      placeholder="your@email.com"
-    />
-
-    <TextField
-      name="phone"
-      label="Phone"
-      type="tel"
-      placeholder="(123) 456-7890"
+      name="heardAboutUs"
+      label="How Did You Hear About Us?"
+      type="text"
+      placeholder="Referral, Google, Social Media, etc."
     />
 
     <TextArea
-      name="message"
-      label="Message"
-      required
+      name="additionalInfo"
+      label="Additional Info"
       rows={5}
-      placeholder="How can we help you?"
+      placeholder="Anything else we should know?"
     />
 
     {
@@ -109,7 +165,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
     <div class="pt-2">
       <Button type="submit" variant="primary" size="lg" class="w-full sm:w-auto" data-submit-button>
-        {buttonText || "Send Message"}
+        {buttonText || "Request Proposal"}
       </Button>
     </div>
   </form>
@@ -127,7 +183,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const form = document.querySelector('[data-lead-form="contact"]');
+    const form = document.querySelector('[data-lead-form="request-proposal"]');
     if (!(form instanceof HTMLFormElement)) return;
 
     const successBox = document.querySelector("[data-form-success]");
@@ -151,14 +207,19 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
       const formData = new FormData(form);
       const payload = {
-        formId: String(formData.get("formId") || "contact"),
-        sourcePage: String(formData.get("sourcePage") || "/contact"),
+        formId: String(formData.get("formId") || "request_proposal"),
+        sourcePage: String(formData.get("sourcePage") || "/request-proposal"),
         honeypot: String(formData.get("honeypot") || ""),
         turnstileToken: String(formData.get("cf-turnstile-response") || ""),
         name: String(formData.get("name") || ""),
         email: String(formData.get("email") || ""),
         phone: String(formData.get("phone") || ""),
-        message: String(formData.get("message") || ""),
+        propertyType: String(formData.get("propertyType") || ""),
+        bestTimeToCall: String(formData.get("bestTimeToCall") || ""),
+        buildingSize: String(formData.get("buildingSize") || ""),
+        buildingAddress: String(formData.get("buildingAddress") || ""),
+        heardAboutUs: String(formData.get("heardAboutUs") || ""),
+        additionalInfo: String(formData.get("additionalInfo") || ""),
       };
 
       try {
@@ -183,7 +244,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
         if (successText) {
           successText.textContent =
-            result?.message || "Thank you for your message! We'll be in touch soon.";
+            result?.message || "Thanks for your proposal request. We'll be in touch soon.";
         }
         successBox?.classList.remove("hidden");
         form.reset();
@@ -193,7 +254,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           turnstile.reset();
         }
       } catch (error) {
-        console.error("Contact form submit failed", error);
+        console.error("Request proposal submit failed", error);
         errorBox?.classList.remove("hidden");
       } finally {
         if (submitButton instanceof HTMLButtonElement) {
