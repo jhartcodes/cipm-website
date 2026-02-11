@@ -141,6 +141,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       errorBox?.classList.add("hidden");
     };
 
+    const resetTurnstile = () => {
+      if (typeof window !== "undefined" && "turnstile" in window) {
+        const turnstile = (window as any).turnstile;
+        turnstile.reset();
+      }
+    };
+
     form.onsubmit = async (event) => {
       event.preventDefault();
       clearMessages();
@@ -178,6 +185,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
               result?.message || "Unable to submit form right now. Please try again.";
           }
           errorBox?.classList.remove("hidden");
+          resetTurnstile();
           return;
         }
 
@@ -188,13 +196,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         successBox?.classList.remove("hidden");
         form.reset();
 
-        if (typeof window !== "undefined" && "turnstile" in window) {
-          const turnstile = (window as any).turnstile;
-          turnstile.reset();
-        }
+        resetTurnstile();
       } catch (error) {
         console.error("Contact form submit failed", error);
         errorBox?.classList.remove("hidden");
+        resetTurnstile();
       } finally {
         if (submitButton instanceof HTMLButtonElement) {
           submitButton.disabled = false;
