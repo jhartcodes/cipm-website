@@ -30,110 +30,109 @@ const { services = [] } = Astro.props;
 ---
 
 <div>
-  {services.map((service, index) => {
-    const isReversed = index % 2 === 1;
-    const rowTone = index % 2 === 0 ? "muted" : "default";
-    const gridColsClass = isReversed
-      ? "md:grid-cols-[4fr_6fr]"
-      : "md:grid-cols-[6fr_4fr]";
-    return (
-      <Section
-        size="lg"
-        tone={rowTone}
-        containerSize="wide"
-        class={index === 0 ? "pt-0" : undefined}
-      >
-        <div
-          class={`grid gap-10 lg:gap-16 md:items-start ${gridColsClass} ${isReversed ? "md:[&>*:first-child]:order-2" : ""}`}
+  {
+    services.map((service, index) => {
+      const isReversed = index % 2 === 1;
+      const rowTone = index % 2 === 0 ? "default" : "muted";
+      const gridColsClass = isReversed
+        ? "md:grid-cols-[4fr_6fr]"
+        : "md:grid-cols-[6fr_4fr]";
+      return (
+        <Section
+          size="lg"
+          tone={rowTone}
+          containerSize="wide"
+          class={index === 0 ? "pt-0" : undefined}
         >
-                  <div class="relative">
-                    <div
-                      class="absolute -top-6 -left-6 h-24 w-24 rounded-full bg-turquoise/10 blur-2xl"
-                      aria-hidden="true"
-                    />
-                    {service.title && (
-                      <Text
-                        as="h3"
-                        variant="headingLg"
-                        class="text-2xl md:text-3xl font-bold text-navy"
-                      >
-                        {service.title}
-                      </Text>
-                    )}
+          <div
+            class={`grid gap-10 lg:gap-16 md:items-start ${gridColsClass} ${isReversed ? "md:[&>*:first-child]:order-2" : ""}`}
+          >
+            <div class="relative">
+              <div
+                class="absolute -top-6 -left-6 h-24 w-24 rounded-full bg-turquoise/10 blur-2xl"
+                aria-hidden="true"
+              />
+              {service.title && (
+                <Text
+                  as="h3"
+                  variant="headingLg"
+                  class="text-2xl md:text-3xl font-bold text-navy"
+                >
+                  {service.title}
+                </Text>
+              )}
 
-                    {service.bulletPoints &&
-                      service.bulletPoints.length > 0 && (
-                        <ul class="mt-6 grid gap-y-3">
-                          {service.bulletPoints.map((point) => (
-                            <li class="flex items-start gap-2.5">
-                              <span
-                                class="mt-1 shrink-0 text-turquoise"
-                                aria-hidden="true"
-                              >
-                                <svg
-                                  width="18"
-                                  height="18"
-                                  viewBox="0 0 24 24"
-                                  fill="currentColor"
-                                >
-                                  <path d="M12 2.5c3.2 0 5.8 1.3 7.4 3.2 1.6 1.9 2.2 4.4 1.5 6.5-.7 2.2-2.6 3.6-4.9 4.2-2.2.6-4.8.5-6.9-.3-2.2-.8-4-2.3-4.5-4.3-.6-2.1.2-4.6 1.8-6.5 1.6-1.9 4-2.8 5.6-2.8Z" />
-                                </svg>
-                              </span>
-                              <Text
-                                as="span"
-                                variant="body"
-                                class="text-gray-700 text-sm md:text-base leading-snug md:leading-relaxed font-medium"
-                              >
-                                {point}
-                              </Text>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-
-                    {service.enableDetailPage && service.slug?.current && (
-                      <div class="mt-8">
-                        <Button
-                          href={resolveLink({
-                            linkType: "internal",
-                            internalLink: {
-                              _type: "service",
-                              slug: service.slug,
-                            },
-                          })}
-                          variant="outline"
-                          size="md"
-                        >
-                          Learn more
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-
-                  {service.image && (
-                    <div class="relative">
-                      <div
-                        class="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-navy/5 blur-2xl"
+              {service.bulletPoints && service.bulletPoints.length > 0 && (
+                <ul class="mt-6 grid gap-y-3">
+                  {service.bulletPoints.map((point) => (
+                    <li class="flex items-start gap-2.5">
+                      <span
+                        class="mt-1 shrink-0 text-turquoise"
                         aria-hidden="true"
-                      />
-                      <div class="overflow-hidden shadow-xl rounded-[28px]">
-                        <div class="aspect-4/3">
-                          <SanityImage
-                            image={service.image}
-                            alt={
-                              service.image?.alt ||
-                              service.title ||
-                              "Service image"
-                            }
-                            width={900}
-                            class="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-        </div>
-      </Section>
-    );
-  })}
+                      >
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M12 2.5c3.2 0 5.8 1.3 7.4 3.2 1.6 1.9 2.2 4.4 1.5 6.5-.7 2.2-2.6 3.6-4.9 4.2-2.2.6-4.8.5-6.9-.3-2.2-.8-4-2.3-4.5-4.3-.6-2.1.2-4.6 1.8-6.5 1.6-1.9 4-2.8 5.6-2.8Z" />
+                        </svg>
+                      </span>
+                      <Text
+                        as="span"
+                        variant="body"
+                        class="text-gray-700 text-sm md:text-base leading-snug md:leading-relaxed font-medium"
+                      >
+                        {point}
+                      </Text>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {service.enableDetailPage && service.slug?.current && (
+                <div class="mt-8">
+                  <Button
+                    href={resolveLink({
+                      linkType: "internal",
+                      internalLink: {
+                        _type: "service",
+                        slug: service.slug,
+                      },
+                    })}
+                    variant="outline"
+                    size="md"
+                  >
+                    Learn more
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {service.image && (
+              <div class="relative">
+                <div
+                  class="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-navy/5 blur-2xl"
+                  aria-hidden="true"
+                />
+                <div class="overflow-hidden shadow-xl rounded-[28px]">
+                  <div class="aspect-4/3">
+                    <SanityImage
+                      image={service.image}
+                      alt={
+                        service.image?.alt || service.title || "Service image"
+                      }
+                      width={900}
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </Section>
+      );
+    })
+  }
 </div>
