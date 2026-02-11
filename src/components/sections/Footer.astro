@@ -11,6 +11,8 @@ import Container from "../layout/Container.astro";
 import SmartLink from "../ui/SmartLink.astro";
 import Icon from "../ui/Icon.astro";
 import logoLongWhite from "../../assets/cipm-logo-long-white.svg";
+import linkedinWhite from "../../assets/linkedin-white.svg";
+import linkedinTurquoise from "../../assets/linkedin-turquoise.svg";
 
 interface SocialLink {
   platform: string;
@@ -31,7 +33,10 @@ interface Props {
 const { data } = Astro.props;
 
 // Map platform names to icon names
-const platformToIcon: Record<string, "linkedin" | "facebook" | "instagram" | "twitter" | "youtube" | "link"> = {
+const platformToIcon: Record<
+  string,
+  "linkedin" | "facebook" | "instagram" | "twitter" | "youtube" | "link"
+> = {
   LinkedIn: "linkedin",
   Facebook: "facebook",
   Instagram: "instagram",
@@ -43,12 +48,20 @@ const platformToIcon: Record<string, "linkedin" | "facebook" | "instagram" | "tw
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="sticky bottom-0 z-0 bg-navy-dark text-white pt-16 pb-12 lg:pt-20 lg:pb-16 rounded-t-[2rem]">
+<footer
+  class="sticky bottom-0 z-0 bg-navy-dark text-white pt-16 pb-12 lg:pt-20 lg:pb-16 rounded-t-[2rem]"
+>
   <Container size="wide">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12"
+    >
       <!-- Logo & Description -->
       <div class="lg:col-span-2">
-        <SmartLink href="/" class="block mb-6" aria-label="CIPM - Go to homepage">
+        <SmartLink
+          href="/"
+          class="block mb-6"
+          aria-label="CIPM - Go to homepage"
+        >
           <Image
             src={logoLongWhite}
             alt="CIPM - Community Impact Property Management"
@@ -63,83 +76,152 @@ const currentYear = new Date().getFullYear();
           nonprofit, rental, and mixed-use properties.
         </p>
 
-        {data.socialLinks && data.socialLinks.length > 0 && (
-          <div class="flex gap-4 mt-6">
-            {data.socialLinks.map((link) => {
-              const iconName = platformToIcon[link.platform] || "link";
-              return (
-                <SmartLink
-                  href={link.url}
-                  class="text-white/70 hover:text-white transition-colors"
-                >
-                  <Icon name={iconName} size={20} aria-label={link.platform} />
-                </SmartLink>
-              );
-            })}
-          </div>
-        )}
+        {
+          data.socialLinks && data.socialLinks.length > 0 && (
+            <div class="flex gap-4 mt-6">
+              {data.socialLinks.map((link) => {
+                const iconName = platformToIcon[link.platform] || "link";
+                const isLinkedIn = link.platform?.toLowerCase() === "linkedin";
+                return (
+                  <SmartLink
+                    href={link.url}
+                    class="group text-white/70 hover:text-white transition-colors"
+                  >
+                    {isLinkedIn ? (
+                      <span class="relative block h-5 w-5">
+                        <Image
+                          src={linkedinWhite}
+                          alt={link.platform}
+                          width={20}
+                          height={20}
+                          class="absolute inset-0 h-5 w-5 transition-opacity duration-200 group-hover:opacity-0"
+                        />
+                        <Image
+                          src={linkedinTurquoise}
+                          alt=""
+                          aria-hidden="true"
+                          width={20}
+                          height={20}
+                          class="absolute inset-0 h-5 w-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                        />
+                      </span>
+                    ) : (
+                      <Icon
+                        name={iconName}
+                        size={20}
+                        aria-label={link.platform}
+                      />
+                    )}
+                  </SmartLink>
+                );
+              })}
+            </div>
+          )
+        }
       </div>
 
       <!-- Contact Information -->
       <div>
         <h3 class="text-base font-bold mb-3 text-turquoise-light">Contact</h3>
         <ul class="space-y-3">
-          {data.phoneNumber && (
-            <li>
-              <SmartLink
-                href={`tel:${data.phoneNumber.replace(/[^0-9+]/g, '')}`}
-                class="text-white/70 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <Icon name="phone-call" size={16} class="flex-shrink-0" />
-                {data.phoneNumber}
-              </SmartLink>
-            </li>
-          )}
+          {
+            data.phoneNumber && (
+              <li>
+                <SmartLink
+                  href={`tel:${data.phoneNumber.replace(/[^0-9+]/g, "")}`}
+                  class="text-white/70 hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <Icon name="phone-call" size={16} class="flex-shrink-0" />
+                  {data.phoneNumber}
+                </SmartLink>
+              </li>
+            )
+          }
 
-          {data.email && (
-            <li>
-              <SmartLink
-                href={`mailto:${data.email}`}
-                class="text-white/70 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <Icon name="mail" size={16} class="flex-shrink-0" />
-                {data.email}
-              </SmartLink>
-            </li>
-          )}
+          {
+            data.email && (
+              <li>
+                <SmartLink
+                  href={`mailto:${data.email}`}
+                  class="text-white/70 hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <Icon name="mail" size={16} class="flex-shrink-0" />
+                  {data.email}
+                </SmartLink>
+              </li>
+            )
+          }
 
-          {data.address && (
-            <li class="text-white/70 flex items-start gap-2">
-              <Icon name="map-pin" size={16} class="flex-shrink-0 mt-1" />
-              <span>{data.address}</span>
-            </li>
-          )}
+          {
+            data.address && (
+              <li class="text-white/70 flex items-start gap-2">
+                <Icon name="map-pin" size={16} class="flex-shrink-0 mt-1" />
+                <span>{data.address}</span>
+              </li>
+            )
+          }
         </ul>
       </div>
 
       <!-- Quick Links -->
       <div>
-        <h3 class="text-base font-bold mb-3 text-turquoise-light">Quick Links</h3>
+        <h3 class="text-base font-bold mb-3 text-turquoise-light">
+          Quick Links
+        </h3>
         <ul class="space-y-2">
-          <li><SmartLink href="/about" class="text-white/70 hover:text-white transition-colors">About Us</SmartLink></li>
-          <li><SmartLink href="/services" class="text-white/70 hover:text-white transition-colors">Services</SmartLink></li>
-          <li><SmartLink href="/blog" class="text-white/70 hover:text-white transition-colors">Blog</SmartLink></li>
-          <li><SmartLink href="/contact" class="text-white/70 hover:text-white transition-colors">Contact</SmartLink></li>
+          <li>
+            <SmartLink
+              href="/about"
+              class="text-white/70 hover:text-white transition-colors"
+              >About Us</SmartLink>
+          </li>
+          <li>
+            <SmartLink
+              href="/services"
+              class="text-white/70 hover:text-white transition-colors"
+              >Services</SmartLink>
+          </li>
+          <li>
+            <SmartLink
+              href="/blog"
+              class="text-white/70 hover:text-white transition-colors"
+              >Blog</SmartLink>
+          </li>
+          <li>
+            <SmartLink
+              href="/contact"
+              class="text-white/70 hover:text-white transition-colors"
+              >Contact</SmartLink>
+          </li>
         </ul>
       </div>
     </div>
 
     <!-- Land Acknowledgement & Copyright -->
     <div class="mt-12 pt-8 border-t border-white/10">
-      {data.landAcknowledgement && (
-        <p class="text-white/50 text-xs mb-4 max-w-3xl">
-          {data.landAcknowledgement}
-        </p>
-      )}
+      {
+        data.landAcknowledgement && (
+          <p class="text-white/50 text-xs mb-4 max-w-3xl">
+            {data.landAcknowledgement}
+          </p>
+        )
+      }
       <p class="text-white/50 text-xs">
-        {data.copyrightText ||
-          `© ${currentYear} Community Impact Property Management. All rights reserved.`}
+        {
+          data.copyrightText ||
+            `© ${currentYear} Community Impact Property Management. All rights reserved.`
+        }
       </p>
+      <div
+        class="mt-3 flex flex-col gap-2 md:ml-auto md:mt-0 md:w-[28rem] md:flex-row md:items-center md:justify-between"
+      >
+        <SmartLink
+          href="/privacy-policy"
+          class="text-white/50 text-xs hover:text-turquoise-light transition-colors"
+        >
+          Privacy Policy
+        </SmartLink>
+      </div>
     </div>
   </Container>
 </footer>
