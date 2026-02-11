@@ -1,14 +1,11 @@
 ---
 /**
- * Contact Page (SSR for form handling)
+ * Contact Page
  */
 
 import { loadQuery } from "../lib/sanity/loadQuery";
 import { CONTACT_PAGE_QUERY } from "../lib/sanity/queries";
 import ContactPage from "../components/pages/ContactPage.astro";
-
-// SSR for form handling
-export const prerender = false;
 
 const { data } = await loadQuery({ query: CONTACT_PAGE_QUERY });
 ---

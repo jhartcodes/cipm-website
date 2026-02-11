@@ -9,8 +9,6 @@ import {
   REQUEST_PROPOSAL_PAGE_QUERY,
 } from "../lib/sanity/queries";
 
-export const prerender = false;
-
 const { data: pageData } = await loadQuery({ query: REQUEST_PROPOSAL_PAGE_QUERY });
 const { data: propertyTypes } = await loadQuery({ query: PROPERTY_TYPE_OPTIONS_QUERY });
 const pageTitle = pageData?.hero?.heading || "Request Proposal";

@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import netlify from "@astrojs/netlify";
+import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import sanity from "@sanity/astro";
 import react from "@astrojs/react";
@@ -20,6 +21,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   integrations: [
+    sitemap(),
     sanity({
       projectId: "sv0c67ot",
       dataset: "production",
