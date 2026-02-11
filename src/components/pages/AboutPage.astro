@@ -17,10 +17,14 @@ interface Props {
 }
 
 const { data, ctaData } = Astro.props;
+const pageTitle = data?.hero?.heading || "About Us";
 ---
 
-<BaseLayout title="About Us" seo={data?.seo}>
-  <SecondaryHeroSection title="About Us" />
+<BaseLayout title={pageTitle} seo={data?.seo}>
+  <SecondaryHeroSection
+    title={pageTitle}
+    subtitle={data?.hero?.subheading}
+  />
   <AboutStorySections sections={data?.storySections} />
   <TeamSection
     eyebrow={data?.teamEyebrow}
@@ -31,12 +35,14 @@ const { data, ctaData } = Astro.props;
     image={data?.teamImage}
     members={data?.teamMembers}
   />
-  {ctaData && (
-    <ContactCtaSection
-      heading={ctaData.heading}
-      subheading={ctaData.subheading}
-      buttonText={ctaData.buttonText}
-      buttonLink={ctaData.buttonLink}
-    />
-  )}
+  {
+    ctaData && (
+      <ContactCtaSection
+        heading={ctaData.heading}
+        subheading={ctaData.subheading}
+        buttonText={ctaData.buttonText}
+        buttonLink={ctaData.buttonLink}
+      />
+    )
+  }
 </BaseLayout>

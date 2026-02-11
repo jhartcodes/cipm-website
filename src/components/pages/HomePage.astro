@@ -20,9 +20,10 @@ interface Props {
 }
 
 const { data, ctaData } = Astro.props;
+const pageTitle = data?.hero?.heading || "Home";
 ---
 
-<BaseLayout title="Home" seo={data?.seo}>
+<BaseLayout title={pageTitle} seo={data?.seo}>
   <HeroSection hero={data?.hero} />
   <IntroductionSection
     headline={data?.introductionHeadline}

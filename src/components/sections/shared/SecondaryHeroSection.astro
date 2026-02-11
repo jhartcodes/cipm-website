@@ -13,10 +13,11 @@ import CubeHouse from "../../../assets/cube-house.svg";
 
 interface Props {
   title: string;
+  subtitle?: string;
   class?: string;
 }
 
-const { title, class: className } = Astro.props;
+const { title, subtitle, class: className } = Astro.props;
 ---
 
 <section
@@ -27,6 +28,13 @@ const { title, class: className } = Astro.props;
       <Text as="h1" variant="hero">
         {title}
       </Text>
+      {
+        subtitle && (
+          <Text as="p" variant="body" class="mt-3 text-navy/70 max-w-2xl">
+            {subtitle}
+          </Text>
+        )
+      }
     </div>
   </Container>
 

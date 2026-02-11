@@ -26,10 +26,14 @@ const {
   currentPage = 1,
   totalPages = 1,
 } = Astro.props;
+const pageTitle = data?.hero?.heading || "Blog";
 ---
 
-<BaseLayout title="Blog" seo={data?.seo}>
-  <SecondaryHeroSection title="Blog" />
+<BaseLayout title={pageTitle} seo={data?.seo}>
+  <SecondaryHeroSection
+    title={pageTitle}
+    subtitle={data?.hero?.subheading}
+  />
   <BlogIntroSection heading={data?.heading} intro={data?.introText} />
   <div transition:name="blog-grid" transition:animate="initial">
     <BlogGridSection
