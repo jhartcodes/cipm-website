@@ -10,6 +10,8 @@ interface Props {
   name: string;
   label: string;
   required?: boolean;
+  minLength?: number;
+  maxLength?: number;
   placeholder?: string;
   value?: string;
   rows?: number;
@@ -21,6 +23,8 @@ const {
   name,
   label,
   required = false,
+  minLength,
+  maxLength,
   placeholder,
   value,
   rows = 4,
@@ -44,6 +48,8 @@ const errorId = `error-${name}`;
     rows={rows}
     placeholder={placeholder}
     required={required}
+    minlength={minLength}
+    maxlength={maxLength}
     aria-required={required}
     aria-invalid={error ? 'true' : 'false'}
     aria-describedby={error ? errorId : undefined}

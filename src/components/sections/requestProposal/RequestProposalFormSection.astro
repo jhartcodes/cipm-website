@@ -197,6 +197,87 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       errorBox?.classList.add("hidden");
     };
 
+    const getField = (name: string) => {
+      const field = form.querySelector(`[name="${name}"]`);
+      if (
+        field instanceof HTMLInputElement ||
+        field instanceof HTMLTextAreaElement ||
+        field instanceof HTMLSelectElement
+      ) {
+        return field;
+      }
+      return null;
+    };
+
+    const clearFieldErrors = () => {
+      form
+        .querySelectorAll("input, textarea, select")
+        .forEach((field) => {
+          if (
+            field instanceof HTMLInputElement ||
+            field instanceof HTMLTextAreaElement ||
+            field instanceof HTMLSelectElement
+          ) {
+            field.setCustomValidity("");
+          }
+        });
+    };
+
+    const applyFieldErrors = (details: Record<string, unknown>) => {
+      let applied = false;
+
+      Object.entries(details).forEach(([fieldName, messages]) => {
+        if (!Array.isArray(messages)) return;
+
+        const firstMessage = messages.find(
+          (value) => typeof value === "string" && value.trim().length > 0,
+        );
+        if (typeof firstMessage !== "string") return;
+
+        const field = getField(fieldName);
+        if (!field) return;
+
+        field.setCustomValidity(firstMessage);
+        applied = true;
+      });
+
+      if (applied) {
+        form.reportValidity();
+      }
+
+      return applied;
+    };
+
+    form
+      .querySelectorAll("input, textarea, select")
+      .forEach((field) => {
+        if (
+          field instanceof HTMLInputElement ||
+          field instanceof HTMLTextAreaElement ||
+          field instanceof HTMLSelectElement
+        ) {
+          const clear = () => field.setCustomValidity("");
+          field.addEventListener("input", clear);
+          field.addEventListener("change", clear);
+        }
+      });
+
+    const getErrorMessage = (result: any) => {
+      if (result?.message === "Invalid form data" && result?.details) {
+        const detailValues = Object.values(result.details).flat();
+        const firstDetail = detailValues.find(
+          (value) => typeof value === "string" && value.trim().length > 0,
+        );
+        if (typeof firstDetail === "string") return firstDetail;
+      }
+
+      if (result?.message === "Turnstile verification failed") {
+        return "Please complete the anti-bot check again and resubmit.";
+      }
+
+      return result?.message || "Unable to submit form right now. Please try again.";
+    };
+
     const resetTurnstile = () => {
       if (typeof window !== "undefined" && "turnstile" in window) {
         const turnstile = (window as any).turnstile;
@@ -207,6 +288,12 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     form.onsubmit = async (event) => {
       event.preventDefault();
       clearMessages();
+      clearFieldErrors();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
 
       if (submitButton instanceof HTMLButtonElement) {
         submitButton.disabled = true;
@@ -241,9 +328,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         const result = await response.json();
 
         if (!response.ok || !result?.ok) {
+          if (result?.message === "Invalid form data" && result?.details) {
+            applyFieldErrors(result.details);
+          }
           if (errorText) {
-            errorText.textContent =
-              result?.message || "Unable to submit form right now. Please try again.";
+            errorText.textContent = getErrorMessage(result);
           }
           errorBox?.classList.remove("hidden");
           resetTurnstile();
