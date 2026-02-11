@@ -4,7 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 import sanity from "@sanity/astro";
 import react from "@astrojs/react";
 
+const siteUrl =
+  process.env.SITE_URL ||
+  process.env.URL ||
+  "https://poetic-starlight-a799dd.netlify.app";
+
 export default defineConfig({
+  site: siteUrl,
   output: "static",
   adapter: netlify(),
   image: {
