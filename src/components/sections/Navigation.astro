@@ -53,28 +53,26 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
 <header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-md" transition:animate="none">
   <Container size="wide">
     <nav
-      class="flex items-center justify-between h-16"
+      class="flex items-center justify-between h-20"
       aria-label="Main navigation"
     >
       <!-- Logo -->
       <SmartLink href="/" class="flex items-center">
-        <!-- Desktop: Full logo -->
         <Image
           src={logoLongColor}
           alt={siteName || "CIPM - Community Impact Property Management"}
-          width={180}
-          height={30}
+          width={220}
+          height={40}
           loading="eager"
-          class="h-10 w-auto hidden md:block"
+          class="h-12 w-auto hidden md:block"
         />
-        <!-- Mobile: Cube icon only -->
         <Image
           src={cubeHouse}
           alt={siteName || "CIPM"}
           width={260}
           height={310}
           loading="eager"
-          class="h-10 w-auto md:hidden"
+          class="h-11 w-auto md:hidden"
         />
       </SmartLink>
 
@@ -89,8 +87,11 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
               <SmartLink
                 href={href}
                 class:list={[
-                  "text-sm font-semibold transition-colors",
-                  isActive ? "text-turquoise" : "text-gray-600 hover:text-navy",
+                  "relative text-sm font-bold transition-colors duration-200 py-2",
+                  "after:absolute after:top-0 after:left-0 after:w-full after:h-1 after:bg-turquoise after:transition-transform after:duration-200 after:origin-left",
+                  isActive
+                    ? "text-turquoise after:scale-x-100"
+                    : "text-navy hover:text-turquoise after:scale-x-0 hover:after:scale-x-100",
                 ]}
                 ariaCurrent={isActive ? "page" : undefined}
               >
@@ -118,12 +119,11 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
         aria-controls="mobile-menu"
         id="mobile-menu-button"
       >
-        <!-- Hamburger icon (shown when menu closed) -->
         <svg
-          class="menu-icon-open"
+          id="menu-icon-open"
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="28"
+          height="28"
           viewBox="0 0 15 15"
           fill="currentColor"
           aria-hidden="true"
@@ -133,12 +133,12 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
             fill-rule="evenodd"
             clip-rule="evenodd"></path>
         </svg>
-        <!-- Close icon (shown when menu open) -->
         <svg
-          class="menu-icon-close hidden"
+          id="menu-icon-close"
+          class="hidden"
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="28"
+          height="28"
           viewBox="0 0 15 15"
           fill="currentColor"
           aria-hidden="true"
@@ -151,9 +151,9 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
       </button>
     </nav>
 
-    <!-- Mobile Menu (hidden by default) -->
-    <div class="mobile-menu hidden pb-4 md:hidden" id="mobile-menu">
-      <div class="flex flex-col gap-4">
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden pb-6 md:hidden">
+      <div class="flex flex-col gap-1">
         {
           data.menuItems?.map((item) => {
             const href = resolveLink(item);
@@ -163,8 +163,10 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
               <SmartLink
                 href={href}
                 class:list={[
-                  "text-sm font-semibold py-2 transition-colors",
-                  isActive ? "text-turquoise" : "text-gray-600 hover:text-navy",
+                  "text-base font-bold py-3 px-2 rounded-lg transition-colors duration-200",
+                  isActive
+                    ? "text-turquoise bg-turquoise/5"
+                    : "text-navy hover:text-turquoise hover:bg-gray-50",
                 ]}
                 ariaCurrent={isActive ? "page" : undefined}
               >
@@ -176,35 +178,17 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
 
         {
           showCta && (
-            <Button href={ctaLink} variant="secondary" size="md" class="w-full">
-              {data.ctaText}
-            </Button>
+            <div class="pt-4">
+              <Button href={ctaLink} variant="secondary" size="md" class="w-full">
+                {data.ctaText}
+              </Button>
+            </div>
           )
         }
       </div>
     </div>
   </Container>
 </header>
-
-<style>
-  /* Mobile menu toggle states - scoped to this component */
-  .menu-icon-open,
-  .menu-icon-close {
-    display: block;
-  }
-
-  .menu-icon-close.hidden {
-    display: none;
-  }
-
-  .menu-icon-open.hidden {
-    display: none;
-  }
-
-  .mobile-menu.hidden {
-    display: none;
-  }
-</style>
 
 <script>
   /**
@@ -214,26 +198,25 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
   document.addEventListener('astro:page-load', () => {
     const button = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
-    if (!button || !menu) return;
+    const openIcon = document.getElementById('menu-icon-open');
+    const closeIcon = document.getElementById('menu-icon-close');
 
-    const openIcon = button.querySelector('.menu-icon-open');
-    const closeIcon = button.querySelector('.menu-icon-close');
+    if (!button || !menu || !openIcon || !closeIcon) return;
 
     const closeMenu = () => {
       menu.classList.add('hidden');
-      openIcon?.classList.remove('hidden');
-      closeIcon?.classList.add('hidden');
+      openIcon.classList.remove('hidden');
+      closeIcon.classList.add('hidden');
       button.setAttribute('aria-expanded', 'false');
     };
 
     const openMenu = () => {
       menu.classList.remove('hidden');
-      openIcon?.classList.add('hidden');
-      closeIcon?.classList.remove('hidden');
+      openIcon.classList.add('hidden');
+      closeIcon.classList.remove('hidden');
       button.setAttribute('aria-expanded', 'true');
     };
 
-    // Property assignment overwrites handlers (no stacking)
     button.onclick = (e) => {
       e.stopPropagation();
       menu.classList.contains('hidden') ? openMenu() : closeMenu();
