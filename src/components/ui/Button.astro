@@ -23,39 +23,37 @@ const {
 const isLink = !!href && !disabled;
 
 const baseClasses = [
+  'btn-sweep',
+  'relative overflow-hidden',
   'inline-flex items-center justify-center gap-2',
   'font-medium leading-normal',
-  'rounded-full border-2',
+  'rounded-lg border-2',
   'cursor-pointer',
-  'no-underline', // Prevent link underlines (text variant adds it on hover)
-  'transition-all duration-200',
+  'no-underline',
   'whitespace-nowrap select-none',
+  'transition-all duration-200 ease-out',
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
 ];
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: [
+    'btn-primary',
     'bg-turquoise text-white border-turquoise',
-    'hover:bg-turquoise/80 hover:border-turquoise/80 hover:-translate-y-px hover:shadow-lg',
-    'active:translate-y-0 active:shadow-md active:bg-turquoise/70',
     'focus-visible:outline-turquoise',
   ].join(' '),
   secondary: [
+    'btn-secondary',
     'bg-navy text-white border-navy',
-    'hover:bg-navy/80 hover:border-navy/80 hover:-translate-y-px hover:shadow-lg',
-    'active:translate-y-0 active:shadow-md active:bg-navy/70',
     'focus-visible:outline-navy',
   ].join(' '),
   outline: [
+    'btn-outline',
     'bg-transparent text-turquoise border-turquoise',
-    'hover:bg-turquoise hover:text-white',
-    'active:bg-turquoise/80',
     'focus-visible:outline-turquoise',
   ].join(' '),
   outlineWhite: [
+    'btn-outline-white',
     'bg-transparent text-white border-white',
-    'hover:bg-white hover:text-navy',
-    'active:bg-gray-100',
     'focus-visible:outline-white',
   ].join(' '),
   text: [
@@ -65,9 +63,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     'focus-visible:outline-turquoise',
   ].join(' '),
   white: [
+    'btn-white',
     'bg-white text-navy border-white',
-    'hover:bg-transparent hover:text-white hover:border-white',
-    'active:bg-white/10',
     'focus-visible:outline-white',
   ].join(' '),
 };
@@ -78,7 +75,6 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: 'px-8 py-4 text-lg',
 };
 
-// Disabled styles - visual indication only, interaction blocked by disabled attr or missing href
 const disabledClasses = 'opacity-50 !cursor-not-allowed';
 
 const classes = [
@@ -92,7 +88,7 @@ const classes = [
 
 {isLink ? (
   <a href={href} class={classes} role="button">
-    <slot />
+    <span class="btn-content"><slot /></span>
   </a>
 ) : href && disabled ? (
   <a
@@ -101,10 +97,100 @@ const classes = [
     aria-disabled="true"
     tabindex="-1"
   >
-    <slot />
+    <span class="btn-content"><slot /></span>
   </a>
 ) : (
   <button type={type} class={classes} disabled={disabled}>
-    <slot />
+    <span class="btn-content"><slot /></span>
   </button>
 )}
+
+<style>
+  /* Button content stays above the sweep */
+  .btn-content {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Sweep pseudo-element */
+  .btn-sweep::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease-out;
+  }
+
+  .btn-sweep:hover::before {
+    transform: scaleX(1);
+  }
+
+  .btn-sweep:active::before {
+    transform: scaleX(1);
+  }
+
+  /* Primary: turquoise -> white (inverted) */
+  .btn-primary::before {
+    background-color: white;
+  }
+  .btn-primary:hover {
+    color: var(--color-turquoise);
+    border-color: var(--color-turquoise);
+    box-shadow: 0 8px 20px -4px rgba(78, 165, 194, 0.4);
+  }
+
+  /* Secondary: navy -> white (inverted) */
+  .btn-secondary::before {
+    background-color: white;
+  }
+  .btn-secondary:hover {
+    color: var(--color-navy);
+    border-color: var(--color-navy);
+    box-shadow: 0 8px 20px -4px rgba(21, 57, 106, 0.4);
+  }
+
+  /* Outline: transparent -> turquoise fill */
+  .btn-outline::before {
+    background-color: var(--color-turquoise);
+  }
+  .btn-outline:hover {
+    color: white;
+    box-shadow: 0 8px 20px -4px rgba(78, 165, 194, 0.4);
+  }
+
+  /* Outline White: transparent -> white fill */
+  .btn-outline-white::before {
+    background-color: white;
+  }
+  .btn-outline-white:hover {
+    color: var(--color-navy);
+    box-shadow: 0 8px 20px -4px rgba(255, 255, 255, 0.3);
+  }
+
+  /* White: white -> navy (inverted) */
+  .btn-white::before {
+    background-color: var(--color-navy);
+  }
+  .btn-white:hover {
+    color: white;
+    border-color: var(--color-navy);
+    box-shadow: 0 8px 20px -4px rgba(21, 57, 106, 0.4);
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .btn-sweep::before {
+      transition: opacity 0.15s ease-out;
+      transform: scaleX(1);
+      opacity: 0;
+    }
+    .btn-sweep:hover::before {
+      opacity: 1;
+    }
+  }
+</style>

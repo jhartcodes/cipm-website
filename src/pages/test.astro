@@ -94,141 +94,73 @@ import RichText from "../components/content/RichText.astro";
       </Text>
 
       <div class="space-y-10">
-        <!-- Primary Buttons -->
-        <div>
-          <Text as="h3">Primary Buttons - Turquoise</Text>
-          <Text as="p" variant="small">
-            Use for main actions, CTAs, and primary user flows
-          </Text>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <Button variant="primary">Contact Us Today</Button>
-            <Button variant="primary">Learn More</Button>
-            <Button variant="primary">Get Started</Button>
+        <!-- Usage Guide -->
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+          <Text as="h3" class="mb-4">Usage Guide</Text>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <Text as="p" variant="small" class="font-bold text-navy mb-1">Light Backgrounds</Text>
+              <ul class="text-gray-600 space-y-1">
+                <li>• <code class="bg-gray-100 px-1 rounded">primary</code> - Main CTAs (turquoise)</li>
+                <li>• <code class="bg-gray-100 px-1 rounded">secondary</code> - Navigation CTAs (navy)</li>
+                <li>• <code class="bg-gray-100 px-1 rounded">outline</code> - Secondary actions</li>
+                <li>• <code class="bg-gray-100 px-1 rounded">text</code> - Tertiary/low-emphasis</li>
+              </ul>
+            </div>
+            <div>
+              <Text as="p" variant="small" class="font-bold text-navy mb-1">Dark/Colored Backgrounds (Inverted)</Text>
+              <ul class="text-gray-600 space-y-1">
+                <li>• <code class="bg-gray-100 px-1 rounded">white</code> - On turquoise backgrounds</li>
+                <li>• <code class="bg-gray-100 px-1 rounded">outlineWhite</code> - On navy backgrounds</li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <!-- Secondary Buttons -->
+        <!-- Light Background Buttons -->
         <div>
-          <Text as="h3">Secondary Buttons - Navy</Text>
-          <Text as="p" variant="small">
-            Use for important but not primary actions
-          </Text>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <Button variant="secondary">View Services</Button>
-            <Button variant="secondary">Our Team</Button>
+          <Text as="h3" class="mb-2">Light Background Buttons</Text>
+          <div class="flex flex-wrap items-center gap-3">
+            <Button variant="primary">Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="text">Text Link</Button>
           </div>
         </div>
 
-        <!-- Outlined Buttons -->
-        <div>
-          <Text as="h3">Outlined Buttons - Transparent with Border</Text>
-          <Text as="p" variant="small">
-            Use for secondary actions or when paired with primary buttons
-          </Text>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <Button variant="outline">Learn More</Button>
-            <Button variant="outline">View Details</Button>
-          </div>
-        </div>
-
-        <!-- Text Buttons -->
-        <div>
-          <Text as="h3">Text Buttons - No Background</Text>
-          <Text as="p" variant="small">
-            Use for tertiary actions, links, and low-emphasis interactions
-          </Text>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <Button variant="text">Read More »</Button>
-            <Button variant="text">View All Posts »</Button>
-            <Button variant="text">Cancel</Button>
-          </div>
-        </div>
-
-        <!-- White CTA Buttons -->
+        <!-- Inverted: Navy Background -->
         <div class="bg-navy p-8 rounded-lg">
-          <Text as="h3" tone="inverted">White CTA Buttons</Text>
-          <Text as="p" variant="small" tone="inverted" class="opacity-80">
-            Use on dark backgrounds for high contrast CTAs
-          </Text>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <Button variant="white">Contact Us Today</Button>
-            <Button variant="white">Get Started</Button>
+          <Text as="h3" tone="inverted" class="mb-2">Navy Background (Inverted)</Text>
+          <div class="flex flex-wrap gap-3">
+            <Button variant="outlineWhite">Outline White</Button>
+            <Button variant="white">White</Button>
+          </div>
+        </div>
+
+        <!-- Inverted: Turquoise Background (Variant C) -->
+        <div class="bg-turquoise p-8 rounded-lg">
+          <Text as="h3" tone="inverted" class="mb-2">Turquoise Background (Variant C)</Text>
+          <div class="flex flex-wrap gap-3">
+            <Button variant="white">White CTA</Button>
           </div>
         </div>
 
         <!-- Button Sizes -->
         <div>
-          <Text as="h3">Button Sizes</Text>
-          <div class="flex flex-wrap items-center gap-3 mt-4">
-            <Button variant="primary" size="sm">Small Button</Button>
-            <Button variant="primary" size="md">Default Button</Button>
-            <Button variant="primary" size="lg">Large Button</Button>
+          <Text as="h3" class="mb-2">Sizes</Text>
+          <div class="flex flex-wrap items-center gap-3">
+            <Button variant="primary" size="sm">Small</Button>
+            <Button variant="primary" size="md">Medium</Button>
+            <Button variant="primary" size="lg">Large</Button>
           </div>
         </div>
 
-        <!-- Button States -->
+        <!-- Disabled State -->
         <div>
-          <Text as="h3">Button States</Text>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <Button variant="primary">Default</Button>
+          <Text as="h3" class="mb-2">Disabled State</Text>
+          <div class="flex flex-wrap gap-3">
             <Button variant="primary" disabled>Disabled</Button>
-          </div>
-        </div>
-
-        <!-- Button with Icons -->
-        <div>
-          <Text as="h3">Buttons with Icons</Text>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <Button variant="primary">
-              <svg
-                width="20"
-                height="20"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  fill="none"></path>
-              </svg>
-              Email Us
-            </Button>
-            <Button variant="secondary">
-              Download
-              <svg
-                width="20"
-                height="20"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  fill="none"></path>
-              </svg>
-            </Button>
-          </div>
-        </div>
-
-        <!-- Full Width Button -->
-        <div>
-          <Text as="h3">Full Width Button</Text>
-          <Button variant="primary" class="w-full mt-4">
-            Full Width CTA Button
-          </Button>
-        </div>
-
-        <!-- Button as Link -->
-        <div>
-          <Text as="h3">Button as Link</Text>
-          <Text as="p" variant="small">
-            Using href prop renders an anchor tag with button styling
-          </Text>
-          <div class="flex flex-wrap gap-3 mt-4">
-            <Button variant="primary" href="/contact">Link to Contact</Button>
-            <Button variant="outline" href="/about">Link to About</Button>
+            <Button variant="outline" disabled>Disabled Outline</Button>
           </div>
         </div>
       </div>
