@@ -141,19 +141,19 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
 {/* Modal for team member bio */}
 <div
   id="team-modal"
-  class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50"
+  class="fixed inset-0 z-50 hidden items-start justify-center bg-black/50 px-4 pb-6 pt-24 md:pt-28"
   role="dialog"
   aria-modal="true"
   aria-labelledby="team-modal-title"
   data-team-modal
 >
   <div
-    class="relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-xl"
+    class="relative w-full max-w-3xl max-h-[calc(100dvh-8rem)] overflow-y-auto rounded-2xl bg-white p-8 shadow-xl"
     data-modal-content
   >
     <button
       type="button"
-      class="absolute top-4 right-4 p-2 text-gray-400 hover:text-navy transition-colors"
+      class="absolute top-4 right-4 p-2 text-gray-400 hover:text-navy transition-colors cursor-pointer pointer-events-auto"
       aria-label="Close dialog"
       data-modal-close
     >
