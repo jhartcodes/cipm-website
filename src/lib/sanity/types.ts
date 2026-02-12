@@ -300,6 +300,7 @@ export interface HomePage extends SanityDocument {
   propertyTypes?: PropertyType[];
   whatWeOfferHeading?: string;
   whatWeOfferIntro?: string;
+  whatWeOfferImage?: SanityImage;
   featuredServices?: Service[];
   testimonialsHeading?: string;
   featuredTestimonials?: Testimonial[];

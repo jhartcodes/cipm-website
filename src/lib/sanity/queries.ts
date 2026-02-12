@@ -128,6 +128,12 @@ export const HOME_PAGE_QUERY = /* groq */ `
   },
   whatWeOfferHeading,
   whatWeOfferIntro,
+  whatWeOfferImage{
+    asset,
+    alt,
+    hotspot,
+    crop
+  },
   featuredServices[]-> {
     title,
     shortDescription,
