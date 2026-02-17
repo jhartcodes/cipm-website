@@ -217,17 +217,17 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
       description
     }
   },
-  teamEyebrow,
-  teamHeading,
-  teamIntro,
-  teamSidebarTitle,
-  teamSidebarContent,
-  teamImage{
+  communityEyebrow,
+  communityHeading,
+  communityIntro,
+  communityImage{
     asset,
     alt,
     hotspot,
     crop
   },
+  teamHeading,
+  teamIntro,
   teamMembers[]{
     name,
     title,

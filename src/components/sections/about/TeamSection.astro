@@ -2,16 +2,15 @@
 /**
  * TeamSection Component
  *
- * Displays a grid of team members with AlternateTextLayout Variant C intro.
- * Features headline, 2-column text, navy sidebar box, and team grid.
+ * Community Focus block + Team intro + team member grid.
  */
 
 import { Image } from "astro:assets";
 import Section from "../../layout/Section.astro";
-import Text from "../../ui/Text.astro";
 import TeamMemberCard from "./TeamMemberCard.astro";
 import SanityImage from "../../content/SanityImage.astro";
 import { urlFor } from "../../../lib/sanity/image";
+import Text from "../../ui/Text.astro";
 
 interface TeamMember {
   name?: string;
@@ -21,26 +20,24 @@ interface TeamMember {
 }
 
 interface Props {
-  eyebrow?: string;
-  heading?: string;
-  intro?: string;
-  sidebarTitle?: string;
-  sidebarContent?: string;
-  image?: any;
+  communityEyebrow?: string;
+  communityHeading?: string;
+  communityIntro?: string;
+  communityImage?: any;
+  teamHeading?: string;
+  teamIntro?: string;
   members?: TeamMember[];
 }
 
 const {
-  eyebrow,
-  heading,
-  intro,
-  sidebarTitle,
-  sidebarContent,
-  image,
+  communityEyebrow,
+  communityHeading,
+  communityIntro,
+  communityImage,
+  teamHeading,
+  teamIntro,
   members = [],
 } = Astro.props;
-
-const hasSidebar = sidebarTitle || sidebarContent;
 
 const modalFallbackMember = members.find((member) => member?.headshot?.asset);
 const modalFallbackSrc = modalFallbackMember?.headshot?.asset
@@ -49,93 +46,84 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
 ---
 
 <Section size="lg" tone="default">
-  {/* AlternateTextLayout Variant C intro */}
-  <div class="space-y-8 mb-12">
-    {/* Main content area with floating image */}
+  <div class="grid gap-10 lg:grid-cols-2 items-start">
     <div>
-      {/* Inline floating image - right side */}
       {
-        image?.asset && (
-          <div class="float-right ml-8 mb-4 w-2/5 hidden lg:block opacity-0 pointer-events-none">
-            <div class="aspect-4/3 w-full h-full">
-              <SanityImage
-                image={image}
-                alt={image?.alt || ""}
-                width={600}
-                class="w-full h-full object-cover"
-              />
-            </div>
-          </div>
+        communityEyebrow && (
+          <Text as="p" variant="small" class="uppercase tracking-[0.2em]">
+            {communityEyebrow}
+          </Text>
         )
       }
-
-      {/* Eyebrow + Headline */}
+      <Text
+        as="h2"
+        variant="headingLg"
+        class={communityEyebrow ? "mt-3" : undefined}
+      >
+        {communityHeading || "Community Focus"}
+      </Text>
       {
-        eyebrow && (
-          <p class="text-turquoise font-bold tracking-wide uppercase text-sm mb-3">
-            {eyebrow}
-          </p>
-        )
-      }
-      <h2 class="text-2xl md:text-3xl font-bold text-navy leading-tight mb-6">
-        {heading || "Our Team"}
-      </h2>
-
-      {/* Main content - 2 columns on lg */}
-      {
-        intro && (
-          <div class="text-base text-gray-600 leading-relaxed columns-1 lg:columns-2 gap-8">
-            {intro}
-          </div>
+        communityIntro && (
+          <Text
+            as="p"
+            variant="body"
+            tone="muted"
+            class="mt-4 whitespace-pre-line"
+          >
+            {communityIntro}
+          </Text>
         )
       }
     </div>
 
-    {/* Navy sidebar box */}
     {
-      hasSidebar && (
-        <aside class="relative bg-navy text-white rounded-lg p-6 lg:pt-12">
-          {image?.asset && (
-            <div class="hidden lg:block absolute bottom-28 right-0 w-2/5 rounded-lg overflow-hidden shadow-lg">
-              <div class="aspect-4/3 w-full h-full">
-                <SanityImage
-                  image={image}
-                  alt={image?.alt || ""}
-                  width={600}
-                  class="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          )}
-          {sidebarTitle && (
-            <h3 class="text-lg font-bold text-white mb-3">{sidebarTitle}</h3>
-          )}
-          {sidebarContent && (
-            <p class="text-white/80 leading-relaxed text-sm">
-              {sidebarContent}
-            </p>
-          )}
-        </aside>
+      communityImage?.asset && (
+        <div>
+          <SanityImage
+            image={communityImage}
+            alt={communityImage?.alt || ""}
+            width={900}
+            class="w-full aspect-4/3 rounded-2xl object-cover"
+          />
+        </div>
       )
     }
   </div>
+</Section>
 
-  {/* Team grid */}
-  {
-    members.length > 0 && (
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 sm: py-6 md:py-12 lg:py-16 ">
-        {members.map((member, index) => (
-          <TeamMemberCard
-            name={member.name}
-            title={member.title}
-            headshot={member.headshot}
-            bio={member.bio}
-            id={`team-member-${index}`}
-          />
-        ))}
-      </div>
-    )
-  }
+<Section size="lg" tone="muted">
+  <div>
+    <Text as="h3" variant="headingLg">
+      {teamHeading || "Our Team"}
+    </Text>
+    {
+      teamIntro && (
+        <Text
+          as="p"
+          variant="body"
+          tone="muted"
+          class="mt-4 max-w-5xl md:text-lg"
+        >
+          {teamIntro}
+        </Text>
+      )
+    }
+    {
+      members.length > 0 && (
+        <div class="grid gap-6 py-8 md:grid-cols-2 md:py-10 lg:grid-cols-3 lg:py-12 xl:grid-cols-5">
+          {members.map((member, index) => (
+            <TeamMemberCard
+              name={member.name}
+              title={member.title}
+              headshot={member.headshot}
+              bio={member.bio}
+              id={`team-member-${index}`}
+            />
+          ))}
+        </div>
+      )
+    }
+  </div>
 </Section>
 
 {/* Modal for team member bio */}
@@ -195,10 +183,6 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
 </div>
 
 <script>
-  /**
-   * Team Modal Controller
-   * View Transitions compatible - uses property assignment
-   */
   document.addEventListener("astro:page-load", () => {
     const modal = document.querySelector("[data-team-modal]");
     const closeButton = modal?.querySelector("[data-modal-close]");
@@ -211,6 +195,8 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
     const modalTitle = document.getElementById("modal-title");
     const modalBio = document.getElementById("modal-bio");
 
+    const focusableSelector =
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
     let previousFocus = null;
 
     const openModal = (card) => {
@@ -225,16 +211,17 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
       previousFocus = document.activeElement;
       modal.classList.remove("hidden");
       modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
       closeButton.focus();
     };
 
     const closeModal = () => {
       modal.classList.add("hidden");
       modal.classList.remove("flex");
+      document.body.style.overflow = "";
       if (previousFocus) previousFocus.focus();
     };
 
-    // Property assignment overwrites handlers (no stacking)
     cards.forEach((card) => {
       card.onclick = () => openModal(card);
       card.onkeydown = (e) => {
@@ -251,6 +238,21 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
     };
     modal.onkeydown = (e) => {
       if (e.key === "Escape") closeModal();
+      if (e.key !== "Tab") return;
+
+      const focusableElements = modal.querySelectorAll(focusableSelector);
+      if (!focusableElements.length) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
   });
 </script>
