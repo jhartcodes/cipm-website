@@ -24,23 +24,32 @@ const { heading, faqs = [] } = Astro.props;
 ---
 
 <Section size="lg" class="relative overflow-hidden">
-  {/* Rotated turquoise shade, coming in from the top right, rotated the other way */}
+  {
+    /* Rotated turquoise shade, coming in from the top right, rotated the other way */
+  }
   <div
-    class="absolute top-[-8%] right-[-10%] w-[60vw] h-[40vh] bg-turquoise/20 transform -rotate-12 skew-y-6 pointer-events-none z-0"
+    class="absolute top-[-10%] right-[-10%] w-[60vw] h-[50vh] bg-turquoise/20 transform -rotate-12 skew-y-6 pointer-events-none z-0"
     aria-hidden="true"
-  />
+  >
+  </div>
   <div class="mx-auto max-w-3xl relative z-10">
     <Text as="h2" variant="headingLg" align="center">
       {heading || "Frequently Asked Questions"}
     </Text>
 
-    {faqs.length > 0 && (
-      <div class="mt-8 space-y-4" data-accordion-group>
-        {faqs.map((faq, index) => (
-          <FaqItem question={faq.question} answer={faq.answer} id={`faq-${index}`} />
-        ))}
-      </div>
-    )}
+    {
+      faqs.length > 0 && (
+        <div class="mt-8 space-y-4" data-accordion-group>
+          {faqs.map((faq, index) => (
+            <FaqItem
+              question={faq.question}
+              answer={faq.answer}
+              id={`faq-${index}`}
+            />
+          ))}
+        </div>
+      )
+    }
   </div>
 </Section>
 
@@ -49,27 +58,27 @@ const { heading, faqs = [] } = Astro.props;
    * Accordion Controller
    * Single-open behavior with View Transitions support
    */
-  document.addEventListener('astro:page-load', () => {
-    document.querySelectorAll('[data-accordion-group]').forEach((group) => {
-      const triggers = group.querySelectorAll('[data-accordion-trigger]');
+  document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll("[data-accordion-group]").forEach((group) => {
+      const triggers = group.querySelectorAll("[data-accordion-trigger]");
 
       triggers.forEach((trigger) => {
         // Property assignment overwrites handler (no stacking)
         trigger.onclick = () => {
-          const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+          const isOpen = trigger.getAttribute("aria-expanded") === "true";
 
           // Close all others
           triggers.forEach((t) => {
-            t.setAttribute('aria-expanded', 'false');
-            const id = t.getAttribute('aria-controls');
-            document.getElementById(id)?.setAttribute('data-expanded', 'false');
+            t.setAttribute("aria-expanded", "false");
+            const id = t.getAttribute("aria-controls");
+            document.getElementById(id)?.setAttribute("data-expanded", "false");
           });
 
           // Toggle clicked one
           if (!isOpen) {
-            trigger.setAttribute('aria-expanded', 'true');
-            const id = trigger.getAttribute('aria-controls');
-            document.getElementById(id)?.setAttribute('data-expanded', 'true');
+            trigger.setAttribute("aria-expanded", "true");
+            const id = trigger.getAttribute("aria-controls");
+            document.getElementById(id)?.setAttribute("data-expanded", "true");
           }
         };
       });

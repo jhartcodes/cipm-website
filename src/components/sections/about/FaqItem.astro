@@ -31,7 +31,10 @@ const getPlainText = (value: string | any[] | undefined): string => {
   if (Array.isArray(value)) {
     return value
       .filter((block) => block._type === "block")
-      .map((block) => block.children?.map((child: any) => child.text).join("") || "")
+      .map(
+        (block) =>
+          block.children?.map((child: any) => child.text).join("") || "",
+      )
       .join(" ");
   }
   return "";
@@ -40,7 +43,7 @@ const getPlainText = (value: string | any[] | undefined): string => {
 const contentId = `${id}-content`;
 ---
 
-<div class="rounded-2xl bg-white shadow-lg" data-accordion-item>
+<div class="rounded-xl bg-white shadow-lg" data-accordion-item>
   <button
     type="button"
     class="w-full flex items-center justify-between gap-4 px-8 py-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-turquoise focus-visible:ring-inset"
@@ -48,15 +51,15 @@ const contentId = `${id}-content`;
     aria-controls={contentId}
     data-accordion-trigger
   >
-    <Text as="span" variant="headingSm" class="text-lg font-semibold text-navy">
+    <Text as="span" variant="bodyLg" class="font-semibold text-navy">
       {getPlainText(question) || "Question"}
     </Text>
     <span
-      class="flex-shrink-0 text-turquoise transition-transform duration-300 ease-out"
+      class="shrink-0 text-turquoise transition-transform duration-300 ease-out"
       aria-hidden="true"
       data-accordion-icon
     >
-      <Icon name="chevron-down" size={24} />
+      <Icon name="chevron-down" size={28} />
     </span>
   </button>
 
@@ -71,13 +74,15 @@ const contentId = `${id}-content`;
     <!-- Inner wrapper with overflow hidden for the animation -->
     <div class="overflow-hidden">
       <div class="px-8 pb-6">
-        {isPortableText(answer) ? (
-          <RichText content={answer} class="richtext--muted" />
-        ) : (
-          <Text as="p" variant="body" class="text-gray-600 leading-relaxed">
-            {answer || "Answer"}
-          </Text>
-        )}
+        {
+          isPortableText(answer) ? (
+            <RichText content={answer} class="richtext--muted" />
+          ) : (
+            <Text as="p" variant="body" tone="muted">
+              {answer || "Answer"}
+            </Text>
+          )
+        }
       </div>
     </div>
   </div>

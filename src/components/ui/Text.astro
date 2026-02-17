@@ -1,6 +1,6 @@
 ---
 type TextElement = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
-type TextVariant = 'hero' | 'headingLg' | 'heading' | 'headingSm' | 'body' | 'bodyLg' | 'small';
+type TextVariant = 'hero' | 'headingLg' | 'heading' | 'headingSm' | 'body' | 'bodyLg' | 'bodyMd' | 'small';
 type TextAlign = 'left' | 'center' | 'right';
 type TextTone = 'default' | 'muted' | 'inverted' | 'inherit';
 
@@ -36,6 +36,7 @@ const variantClasses: Record<TextVariant, string> = {
   headingSm: 'text-xl md:text-2xl font-semibold leading-snug',
   body: 'text-base leading-relaxed',
   bodyLg: 'text-lg md:text-xl leading-relaxed',
+  bodyMd: 'text-base md:text-lg leading-relaxed',
   small: 'text-sm leading-normal',
 };
 
@@ -47,6 +48,7 @@ const defaultColors: Record<TextVariant, string> = {
   headingSm: 'text-navy',
   body: 'text-gray-900',
   bodyLg: 'text-gray-900',
+  bodyMd: 'text-gray-900',
   small: 'text-gray-600',
 };
 
