@@ -34,12 +34,16 @@ const { post } = Astro.props;
     alt={post.featuredImage?.alt || post.title}
   />
 
-  <Section size="lg" containerSize="narrow">
-    {post.content && Array.isArray(post.content) && post.content.length > 0 && (
-      <article class="richtext">
-        <BlogBlocks blocks={post.content} />
-      </article>
-    )}
+  <Section size="md" containerSize="narrow">
+    {
+      post.content &&
+        Array.isArray(post.content) &&
+        post.content.length > 0 && (
+          <article class="richtext">
+            <BlogBlocks blocks={post.content} />
+          </article>
+        )
+    }
 
     <div class="mt-16 pt-8 border-t border-gray-200">
       <Button href="/blog" variant="outline" size="md">
