@@ -20,7 +20,7 @@ const { data, ctaData } = Astro.props;
 ---
 
 <BaseLayout title="Contact Us" seo={data?.seo}>
-  <Section size="lg">
+  <Section size="sm">
     <div class="grid lg:grid-cols-2 gap-16 lg:gap-24">
       <div>
         <ContactFormSection
@@ -41,13 +41,15 @@ const { data, ctaData } = Astro.props;
       </div>
     </div>
   </Section>
-  {ctaData && (
-    <ContactCtaSection
-      heading={ctaData.heading}
-      subheading={ctaData.subheading}
-      buttonText={ctaData.buttonText}
-      buttonLink={ctaData.buttonLink}
-      backgroundImage={ctaData.backgroundImage}
-    />
-  )}
+  {
+    ctaData && (
+      <ContactCtaSection
+        heading={ctaData.heading}
+        subheading={ctaData.subheading}
+        buttonText={ctaData.buttonText}
+        buttonLink={ctaData.buttonLink}
+        backgroundImage={ctaData.backgroundImage}
+      />
+    )
+  }
 </BaseLayout>

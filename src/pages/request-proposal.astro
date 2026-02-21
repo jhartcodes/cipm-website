@@ -8,20 +8,22 @@ import {
   REQUEST_PROPOSAL_PAGE_QUERY,
 } from "../lib/sanity/queries";
 
-const { data: pageData } = await loadQuery({ query: REQUEST_PROPOSAL_PAGE_QUERY });
-const { data: propertyTypes } = await loadQuery({ query: PROPERTY_TYPE_OPTIONS_QUERY });
+const { data: pageData } = await loadQuery({
+  query: REQUEST_PROPOSAL_PAGE_QUERY,
+});
+const { data: propertyTypes } = await loadQuery({
+  query: PROPERTY_TYPE_OPTIONS_QUERY,
+});
 ---
 
 <BaseLayout title="Request Proposal" seo={pageData?.seo}>
-  <Section size="lg">
-    <div class="mx-auto max-w-4xl">
-      <RequestProposalFormSection
-        propertyTypes={propertyTypes || []}
-        heading={pageData?.formHeading}
-        description={pageData?.formDescription}
-        buttonText={pageData?.submitButtonText}
-        successMessage={pageData?.successMessage}
-      />
-    </div>
+  <Section size="sm" containerSize="wide">
+    <RequestProposalFormSection
+      propertyTypes={propertyTypes || []}
+      heading={pageData?.formHeading}
+      description={pageData?.formDescription}
+      buttonText={pageData?.submitButtonText}
+      successMessage={pageData?.successMessage}
+    />
   </Section>
 </BaseLayout>
