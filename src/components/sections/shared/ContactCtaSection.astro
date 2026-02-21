@@ -9,6 +9,7 @@
 import Container from "../../layout/Container.astro";
 import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
+import SanityImage from "../../content/SanityImage.astro";
 import { resolveLink } from "../../../lib/routing/resolveLink";
 
 interface Props {
@@ -16,16 +17,34 @@ interface Props {
   subheading?: string;
   buttonText?: string;
   buttonLink?: any;
+  backgroundImage?: any;
 }
 
-const { heading, subheading, buttonText, buttonLink } = Astro.props;
+const { heading, subheading, buttonText, buttonLink, backgroundImage } = Astro.props;
 
 const resolvedHref = resolveLink(buttonLink);
 ---
 
-<section class="py-12 md:py-16 lg:py-24 bg-turquoise">
+<section class="relative overflow-hidden py-12 md:py-16 lg:py-24 bg-turquoise">
+  {
+    backgroundImage && (
+      <div class="absolute inset-0">
+        <SanityImage
+          image={backgroundImage}
+          alt={backgroundImage?.alt || ""}
+          width={2400}
+          class="w-full h-full object-cover"
+        />
+      </div>
+    )
+  }
+  <div
+    class="absolute inset-0"
+    style="background-image: linear-gradient(to right, rgba(78, 165, 194, 1) 0%, rgba(78, 165, 194, 0.65) 100%);"
+    aria-hidden="true"
+  />
   <Container>
-    <div class="text-center">
+    <div class="relative z-10 text-center">
       <Text as="h2" variant="headingLg" tone="inverted" class="mb-4">
         {heading || "Have a property that needs management?"}
       </Text>

@@ -65,6 +65,12 @@ export const CTA_SECTION_QUERY = /* groq */ `
 *[_type == "ctaSection"][0]{
   heading,
   subheading,
+  backgroundImage{
+    asset,
+    alt,
+    hotspot,
+    crop
+  },
   buttonText,
   buttonLink{
     linkType,
@@ -82,6 +88,12 @@ const CTA_SECTION_PROJECTION = /* groq */ `
 {
   heading,
   subheading,
+  backgroundImage{
+    asset,
+    alt,
+    hotspot,
+    crop
+  },
   buttonText,
   buttonLink{
     linkType,
