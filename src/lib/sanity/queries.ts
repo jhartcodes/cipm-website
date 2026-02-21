@@ -97,6 +97,7 @@ const CTA_SECTION_PROJECTION = /* groq */ `
 
 export const HOME_PAGE_QUERY = /* groq */ `
 *[_type == "homePage"][0]{
+  heroVariant,
   ${HERO_PROJECTION},
   introductionHeadline,
   introductionText,
@@ -282,7 +283,6 @@ export const SERVICES_PAGE_QUERY = /* groq */ `
 
 export const CONTACT_PAGE_QUERY = /* groq */ `
 *[_type == "contactPage"][0]{
-  ${HERO_PROJECTION},
   contactHeading,
   address,
   phone,
@@ -393,7 +393,6 @@ export const PROPERTY_TYPE_OPTIONS_QUERY = /* groq */ `
 
 export const REQUEST_PROPOSAL_PAGE_QUERY = /* groq */ `
 *[_type == "requestProposalPage"][0]{
-  ${HERO_PROJECTION},
   formHeading,
   formDescription,
   submitButtonText,

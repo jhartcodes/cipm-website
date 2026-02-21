@@ -7,7 +7,6 @@
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../layout/Section.astro";
-import SecondaryHeroSection from "../sections/shared/SecondaryHeroSection.astro";
 import ContactInfoSection from "../sections/contact/ContactInfoSection.astro";
 import ContactFormSection from "../sections/contact/ContactFormSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
@@ -18,14 +17,9 @@ interface Props {
 }
 
 const { data, ctaData } = Astro.props;
-const pageTitle = data?.hero?.heading || "Contact Us";
 ---
 
-<BaseLayout title={pageTitle} seo={data?.seo}>
-  <SecondaryHeroSection
-    title={pageTitle}
-    subtitle={data?.hero?.subheading}
-  />
+<BaseLayout title="Contact Us" seo={data?.seo}>
   <Section size="lg">
     <div class="grid lg:grid-cols-2 gap-16 lg:gap-24">
       <div>

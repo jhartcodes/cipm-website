@@ -13,18 +13,23 @@ import Text from "../../ui/Text.astro";
 interface Props {
   headline?: string;
   supportingText?: string;
+  showTopGradient?: boolean;
 }
 
-const { headline, supportingText } = Astro.props;
+const { headline, supportingText, showTopGradient = true } = Astro.props;
 
 if (!headline) return;
 ---
 
 <section class="relative overflow-visible bg-turquoise py-12 lg:py-16">
-  <div
-    class="pointer-events-none absolute inset-x-0 -top-28 h-48 bg-gradient-to-t from-turquoise/100 via-turquoise-light/25 to-transparent blur-2xl"
-    aria-hidden="true"
-  ></div>
+  {
+    showTopGradient && (
+      <div
+        class="pointer-events-none absolute inset-x-0 -top-28 h-48 bg-gradient-to-t from-turquoise/100 via-turquoise-light/25 to-transparent blur-2xl"
+        aria-hidden="true"
+      ></div>
+    )
+  }
 
   <Container size="wide" class="relative z-10">
     <div>

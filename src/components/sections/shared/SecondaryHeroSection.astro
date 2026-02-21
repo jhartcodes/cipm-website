@@ -14,14 +14,19 @@ import CubeHouse from "../../../assets/cube-house.svg";
 interface Props {
   title: string;
   subtitle?: string;
+  layout?: "default" | "homeLarge";
   class?: string;
 }
 
-const { title, subtitle, class: className } = Astro.props;
+const { title, subtitle, layout = "default", class: className } = Astro.props;
+const sizeClasses =
+  layout === "homeLarge"
+    ? "sm:min-h-[30vh] lg:min-h-[70vh] max-h-200 py-8 md:py-12 lg:py-16"
+    : "min-h-[30vh] md:min-h-[40vh] lg:min-h-[50vh] max-h-120 py-16 lg:py-20";
 ---
 
 <section
-  class={`relative overflow-hidden min-h-[30vh] md:min-h-[40vh] lg:min-h-[50vh] max-h-120 bg-gray-50 py-16 lg:py-20 ${className ?? ""}`}
+  class={`relative overflow-hidden bg-gray-50 ${sizeClasses} ${className ?? ""}`}
 >
   <!-- Decorative turquoise shape -->
   <div

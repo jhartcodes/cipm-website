@@ -289,6 +289,7 @@ export type AboutStorySection =
 export interface HomePage extends SanityDocument {
   _type: "homePage";
   seo?: SeoData;
+  heroVariant?: "primary" | "secondary";
   hero?: HeroSection;
   introductionHeadline?: string;
   introductionText?: string;
@@ -339,7 +340,6 @@ export interface ServicesPage extends SanityDocument {
 export interface ContactPage extends SanityDocument {
   _type: "contactPage";
   seo?: SeoData;
-  hero?: HeroSection;
   contactHeading?: string;
   address?: string;
   phone?: string;

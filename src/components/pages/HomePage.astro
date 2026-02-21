@@ -7,6 +7,7 @@
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import HeroSection from "../sections/home/HeroSection.astro";
+import SecondaryHeroSection from "../sections/shared/SecondaryHeroSection.astro";
 import IntroductionSection from "../sections/home/IntroductionSection.astro";
 import WhoWeAreSection from "../sections/home/WhoWeAreSection.astro";
 import WhatWeManageSection from "../sections/home/WhatWeManageSection.astro";
@@ -21,13 +22,25 @@ interface Props {
 
 const { data, ctaData } = Astro.props;
 const pageTitle = data?.hero?.heading || "Home";
+const heroVariant = data?.heroVariant || "primary";
 ---
 
 <BaseLayout title={pageTitle} seo={data?.seo}>
-  <HeroSection hero={data?.hero} />
+  {
+    heroVariant === "secondary" ? (
+      <SecondaryHeroSection
+        title={pageTitle}
+        subtitle={data?.hero?.subheading}
+        layout="homeLarge"
+      />
+    ) : (
+      <HeroSection hero={data?.hero} />
+    )
+  }
   <IntroductionSection
     headline={data?.introductionHeadline}
     supportingText={data?.introductionText}
+    showTopGradient={heroVariant !== "secondary"}
   />
   <WhoWeAreSection
     heading={data?.whoWeAreHeading}

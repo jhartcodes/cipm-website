@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/layout/Section.astro";
-import SecondaryHeroSection from "../components/sections/shared/SecondaryHeroSection.astro";
 import RequestProposalFormSection from "../components/sections/requestProposal/RequestProposalFormSection.astro";
 import { loadQuery } from "../lib/sanity/loadQuery";
 import {
@@ -11,15 +10,9 @@ import {
 
 const { data: pageData } = await loadQuery({ query: REQUEST_PROPOSAL_PAGE_QUERY });
 const { data: propertyTypes } = await loadQuery({ query: PROPERTY_TYPE_OPTIONS_QUERY });
-const pageTitle = pageData?.hero?.heading || "Request Proposal";
 ---
 
-<BaseLayout title={pageTitle} seo={pageData?.seo}>
-  <SecondaryHeroSection
-    title={pageTitle}
-    subtitle={pageData?.hero?.subheading}
-  />
-
+<BaseLayout title="Request Proposal" seo={pageData?.seo}>
   <Section size="lg">
     <div class="mx-auto max-w-4xl">
       <RequestProposalFormSection
