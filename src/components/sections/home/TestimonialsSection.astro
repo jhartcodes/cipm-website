@@ -2,8 +2,8 @@
 /**
  * TestimonialsSection Component
  *
- * Displays client testimonials in a grid.
- * Uses Section's built-in Container - do not nest another Container.
+ * Displays client testimonials in a slider.
+ * Uses home page testimonial data from Sanity.
  */
 
 import Section from "../../layout/Section.astro";
@@ -22,7 +22,8 @@ interface Props {
   testimonials?: Testimonial[];
 }
 
-const { heading, testimonials = [] } = Astro.props;
+const { heading, testimonials } = Astro.props;
+const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
 ---
 
 <Section size="md" tone="default">
@@ -30,48 +31,199 @@ const { heading, testimonials = [] } = Astro.props;
     as="h2"
     variant="headingLg"
     align="center"
-    class="mb-12 text-3xl md:text-4xl font-bold text-navy"
+    class="mb-10 text-2xl md:text-3xl font-semibold text-navy"
   >
     {heading || "What Our Clients Say"}
   </Text>
 
   {
-    testimonials.length > 0 && (
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {testimonials.map((item) => (
-          <div class="bg-white rounded-2xl p-8 shadow-lg relative group">
-            <span
-              class="absolute -top-4 left-8 text-6xl text-turquoise/20 font-serif transition-colors group-hover:text-navy/80"
-              aria-hidden="true"
-            >
-              "
-            </span>
-
-            {item.quote && (
-              <Text
-                as="p"
-                variant="body"
-                class=" text-gray-700 leading-relaxed italic"
+    testimonialItems.length > 0 && (
+      <div class="w-full" data-testimonial-slider tabindex="0" role="region" aria-roledescription="carousel" aria-label="Client testimonials carousel">
+        <div class="relative w-full">
+          <div class="relative mx-auto max-w-3xl testimonial-slider-shell">
+            <div class="overflow-hidden rounded-sm">
+              <div
+                class="flex transition-transform duration-500 ease-out"
+                data-slider-track
               >
-                "{item.quote}"
-              </Text>
-            )}
+                {testimonialItems.map((item, index) => (
+                  <div class="flex-shrink-0 w-full" data-slide role="group" aria-roledescription="slide" aria-label={`Testimonial ${index + 1} of ${testimonialItems.length}`}>
+                    <blockquote class="max-w-3xl mx-auto border-l-4 border-turquoise bg-white p-8 md:p-10">
 
-            <div class="mt-6 pt-6 border-t border-gray-100">
-              {item.authorName && (
-                <Text as="p" variant="body" class="font-semibold text-navy">
-                  {item.authorName}
-                </Text>
-              )}
-              {item.authorTitle && (
-                <Text as="p" variant="small" class="text-sm text-gray-500">
-                  {item.authorTitle}
-                </Text>
-              )}
+                      {item.quote && (
+                        <Text as="p" variant="bodyMd" class="text-gray-600 leading-relaxed">
+                          "{item.quote}"
+                        </Text>
+                      )}
+
+                      <footer class="mt-5">
+                        {
+                          item.image && (
+                            <SanityImage
+                              image={item.image}
+                              alt={item.authorName || "Testimonial author"}
+                              width={128}
+                              height={128}
+                              class="w-12 h-12 rounded-full mb-3 object-cover"
+                            />
+                          )
+                        }
+                        <cite class="not-italic block">
+                          {item.authorName && (
+                            <span class="block text-sm font-medium text-navy">{item.authorName}</span>
+                          )}
+                          {item.authorTitle && (
+                            <span class="text-xs text-gray-500">{item.authorTitle}</span>
+                          )}
+                        </cite>
+                      </footer>
+                    </blockquote>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            <button
+              type="button"
+              class="hidden lg:flex testimonial-arrow testimonial-arrow--prev w-14 h-14 rounded-full bg-white shadow-lg items-center justify-center hover:bg-gray-50 transition-colors text-navy absolute top-1/2 left-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-turquoise z-20 pointer-events-auto"
+              aria-label="Previous testimonial"
+              data-slider-prev
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="hidden lg:flex testimonial-arrow testimonial-arrow--next w-14 h-14 rounded-full bg-white shadow-lg items-center justify-center hover:bg-gray-50 transition-colors text-navy absolute top-1/2 right-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-turquoise z-20 pointer-events-auto"
+              aria-label="Next testimonial"
+              data-slider-next
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
-        ))}
+
+        </div>
+
+        <div class="flex justify-center gap-2 mt-6">
+          {testimonialItems.map((_, index) => (
+            <button
+              type="button"
+              class={`h-2 rounded-full transition-all ${index === 0 ? "w-6 bg-turquoise" : "w-2 bg-gray-300"}`}
+              aria-label={`Go to testimonial ${index + 1}`}
+              data-slide-index={index}
+            />
+          ))}
+        </div>
       </div>
     )
   }
 </Section>
+
+<style>
+  .testimonial-arrow--prev {
+    transform: translate(-140%, -50%);
+  }
+
+  .testimonial-arrow--next {
+    transform: translate(140%, -50%);
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll("[data-testimonial-slider]").forEach((slider) => {
+      const track = slider.querySelector("[data-slider-track]");
+      const slides = slider.querySelectorAll("[data-slide]");
+      const dots = slider.querySelectorAll("[data-slide-index]");
+      const prevBtn = slider.querySelector("[data-slider-prev]");
+      const nextBtn = slider.querySelector("[data-slider-next]");
+
+      if (!track || slides.length === 0) return;
+
+      let currentIndex = 0;
+      const totalSlides = slides.length;
+
+      const updateSlider = () => {
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+        slides.forEach((slide, index) => {
+          slide.setAttribute("aria-hidden", index === currentIndex ? "false" : "true");
+        });
+
+        dots.forEach((dot, index) => {
+          if (index === currentIndex) {
+            dot.classList.remove("w-2", "bg-gray-300");
+            dot.classList.add("w-6", "bg-turquoise");
+          } else {
+            dot.classList.remove("w-6", "bg-turquoise");
+            dot.classList.add("w-2", "bg-gray-300");
+          }
+        });
+
+      };
+
+      const goToSlide = (index) => {
+        currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
+        updateSlider();
+      };
+
+      const nextSlide = () => {
+        if (currentIndex < totalSlides - 1) goToSlide(currentIndex + 1);
+      };
+
+      const prevSlide = () => {
+        if (currentIndex > 0) goToSlide(currentIndex - 1);
+      };
+
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const index = Number(dot.getAttribute("data-slide-index") || "0");
+          goToSlide(index);
+        });
+      });
+
+      prevBtn?.addEventListener("click", prevSlide);
+      nextBtn?.addEventListener("click", nextSlide);
+
+      slider.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          prevSlide();
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          nextSlide();
+        }
+      });
+
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      track.addEventListener(
+        "touchstart",
+        (event) => {
+          touchStartX = event.changedTouches[0].screenX;
+        },
+        { passive: true },
+      );
+
+      track.addEventListener(
+        "touchend",
+        (event) => {
+          touchEndX = event.changedTouches[0].screenX;
+          const diff = touchStartX - touchEndX;
+
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) nextSlide();
+            else prevSlide();
+          }
+        },
+        { passive: true },
+      );
+
+      updateSlider();
+    });
+  });
+</script>
