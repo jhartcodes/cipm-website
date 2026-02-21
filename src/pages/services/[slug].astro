@@ -6,7 +6,6 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Container from "../../components/layout/Container.astro";
 import Section from "../../components/layout/Section.astro";
 import Text from "../../components/ui/Text.astro";
 import RichText from "../../components/content/RichText.astro";
@@ -32,9 +31,8 @@ if (!service) {
 ---
 
 <BaseLayout title={service.title} seo={service.seo}>
-  <Section size="xl">
-    <Container class="max-w-3xl">
-      <Text as="h1" variant="displayLg">
+  <Section size="lg" containerSize="narrow">
+      <Text as="h1" variant="hero">
         {service.title}
       </Text>
 
@@ -49,6 +47,5 @@ if (!service) {
           <RichText content={service.content} />
         </div>
       )}
-    </Container>
-  </Section>
+    </Section>
 </BaseLayout>

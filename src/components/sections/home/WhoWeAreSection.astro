@@ -27,20 +27,19 @@ const { heading, content, image } = Astro.props;
         {heading || "Who We Are"}
       </p>
 
-      <Text
-        as="h2"
-        class="text-2xl md:text-3xl font-bold text-navy leading-tight mb-4"
-      >
-        Develop a title here
-      </Text>
+      <div class="space-y-4">
+        <Text as="h2" class="text-2xl md:text-3xl font-bold text-navy leading-tight">
+          Develop a title here
+        </Text>
 
-      {
-        content && (
-          <div class="text-base text-gray-600 leading-relaxed space-y-4">
-            <RichText content={content} />
-          </div>
-        )
-      }
+        {
+          content && (
+            <div class="text-base text-gray-600 leading-relaxed space-y-4">
+              <RichText content={content} />
+            </div>
+          )
+        }
+      </div>
     </div>
 
     {

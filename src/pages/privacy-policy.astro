@@ -1,14 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/layout/Section.astro";
-import Container from "../components/layout/Container.astro";
 import Text from "../components/ui/Text.astro";
 ---
 
 <BaseLayout title="Privacy Policy">
-  <Section size="lg">
-    <Container class="max-w-3xl">
-      <Text as="h1" variant="displayLg">Privacy Policy</Text>
+  <Section size="lg" containerSize="narrow">
+      <Text as="h1" variant="hero">Privacy Policy</Text>
 
       <div class="mt-8 space-y-6 text-gray-700 leading-relaxed">
         <p>
@@ -29,6 +27,5 @@ import Text from "../components/ui/Text.astro";
           the contact information provided on the website.
         </p>
       </div>
-    </Container>
-  </Section>
+    </Section>
 </BaseLayout>
