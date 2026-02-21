@@ -26,7 +26,7 @@ const { heading, testimonials } = Astro.props;
 const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
 ---
 
-<Section size="md" tone="default">
+<Section size="lg" tone="muted">
   <Text
     as="h2"
     variant="headingLg"
@@ -38,7 +38,14 @@ const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
 
   {
     testimonialItems.length > 0 && (
-      <div class="w-full" data-testimonial-slider tabindex="0" role="region" aria-roledescription="carousel" aria-label="Client testimonials carousel">
+      <div
+        class="w-full"
+        data-testimonial-slider
+        tabindex="0"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Client testimonials carousel"
+      >
         <div class="relative w-full">
           <div class="relative mx-auto max-w-3xl testimonial-slider-shell">
             <div class="overflow-hidden rounded-sm">
@@ -47,33 +54,44 @@ const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
                 data-slider-track
               >
                 {testimonialItems.map((item, index) => (
-                  <div class="flex-shrink-0 w-full" data-slide role="group" aria-roledescription="slide" aria-label={`Testimonial ${index + 1} of ${testimonialItems.length}`}>
+                  <div
+                    class="flex-shrink-0 w-full"
+                    data-slide
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`Testimonial ${index + 1} of ${testimonialItems.length}`}
+                  >
                     <blockquote class="max-w-3xl mx-auto border-l-4 border-turquoise bg-white p-8 md:p-10">
-
                       {item.quote && (
-                        <Text as="p" variant="bodyMd" class="text-gray-600 leading-relaxed">
+                        <Text
+                          as="p"
+                          variant="bodyMd"
+                          class="text-gray-600 leading-relaxed"
+                        >
                           "{item.quote}"
                         </Text>
                       )}
 
                       <footer class="mt-5">
-                        {
-                          item.image && (
-                            <SanityImage
-                              image={item.image}
-                              alt={item.authorName || "Testimonial author"}
-                              width={128}
-                              height={128}
-                              class="w-12 h-12 rounded-full mb-3 object-cover"
-                            />
-                          )
-                        }
+                        {item.image && (
+                          <SanityImage
+                            image={item.image}
+                            alt={item.authorName || "Testimonial author"}
+                            width={128}
+                            height={128}
+                            class="w-12 h-12 rounded-full mb-3 object-cover"
+                          />
+                        )}
                         <cite class="not-italic block">
                           {item.authorName && (
-                            <span class="block text-sm font-medium text-navy">{item.authorName}</span>
+                            <span class="block text-sm font-medium text-navy">
+                              {item.authorName}
+                            </span>
                           )}
                           {item.authorTitle && (
-                            <span class="text-xs text-gray-500">{item.authorTitle}</span>
+                            <span class="text-xs text-gray-500">
+                              {item.authorTitle}
+                            </span>
                           )}
                         </cite>
                       </footer>
@@ -89,8 +107,18 @@ const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
               aria-label="Previous testimonial"
               data-slider-prev
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
             <button
@@ -99,12 +127,21 @@ const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
               aria-label="Next testimonial"
               data-slider-next
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
-
         </div>
 
         <div class="flex justify-center gap-2 mt-6">
@@ -150,7 +187,10 @@ const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
         track.style.transform = `translateX(-${currentIndex * 100}%)`;
 
         slides.forEach((slide, index) => {
-          slide.setAttribute("aria-hidden", index === currentIndex ? "false" : "true");
+          slide.setAttribute(
+            "aria-hidden",
+            index === currentIndex ? "false" : "true",
+          );
         });
 
         dots.forEach((dot, index) => {
@@ -162,7 +202,6 @@ const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
             dot.classList.add("w-2", "bg-gray-300");
           }
         });
-
       };
 
       const goToSlide = (index) => {

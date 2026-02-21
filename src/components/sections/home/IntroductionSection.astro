@@ -7,8 +7,8 @@
  * compact spacing.
  */
 
-import Container from "../../layout/Container.astro";
 import Text from "../../ui/Text.astro";
+import Section from "../../layout/Section.astro";
 
 interface Props {
   headline?: string;
@@ -21,17 +21,21 @@ const { headline, supportingText, showTopGradient = true } = Astro.props;
 if (!headline) return;
 ---
 
-<section class="relative overflow-visible bg-turquoise py-12 lg:py-16">
+<Section
+  size="sm"
+  containerSize="wide"
+  class="relative overflow-visible !bg-turquoise"
+>
   {
     showTopGradient && (
       <div
         class="pointer-events-none absolute inset-x-0 -top-28 h-48 bg-gradient-to-t from-turquoise/100 via-turquoise-light/25 to-transparent blur-2xl"
         aria-hidden="true"
-      ></div>
+      />
     )
   }
 
-  <Container size="wide" class="relative z-10">
+  <div class="relative z-10">
     <div>
       <Text as="h2" variant="headingLg" tone="inverted">
         {headline}
@@ -39,9 +43,9 @@ if (!headline) return;
 
       {
         supportingText && (
-          <p class="mt-3 text-base text-white/90 max-w-xl">{supportingText}</p>
+          <p class="mt-4 text-base text-white/90 max-w-xl">{supportingText}</p>
         )
       }
     </div>
-  </Container>
-</section>
+  </div>
+</Section>
