@@ -5,13 +5,21 @@
 
 export const prerender = false;
 
-import { loadQuery } from "../../lib/sanity/loadQuery";
+import {
+  isVisualEditingEnabledForRequest,
+  loadQuery,
+} from "../../lib/sanity/loadQuery";
 import { BLOG_POST_QUERY } from "../../lib/sanity/queries";
 import BlogPostPage from "../../components/pages/BlogPostPage.astro";
 
 const { slug } = Astro.params;
+const visualEditingEnabled = isVisualEditingEnabledForRequest(Astro);
 
-const { data: post } = await loadQuery({ query: BLOG_POST_QUERY, params: { slug } });
+const { data: post } = await loadQuery({
+  query: BLOG_POST_QUERY,
+  params: { slug },
+  visualEditingEnabled,
+});
 
 if (!post) {
   return Astro.redirect("/404");

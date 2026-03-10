@@ -3,7 +3,10 @@
  * Blog Page (SSR for pagination/filtering)
  */
 
-import { loadQuery } from "../../lib/sanity/loadQuery";
+import {
+  isVisualEditingEnabledForRequest,
+  loadQuery,
+} from "../../lib/sanity/loadQuery";
 import {
   BLOG_PAGE_QUERY,
   BLOG_LIST_QUERY,
@@ -13,12 +16,19 @@ import BlogPage from "../../components/pages/BlogPage.astro";
 
 // SSR for pagination/filtering
 export const prerender = false;
+const visualEditingEnabled = isVisualEditingEnabledForRequest(Astro);
 
 // Fetch page settings first (used for pagination size)
-const { data: pageData } = await loadQuery({ query: BLOG_PAGE_QUERY });
+const { data: pageData } = await loadQuery({
+  query: BLOG_PAGE_QUERY,
+  visualEditingEnabled,
+});
 
 // Count posts first to determine pagination
-const { data: totalCount } = await loadQuery({ query: BLOG_COUNT_QUERY });
+const { data: totalCount } = await loadQuery({
+  query: BLOG_COUNT_QUERY,
+  visualEditingEnabled,
+});
 
 // Get pagination params from URL
 const url = Astro.url;
@@ -37,6 +47,7 @@ const { data: paginatedPosts } = totalPosts > 0
   ? await loadQuery({
       query: BLOG_LIST_QUERY,
       params: { start: startIndex, end: endIndex },
+      visualEditingEnabled,
     })
   : { data: [] };
 ---

@@ -5,7 +5,7 @@
  * Update these as your schema evolves.
  */
 
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import type { SanityImageSource } from "@sanity/image-url";
 
 // ============================================
 // Core Sanity Types

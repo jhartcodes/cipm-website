@@ -10,9 +10,19 @@ const siteUrl =
   process.env.URL ||
   "https://poetic-starlight-a799dd.netlify.app";
 
+const visualEditingRuntimeEnabled =
+  process.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true" ||
+  process.env.NODE_ENV === "development";
+
+const studioUrl =
+  process.env.PUBLIC_SANITY_STUDIO_URL ||
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:3333"
+    : "https://cipm.sanity.studio");
+
 export default defineConfig({
   site: siteUrl,
-  output: "static",
+  output: visualEditingRuntimeEnabled ? "server" : "static",
   adapter: netlify(),
   image: {
     domains: ["cdn.sanity.io"],
@@ -28,7 +38,7 @@ export default defineConfig({
       useCdn: false,
       apiVersion: "2026-01-01",
       stega: {
-        studioUrl: "https://cipm.sanity.studio",
+        studioUrl,
       },
     }),
     react(),

@@ -3,11 +3,15 @@
  * About Page
  */
 
-import { loadQuery } from "../lib/sanity/loadQuery";
+import {
+  isVisualEditingEnabledForRequest,
+  loadQuery,
+} from "../lib/sanity/loadQuery";
 import { ABOUT_PAGE_QUERY } from "../lib/sanity/queries";
 import AboutPage from "../components/pages/AboutPage.astro";
 
-const { data } = await loadQuery({ query: ABOUT_PAGE_QUERY });
+const visualEditingEnabled = isVisualEditingEnabledForRequest(Astro);
+const { data } = await loadQuery({ query: ABOUT_PAGE_QUERY, visualEditingEnabled });
 ---
 
 <AboutPage data={data} ctaData={data?.ctaData} />

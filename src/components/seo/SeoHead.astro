@@ -13,6 +13,7 @@
  */
 
 import { getImageUrl } from "../../lib/sanity/image";
+import { stegaClean } from "@sanity/client/stega";
 
 interface SeoData {
   metaTitle?: string;
@@ -45,12 +46,14 @@ const {
 
 // Determine final meta values with fallback chain
 const metaTitle =
-  seo?.metaTitle || fallbackTitle || siteSettings?.siteName || "CIPM";
+  stegaClean(seo?.metaTitle || fallbackTitle || siteSettings?.siteName || "CIPM");
 const metaDescription =
-  seo?.metaDescription ||
-  fallbackDescription ||
-  siteSettings?.siteDescription ||
-  "Community Impact Property Management";
+  stegaClean(
+    seo?.metaDescription ||
+      fallbackDescription ||
+      siteSettings?.siteDescription ||
+      "Community Impact Property Management",
+  );
 
 // Open Graph image
 const ogImage = seo?.ogImage || siteSettings?.defaultOgImage;
@@ -61,6 +64,7 @@ const robots = seo?.noIndex ? "noindex, nofollow" : "index, follow";
 
 // Canonical URL
 const canonical = canonicalUrl || Astro.url.href;
+const cleanCanonical = stegaClean(canonical);
 ---
 
 <!-- Primary Meta Tags -->
@@ -70,18 +74,18 @@ const canonical = canonicalUrl || Astro.url.href;
 <meta name="robots" content={robots} />
 
 <!-- Canonical URL -->
-<link rel="canonical" href={canonical} />
+<link rel="canonical" href={cleanCanonical} />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content={canonical} />
+<meta property="og:url" content={cleanCanonical} />
 <meta property="og:title" content={metaTitle} />
 <meta property="og:description" content={metaDescription} />
 {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={canonical} />
+<meta property="twitter:url" content={cleanCanonical} />
 <meta property="twitter:title" content={metaTitle} />
 <meta property="twitter:description" content={metaDescription} />
 {ogImageUrl && <meta property="twitter:image" content={ogImageUrl} />}
