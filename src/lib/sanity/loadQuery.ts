@@ -17,7 +17,11 @@ interface VisualEditingRequestContext {
     set?: (
       name: string,
       value: string,
-      options?: { path?: string; sameSite?: "lax" | "strict" | "none" },
+      options?: {
+        path?: string;
+        sameSite?: "lax" | "strict" | "none";
+        secure?: boolean;
+      },
     ) => void;
   };
 }
@@ -45,9 +49,11 @@ export function isVisualEditingEnabledForRequest(
     context.cookies?.set
   ) {
     try {
+      const secure = requestUrl.protocol === "https:";
       context.cookies.set(previewPerspectiveParam, previewPerspectiveValue, {
         path: "/",
-        sameSite: "lax",
+        sameSite: secure ? "none" : "lax",
+        secure,
       });
     } catch {
       // Ignore cookie persistence failures on unsupported/prerendered routes.
