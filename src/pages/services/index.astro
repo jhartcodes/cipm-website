@@ -3,17 +3,12 @@
  * Services Page
  */
 
-import {
-  isVisualEditingEnabledForRequest,
-  loadQuery,
-} from "../../lib/sanity/loadQuery";
+import { loadQuery } from "../../lib/sanity/loadQuery";
 import { SERVICES_PAGE_QUERY } from "../../lib/sanity/queries";
 import ServicesPage from "../../components/pages/ServicesPage.astro";
 
-const visualEditingEnabled = isVisualEditingEnabledForRequest(Astro);
 const { data } = await loadQuery({
   query: SERVICES_PAGE_QUERY,
-  visualEditingEnabled,
 });
 ---
 

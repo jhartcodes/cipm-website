@@ -3,15 +3,11 @@
  * Home Page
  */
 
-import {
-  isVisualEditingEnabledForRequest,
-  loadQuery,
-} from "../lib/sanity/loadQuery";
+import { loadQuery } from "../lib/sanity/loadQuery";
 import { HOME_PAGE_QUERY } from "../lib/sanity/queries";
 import HomePage from "../components/pages/HomePage.astro";
 
-const visualEditingEnabled = isVisualEditingEnabledForRequest(Astro);
-const { data } = await loadQuery({ query: HOME_PAGE_QUERY, visualEditingEnabled });
+const { data } = await loadQuery({ query: HOME_PAGE_QUERY });
 ---
 
 <HomePage data={data} ctaData={data?.ctaData} />

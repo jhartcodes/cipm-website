@@ -14,10 +14,7 @@
 
 import { VisualEditing } from "@sanity/astro/visual-editing";
 import { ClientRouter } from "astro:transitions";
-import {
-  isVisualEditingEnabledForRequest,
-  loadQuery,
-} from "../lib/sanity/loadQuery";
+import { isVisualEditingEnabled, loadQuery } from "../lib/sanity/loadQuery";
 import { GLOBAL_CHROME_QUERY } from "../lib/sanity/queries";
 import SeoHead from "../components/seo/SeoHead.astro";
 import TopRibbon from "../components/sections/TopRibbon.astro";
@@ -25,7 +22,7 @@ import Navigation from "../components/sections/Navigation.astro";
 import Footer from "../components/sections/Footer.astro";
 import "../styles/global.css";
 
-const visualEditingEnabled = isVisualEditingEnabledForRequest(Astro);
+const visualEditingEnabled = isVisualEditingEnabled();
 
 interface Props {
   title?: string;
@@ -38,7 +35,6 @@ const { title, description, seo, class: className } = Astro.props;
 
 const { data: globalData } = await loadQuery({
   query: GLOBAL_CHROME_QUERY,
-  visualEditingEnabled,
 });
 const { site, nav, topRibbon, footer } = globalData;
 ---

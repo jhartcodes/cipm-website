@@ -2,23 +2,17 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/layout/Section.astro";
 import RequestProposalFormSection from "../components/sections/requestProposal/RequestProposalFormSection.astro";
-import {
-  isVisualEditingEnabledForRequest,
-  loadQuery,
-} from "../lib/sanity/loadQuery";
+import { loadQuery } from "../lib/sanity/loadQuery";
 import {
   PROPERTY_TYPE_OPTIONS_QUERY,
   REQUEST_PROPOSAL_PAGE_QUERY,
 } from "../lib/sanity/queries";
 
-const visualEditingEnabled = isVisualEditingEnabledForRequest(Astro);
 const { data: pageData } = await loadQuery({
   query: REQUEST_PROPOSAL_PAGE_QUERY,
-  visualEditingEnabled,
 });
 const { data: propertyTypes } = await loadQuery({
   query: PROPERTY_TYPE_OPTIONS_QUERY,
-  visualEditingEnabled,
 });
 ---
 
