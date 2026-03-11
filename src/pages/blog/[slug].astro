@@ -5,15 +5,20 @@
 
 export const prerender = false;
 
-import { loadQuery } from "../../lib/sanity/loadQuery";
+import { isVisualEditingEnabled, loadQuery } from "../../lib/sanity/loadQuery";
 import { BLOG_POST_QUERY } from "../../lib/sanity/queries";
 import BlogPostPage from "../../components/pages/BlogPostPage.astro";
 
 const { slug } = Astro.params;
+const visualEditingEnabled = isVisualEditingEnabled({
+  url: Astro.url,
+  request: Astro.isPrerendered ? undefined : Astro.request,
+});
 
 const { data: post } = await loadQuery({
   query: BLOG_POST_QUERY,
   params: { slug },
+  visualEditingEnabled,
 });
 
 if (!post) {

@@ -356,6 +356,31 @@ export const BLOG_COUNT_QUERY = /* groq */ `
 count(*[_type == "blogPost"])
 `;
 
+export const BLOG_COUNT_AND_LIST_QUERY = /* groq */ `
+{
+  "totalCount": count(*[_type == "blogPost"]),
+  "posts": *[_type == "blogPost"] | order(publishedAt desc)[$start...$end]{
+    title,
+    slug,
+    publishedAt,
+    excerpt,
+    featuredImage{
+      asset,
+      alt,
+      hotspot,
+      crop
+    },
+    author,
+    showAuthor,
+    category->{
+      title,
+      slug,
+      color
+    }
+  }
+}
+`;
+
 export const BLOG_POST_QUERY = /* groq */ `
 *[_type == "blogPost" && slug.current == $slug][0]{
   title,

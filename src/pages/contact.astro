@@ -3,11 +3,15 @@
  * Contact Page
  */
 
-import { loadQuery } from "../lib/sanity/loadQuery";
+import { isVisualEditingEnabled, loadQuery } from "../lib/sanity/loadQuery";
 import { CONTACT_PAGE_QUERY } from "../lib/sanity/queries";
 import ContactPage from "../components/pages/ContactPage.astro";
 
-const { data } = await loadQuery({ query: CONTACT_PAGE_QUERY });
+const visualEditingEnabled = isVisualEditingEnabled({
+  url: Astro.url,
+  request: Astro.isPrerendered ? undefined : Astro.request,
+});
+const { data } = await loadQuery({ query: CONTACT_PAGE_QUERY, visualEditingEnabled });
 ---
 
 <ContactPage data={data} ctaData={data?.ctaData} />

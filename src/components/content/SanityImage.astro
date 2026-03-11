@@ -1,19 +1,22 @@
 ---
 /**
  * SanityImage Component
- * 
+ *
  * Content Component (Sanity-aware)
  * Renders optimized images from Sanity CDN with responsive srcset
- * 
+ *
  * Architecture Rules:
  * - This IS allowed to import from lib/sanity
  * - Handles Sanity image objects
  * - Provides responsive, optimized images
  */
 
-import { Image } from "astro:assets";
-import { getImageUrl, getImageDimensions } from "../../lib/sanity/image";
-import type { SanityImageSource } from '@sanity/image-url';
+import {
+  getImageDimensions,
+  getImageSrcSet,
+  getImageUrl,
+} from "../../lib/sanity/image";
+import type { SanityImageSource } from "@sanity/image-url";
 
 interface Props {
   image: SanityImageSource;
@@ -22,8 +25,8 @@ interface Props {
   height?: number;
   sizes?: string;
   quality?: number;
-  loading?: 'lazy' | 'eager';
-  fetchpriority?: 'high' | 'low' | 'auto';
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "low" | "auto";
   class?: string;
 }
 
@@ -54,20 +57,23 @@ const resolvedHeight = height ?? (resolvedWidth && baseWidth && baseHeight
   ? Math.round((resolvedWidth * baseHeight) / baseWidth)
   : baseHeight);
 
-const inferSize = !resolvedWidth || !resolvedHeight;
+const responsiveWidths = [320, 480, 640, 768, 960, 1200, 1536, 1920];
+const maxWidth = resolvedWidth ?? baseWidth ?? responsiveWidths[responsiveWidths.length - 1];
+const srcSetWidths = Array.from(
+  new Set([...responsiveWidths.filter((value) => value < maxWidth), maxWidth]),
+).sort((a, b) => a - b);
 
-// Sanity URL (Astro Image will handle optimization)
-const src = getImageUrl(image, resolvedWidth ?? baseWidth, quality);
+const src = getImageUrl(image, resolvedWidth ?? maxWidth, quality);
+const srcSet = getImageSrcSet(image, srcSetWidths, quality);
 ---
 
-<Image
+<img
   src={src}
+  srcset={srcSet}
+  sizes={sizes}
   alt={alt}
   width={resolvedWidth}
   height={resolvedHeight}
-  inferSize={inferSize}
-  sizes={sizes}
-  quality={quality}
   loading={loading}
   decoding="async"
   fetchpriority={fetchpriority ?? (loading === "eager" ? "high" : undefined)}

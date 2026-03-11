@@ -9,9 +9,13 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/layout/Section.astro";
 import Text from "../../components/ui/Text.astro";
 import RichText from "../../components/content/RichText.astro";
-import { loadQuery } from "../../lib/sanity/loadQuery";
+import { isVisualEditingEnabled, loadQuery } from "../../lib/sanity/loadQuery";
 
 const { slug } = Astro.params;
+const visualEditingEnabled = isVisualEditingEnabled({
+  url: Astro.url,
+  request: Astro.isPrerendered ? undefined : Astro.request,
+});
 
 const { data: service } = await loadQuery({
   query: `*[_type == "service" && slug.current == $slug][0]{
@@ -23,6 +27,7 @@ const { data: service } = await loadQuery({
     seo
   }`,
   params: { slug },
+  visualEditingEnabled,
 });
 
 if (!service) {
