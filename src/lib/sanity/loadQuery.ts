@@ -10,13 +10,13 @@ const visualEditingEnabled =
   String(
     import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED ??
       process.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED,
-  ).toLowerCase() === "true" || import.meta.env.DEV;
+  ).toLowerCase() === "true";
 
 const token = import.meta.env.SANITY_API_READ_TOKEN;
 
 /**
  * Presentation mode is environment-wide for this Astro setup:
- * - preview/local deployments enable drafts + stega everywhere
+ * - preview deployments enable drafts + stega everywhere
  * - production deployments serve published content only
  */
 export function isVisualEditingEnabled(_context?: VisualEditingContext): boolean {

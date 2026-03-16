@@ -50,7 +50,10 @@ const ctaLink = resolveLink({
 const showCta = data.showCtaButton && data.ctaText && ctaLink;
 ---
 
-<header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-md" transition:animate="none">
+<header
+  class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-md"
+  transition:animate="none"
+>
   <Container size="wide">
     <nav
       class="flex items-center justify-between h-20"
@@ -61,10 +64,10 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
         <Image
           src={logoLongColor}
           alt={siteName || "CIPM - Community Impact Property Management"}
-          width={220}
-          height={40}
+          width={385}
+          height={48}
           loading="eager"
-          class="h-12 w-auto hidden md:block"
+          class="h-9 w-auto hidden md:block lg:h-10 xl:h-12"
         />
         <Image
           src={cubeHouse}
@@ -179,7 +182,12 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
         {
           showCta && (
             <div class="pt-4">
-              <Button href={ctaLink} variant="secondary" size="md" class="w-full">
+              <Button
+                href={ctaLink}
+                variant="secondary"
+                size="md"
+                class="w-full"
+              >
                 {data.ctaText}
               </Button>
             </div>
@@ -195,31 +203,31 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
    * Mobile Menu Controller
    * View Transitions compatible - uses property assignment to overwrite handlers
    */
-  document.addEventListener('astro:page-load', () => {
-    const button = document.getElementById('mobile-menu-button');
-    const menu = document.getElementById('mobile-menu');
-    const openIcon = document.getElementById('menu-icon-open');
-    const closeIcon = document.getElementById('menu-icon-close');
+  document.addEventListener("astro:page-load", () => {
+    const button = document.getElementById("mobile-menu-button");
+    const menu = document.getElementById("mobile-menu");
+    const openIcon = document.getElementById("menu-icon-open");
+    const closeIcon = document.getElementById("menu-icon-close");
 
     if (!button || !menu || !openIcon || !closeIcon) return;
 
     const closeMenu = () => {
-      menu.classList.add('hidden');
-      openIcon.classList.remove('hidden');
-      closeIcon.classList.add('hidden');
-      button.setAttribute('aria-expanded', 'false');
+      menu.classList.add("hidden");
+      openIcon.classList.remove("hidden");
+      closeIcon.classList.add("hidden");
+      button.setAttribute("aria-expanded", "false");
     };
 
     const openMenu = () => {
-      menu.classList.remove('hidden');
-      openIcon.classList.add('hidden');
-      closeIcon.classList.remove('hidden');
-      button.setAttribute('aria-expanded', 'true');
+      menu.classList.remove("hidden");
+      openIcon.classList.add("hidden");
+      closeIcon.classList.remove("hidden");
+      button.setAttribute("aria-expanded", "true");
     };
 
     button.onclick = (e) => {
       e.stopPropagation();
-      menu.classList.contains('hidden') ? openMenu() : closeMenu();
+      menu.classList.contains("hidden") ? openMenu() : closeMenu();
     };
 
     document.onclick = (e) => {
@@ -227,9 +235,9 @@ const showCta = data.showCtaButton && data.ctaText && ctaLink;
     };
 
     document.onkeydown = (e) => {
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === "Escape") closeMenu();
     };
 
-    document.addEventListener('astro:before-swap', closeMenu, { once: true });
+    document.addEventListener("astro:before-swap", closeMenu, { once: true });
   });
 </script>

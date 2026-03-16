@@ -14,8 +14,7 @@ const siteUrl =
   "https://poetic-starlight-a799dd.netlify.app";
 
 const visualEditingRuntimeEnabled =
-  env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true" ||
-  process.env.NODE_ENV === "development";
+  env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
 
 const studioUrl =
   env.PUBLIC_SANITY_STUDIO_URL ||
