@@ -4,18 +4,21 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import sanity from "@sanity/astro";
 import react from "@astrojs/react";
+import { loadEnv } from "vite";
+
+const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 
 const siteUrl =
-  process.env.SITE_URL ||
-  process.env.URL ||
+  env.SITE_URL ||
+  env.URL ||
   "https://poetic-starlight-a799dd.netlify.app";
 
 const visualEditingRuntimeEnabled =
-  process.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true" ||
+  env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true" ||
   process.env.NODE_ENV === "development";
 
 const studioUrl =
-  process.env.PUBLIC_SANITY_STUDIO_URL ||
+  env.PUBLIC_SANITY_STUDIO_URL ||
   (process.env.NODE_ENV === "development"
     ? "http://localhost:3333"
     : "https://cipm.sanity.studio");
@@ -31,7 +34,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   integrations: [
-    sitemap(),
+    ...(visualEditingRuntimeEnabled ? [] : [sitemap()]),
     sanity({
       projectId: "sv0c67ot",
       dataset: "production",

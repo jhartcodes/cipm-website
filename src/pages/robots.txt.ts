@@ -1,9 +1,16 @@
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = ({ site }) => {
-  const lines = ["User-agent: *", "Allow: /"];
+  const previewDeployment =
+    String(
+      import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED ??
+        process.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED,
+    ).toLowerCase() === "true";
+  const lines = previewDeployment
+    ? ["User-agent: *", "Disallow: /"]
+    : ["User-agent: *", "Allow: /"];
 
-  if (site) {
+  if (!previewDeployment && site) {
     lines.push(`Sitemap: ${new URL("/sitemap.xml", site).toString()}`);
   }
 

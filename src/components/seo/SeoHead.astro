@@ -59,12 +59,18 @@ const metaDescription =
 const ogImage = seo?.ogImage || siteSettings?.defaultOgImage;
 const ogImageUrl = ogImage ? getImageUrl(ogImage, 1200, 85) : null;
 
+const previewDeployment =
+  String(
+    import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED ??
+      process.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED,
+  ).toLowerCase() === "true";
+
 // Robots meta
-const robots = seo?.noIndex ? "noindex, nofollow" : "index, follow";
+const robots = previewDeployment || seo?.noIndex ? "noindex, nofollow" : "index, follow";
 
 // Canonical URL
-const canonical = canonicalUrl || Astro.url.href;
-const cleanCanonical = stegaClean(canonical);
+const canonical = previewDeployment ? null : canonicalUrl || Astro.url.href;
+const cleanCanonical = canonical ? stegaClean(canonical) : null;
 ---
 
 <!-- Primary Meta Tags -->
@@ -74,18 +80,18 @@ const cleanCanonical = stegaClean(canonical);
 <meta name="robots" content={robots} />
 
 <!-- Canonical URL -->
-<link rel="canonical" href={cleanCanonical} />
+{cleanCanonical && <link rel="canonical" href={cleanCanonical} />}
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content={cleanCanonical} />
+{cleanCanonical && <meta property="og:url" content={cleanCanonical} />}
 <meta property="og:title" content={metaTitle} />
 <meta property="og:description" content={metaDescription} />
 {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={cleanCanonical} />
+{cleanCanonical && <meta property="twitter:url" content={cleanCanonical} />}
 <meta property="twitter:title" content={metaTitle} />
 <meta property="twitter:description" content={metaDescription} />
 {ogImageUrl && <meta property="twitter:image" content={ogImageUrl} />}
