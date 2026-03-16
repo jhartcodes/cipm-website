@@ -64,24 +64,45 @@ const { site, nav, topRibbon, footer } = globalData;
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </SeoHead>
-    <ClientRouter prefetch="viewport" fallback="swap" />
+    {!visualEditingEnabled && <ClientRouter prefetch="viewport" fallback="swap" />}
   </head>
 
   <body class="min-h-screen">
     <!-- Main content wrapper - sits above footer -->
-    <div class="site-content relative z-10 bg-white pb-8">
-      {topRibbon?.enabled && <TopRibbon data={topRibbon} transition:persist />}
+    {visualEditingEnabled ? (
+      <>
+        <div class="site-content relative z-10 bg-white pb-8">
+          {topRibbon?.enabled && <TopRibbon data={topRibbon} />}
 
-      <Navigation data={nav} siteName={site?.siteName} transition:persist />
+          <Navigation data={nav} siteName={site?.siteName} />
 
-      <main class={className} transition:animate="fade">
-        <slot />
-      </main>
-    </div>
+          <main class={className}>
+            <slot />
+          </main>
+        </div>
 
-    <!-- Footer - sticky behind content, reveals on scroll -->
-    <Footer data={footer} transition:persist />
+        <!-- Footer - sticky behind content, reveals on scroll -->
+        <Footer data={footer} />
 
-    <VisualEditing enabled={visualEditingEnabled} transition:persist />
+        <VisualEditing enabled={visualEditingEnabled} />
+      </>
+    ) : (
+      <>
+        <div class="site-content relative z-10 bg-white pb-8">
+          {topRibbon?.enabled && <TopRibbon data={topRibbon} transition:persist />}
+
+          <Navigation data={nav} siteName={site?.siteName} transition:persist />
+
+          <main class={className} transition:animate="fade">
+            <slot />
+          </main>
+        </div>
+
+        <!-- Footer - sticky behind content, reveals on scroll -->
+        <Footer data={footer} transition:persist />
+
+        <VisualEditing enabled={visualEditingEnabled} transition:persist />
+      </>
+    )}
   </body>
 </html>
