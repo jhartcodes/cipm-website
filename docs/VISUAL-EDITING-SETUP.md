@@ -2,6 +2,8 @@
 
 This document explains how visual editing (live preview with click-to-edit overlays) works in this Astro + Sanity project.
 
+This repository uses a standalone Studio plus a separate Astro frontend. The Studio is not embedded inside `cipm-astro`.
+
 ## Architecture Overview
 
 ```
@@ -44,7 +46,7 @@ This allows the `VisualEditing` component to know which Studio field each piece 
 ### 2. The VisualEditing Component
 
 ```astro
-<VisualEditing enabled={visualEditingEnabled} transition:persist />
+<VisualEditing enabled={visualEditingEnabled} />
 ```
 
 This component:
@@ -59,15 +61,17 @@ Visual editing is controlled by a single environment variable:
 
 ```typescript
 const visualEditingEnabled =
-  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true" ||
-  import.meta.env.DEV;
+  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
 ```
 
 | Environment | `DEV` | Env Var | Result |
 |-------------|-------|---------|--------|
-| Local dev (`npm run dev`) | `true` | ignored | **Enabled** |
+| Local dev (`npm run dev`) | n/a | `"true"` | **Enabled** |
+| Local dev (`npm run dev`) | n/a | `"false"` | **Disabled** |
 | Preview deployment | `false` | `"true"` | **Enabled** |
 | Production deployment | `false` | `"false"` | **Disabled** |
+
+In this project, the preview deployment is the Presentation frontend. It does not use per-request draft-mode cookies or URL heuristics.
 
 ## Required Configuration
 
@@ -118,6 +122,7 @@ cipm-astro/
 │       └── BaseLayout.astro  # VisualEditing component
 │
 studio-cipm-/
+├── sanity.cli.ts             # Hosted Studio URL + deployment config
 ├── sanity.config.ts          # Presentation tool config
 └── presentation/
     └── resolve.ts            # Document location resolver
@@ -143,7 +148,7 @@ The `stega.studioUrl` tells overlays where the Studio is hosted.
 ### loadQuery.ts
 
 ```typescript
-const perspective = visualEditingEnabled ? "previewDrafts" : "published";
+const perspective = visualEditingEnabled ? "drafts" : "published";
 
 await sanityClient.fetch(query, params, {
   perspective,
@@ -155,7 +160,7 @@ await sanityClient.fetch(query, params, {
 ```
 
 When visual editing is enabled:
-- Uses `previewDrafts` perspective (shows unpublished changes)
+- Uses `drafts` perspective (shows unpublished changes)
 - Enables `resultSourceMap` (required for stega)
 - Enables `stega` encoding
 - Disables CDN (ensures fresh content)
@@ -214,13 +219,15 @@ You need **two separate deployments**:
 
 ## View Transitions
 
-The `transition:persist` directive keeps the visual editing connection alive during page navigation:
+Preview deployments intentionally disable Astro client-side transitions.
 
-```astro
-<VisualEditing enabled={visualEditingEnabled} transition:persist />
-```
+Reason:
 
-Without this, the postMessage connection to the Studio would break on every page transition.
+- Presentation worked on the initial page load
+- client-side navigation broke overlays until a hard refresh
+- full document navigation is the more reliable match for the current `@sanity/astro` Presentation setup
+
+Production deployments can still use Astro transitions.
 
 ## Common Issues
 
@@ -237,6 +244,15 @@ The `PUBLIC_SANITY_STUDIO_URL` must be your actual Studio URL:
 - Correct: `https://cipm.sanity.studio`
 - Wrong: `https://www.sanity.io/@username/studio/...` (this is the dashboard URL)
 
+The dashboard URL may still appear when navigating from Sanity Manage, but it should not be treated as the canonical frontend overlay target.
+
+### Preview Crawlability
+
+Preview deployments should not be indexed:
+- `PUBLIC_SANITY_VISUAL_EDITING_ENABLED="true"` forces `noindex, nofollow`
+- `robots.txt` disallows crawling
+- the sitemap is not emitted for preview builds
+
 ### Navigation Not Syncing in Presentation Tool
 
 Ensure `presentation/resolve.ts` includes:
@@ -246,8 +262,8 @@ Ensure `presentation/resolve.ts` includes:
 ## Security Notes
 
 1. **Never expose `SANITY_API_READ_TOKEN` to the client** - It's only used server-side in `loadQuery.ts`
-2. **Preview site should not be indexed** - Add `noindex` meta tag or robots.txt rule
-3. **Consider auth for preview site** - Netlify password protection or similar
+2. **Preview site should not be indexed** - This setup enforces `noindex`, `robots.txt` blocking, and no sitemap on preview builds
+3. **Consider auth for preview site** - Netlify password protection or similar is still a good idea if the preview URL is public
 
 ## References
 
