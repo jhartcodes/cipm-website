@@ -24,6 +24,7 @@ interface Props {
     phoneNumber?: string;
     email?: string;
     address?: string;
+    description?: string;
     landAcknowledgement?: string;
     socialLinks?: SocialLink[];
     copyrightText?: string;
@@ -71,10 +72,11 @@ const currentYear = new Date().getFullYear();
             class="h-10 w-auto"
           />
         </SmartLink>
-        <p class="text-white/70 max-w-md leading-relaxed">
-          Professional property management in Metro Vancouver for commercial,
-          nonprofit, rental, and mixed-use properties.
-        </p>
+        {data.description && (
+          <p class="text-white/70 max-w-md leading-relaxed">
+            {data.description}
+          </p>
+        )}
 
         {
           data.socialLinks && data.socialLinks.length > 0 && (

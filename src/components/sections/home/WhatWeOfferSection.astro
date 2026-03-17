@@ -6,9 +6,9 @@
  */
 
 import Section from "../../layout/Section.astro";
-import Text from "../../ui/Text.astro";
 import Button from "../../ui/Button.astro";
 import SanityImage from "../../content/SanityImage.astro";
+import RichText from "../../content/RichText.astro";
 
 interface ServiceItem {
   title?: string;
@@ -18,12 +18,12 @@ interface ServiceItem {
 
 interface Props {
   heading?: string;
-  intro?: string;
+  content?: any[];
   image?: any;
   services?: ServiceItem[];
 }
 
-const { heading, intro, image, services = [] } = Astro.props;
+const { heading, content, image, services = [] } = Astro.props;
 
 // Default SVG icon paths (fallback when no Sanity icon)
 const defaultIcons = [
@@ -39,12 +39,13 @@ const defaultIcons = [
     <p class="text-turquoise font-bold tracking-wide uppercase text-sm">
       {heading || "What We Offer"}
     </p>
-    <Text
-      as="h2"
-      class="text-2xl md:text-3xl font-bold text-navy leading-tight max-w-3xl mx-auto"
-    >
-      {intro || "Develop a title here"}
-    </Text>
+    {
+      content && (
+        <div class="max-w-3xl mx-auto text-center">
+          <RichText content={content} />
+        </div>
+      )
+    }
   </div>
 
   <div class="grid gap-8 lg:grid-cols-2 lg:gap-10 items-start lg:items-stretch">

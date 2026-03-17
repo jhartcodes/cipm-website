@@ -34,7 +34,7 @@ const pageTitle = data?.hero?.heading || "Blog";
     title={pageTitle}
     subtitle={data?.hero?.subheading}
   />
-  <BlogIntroSection heading={data?.heading} intro={data?.introText} />
+  <BlogIntroSection heading={data?.heading} intro={data?.intro} />
   <div transition:name="blog-grid" transition:animate="initial">
     <BlogGridSection
       posts={posts}

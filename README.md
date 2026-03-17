@@ -7,6 +7,8 @@ This frontend is part of a two-app Sanity setup:
 
 This repository does **not** embed Sanity Studio into the Astro app. The Studio is deployed separately and the Astro app points Visual Editing overlays back to that Studio.
 
+For Studio-specific deployment and Presentation configuration, see [`/Users/joel/Personal/CIPM/studio-cipm-/README.md`](/Users/joel/Personal/CIPM/studio-cipm-/README.md).
+
 ## Architecture
 
 ### Production site
@@ -127,6 +129,21 @@ That is enforced by:
 - [`src/pages/robots.txt.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/robots.txt.ts)
   - preview crawl blocking
 
+### Sanity-specific frontend conventions
+
+- All Sanity page data should flow through [`src/lib/sanity/loadQuery.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/lib/sanity/loadQuery.ts).
+- Shared GROQ queries live in [`src/lib/sanity/queries.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/lib/sanity/queries.ts).
+- Image URLs are generated through [`src/lib/sanity/image.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/lib/sanity/image.ts).
+- Internal Sanity link objects are converted to site URLs through [`src/lib/routing/resolveLink.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/lib/routing/resolveLink.ts).
+
+These conventions matter because Presentation depends on route consistency:
+
+- the frontend route map
+- Studio `resolve.locations`
+- Studio `resolve.mainDocuments`
+
+all need to stay aligned.
+
 ### Studio app
 
 - [`sanity.config.ts`](/Users/joel/Personal/CIPM/studio-cipm-/sanity.config.ts)
@@ -153,6 +170,12 @@ That is enforced by:
 | `PUBLIC_SANITY_STUDIO_URL` | yes | canonical Studio URL used by overlays |
 | `SANITY_API_READ_TOKEN` | preview only | viewer token for draft content |
 | `SITE_URL` or `URL` | recommended | site URL for canonical and sitemap generation |
+| `RESEND_API_KEY` | forms only | server-side API key for transactional email |
+| `CONTACT_FROM` | forms only | sender address used by Resend |
+| `CONTACT_TO` | forms only | comma-separated primary recipients |
+| `CONTACT_BCC` | optional | comma-separated BCC recipients |
+| `PUBLIC_TURNSTILE_SITE_KEY` | forms only | browser-side Turnstile site key |
+| `TURNSTILE_SECRET_KEY` | forms only | server-side Turnstile secret |
 
 ### `studio-cipm-`
 
@@ -174,6 +197,87 @@ npm run dev
 ```
 
 Local behavior depends entirely on `PUBLIC_SANITY_VISUAL_EDITING_ENABLED`.
+
+### Route strategy
+
+This Astro app uses a mixed route strategy:
+
+- static-style published pages for the production site
+- server-rendered behavior for Presentation preview
+- explicit SSR routes for dynamic content and form handling
+
+Notable routes:
+
+- [`src/pages/blog/index.astro`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/blog/index.astro): SSR for pagination/filtering
+- [`src/pages/blog/[slug].astro`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/blog/[slug].astro): dynamic blog posts
+- [`src/pages/services/[slug].astro`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/services/[slug].astro): dynamic service pages
+- [`src/pages/api/form-submit.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/api/form-submit.ts): server endpoint for forms
+
+## Forms, Turnstile, and Resend
+
+The site has two lead forms:
+
+- contact form
+- request proposal form
+
+Both submit to [`src/pages/api/form-submit.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/api/form-submit.ts).
+
+### Form flow
+
+1. The browser submits JSON to `/api/form-submit`.
+2. The request includes:
+   - `formId`
+   - form fields
+   - a honeypot field
+   - a Cloudflare Turnstile token
+3. The API route:
+   - validates `formId`
+   - silently accepts honeypot spam
+   - verifies the Turnstile token
+   - validates payload shape with Zod
+   - sends an email through Resend
+
+### Validation
+
+Schemas live in [`src/lib/forms/schemas.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/lib/forms/schemas.ts).
+
+- `contactFormSchema`
+- `requestProposalFormSchema`
+
+### Turnstile
+
+Turnstile verification lives in [`src/lib/forms/turnstile.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/lib/forms/turnstile.ts).
+
+- browser uses `PUBLIC_TURNSTILE_SITE_KEY`
+- server verifies with `TURNSTILE_SECRET_KEY`
+
+### Resend
+
+Resend integration lives in [`src/lib/email/sendEmail.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/lib/email/sendEmail.ts).
+
+Behavior:
+
+- sends email via `https://api.resend.com/emails`
+- requires `RESEND_API_KEY`
+- requires `CONTACT_FROM`
+- requires at least one `CONTACT_TO`
+- optionally includes `CONTACT_BCC`
+- uses the form submitter email as `reply_to`
+
+Subjects are set in [`src/pages/api/form-submit.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/api/form-submit.ts):
+
+- contact form: `CONTACT_SUBJECT_CONTACT` fallback
+- request proposal form: `CONTACT_SUBJECT_PROPOSAL` fallback
+
+### Operational notes
+
+- Resend runs only server-side through the API route.
+- The Resend API key must never be exposed to the client.
+- If forms stop working, check:
+  1. Turnstile keys
+  2. Resend API key
+  3. recipient env vars
+  4. Netlify function/server logs
 
 ### Studio
 
@@ -218,6 +322,7 @@ Note:
 - `PUBLIC_SANITY_VISUAL_EDITING_ENABLED=false`
 - no preview token required
 - canonical site URL configured
+- form env vars configured if forms should remain live
 
 ### Studio deployment
 
@@ -235,6 +340,16 @@ Check these first:
 4. Does Studio `allowOrigins` include the preview origin?
 5. Did someone re-enable Astro client-side transitions on the preview deployment?
 
+## If forms break
+
+Check these first:
+
+1. Is `/api/form-submit` deployed and reachable?
+2. Is `PUBLIC_TURNSTILE_SITE_KEY` present in the frontend?
+3. Is `TURNSTILE_SECRET_KEY` present on the server?
+4. Is `RESEND_API_KEY` valid?
+5. Are `CONTACT_FROM` and `CONTACT_TO` configured?
+
 ## References
 
 - [Build your blog with Astro and Sanity](https://www.sanity.io/docs/developer-guides/sanity-astro-blog)
@@ -242,3 +357,5 @@ Check these first:
 - [Embedding Sanity Studio](https://www.sanity.io/docs/studio/embedding-sanity-studio)
 - [Studio deployment](https://www.sanity.io/docs/studio/deployment)
 - [Sanity JavaScript client CDN configuration](https://www.sanity.io/docs/js-client-cdn-configuration)
+- [Resend API](https://resend.com/docs/api-reference/emails/send-email)
+- [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/)

@@ -154,7 +154,6 @@ export interface NavigationData {
 export interface HeroSection {
   heading?: string;
   subheading?: string;
-  backgroundImage?: SanityImage;
 }
 
 // ============================================
@@ -198,7 +197,6 @@ export interface PropertyType {
   _key?: string;
   title?: string;
   slug?: { current: string };
-  icon?: SanityImage;
   image?: SanityImage;
   shortDescription?: string;
   enableDetailPage?: boolean;
@@ -217,7 +215,6 @@ export interface Testimonial {
   quote?: string;
   authorName?: string;
   authorTitle?: string;
-  image?: SanityImage;
 }
 
 export interface FaqItem {
@@ -300,7 +297,7 @@ export interface HomePage extends SanityDocument {
   whatWeManageContent?: PortableTextContent;
   propertyTypes?: PropertyType[];
   whatWeOfferHeading?: string;
-  whatWeOfferIntro?: string;
+  whatWeOfferContent?: PortableTextContent;
   whatWeOfferImage?: SanityImage;
   featuredServices?: Service[];
   testimonialsHeading?: string;
@@ -327,8 +324,6 @@ export interface ServicesPage extends SanityDocument {
   _type: "servicesPage";
   seo?: SeoData;
   hero?: HeroSection;
-  introHeading?: string;
-  introContent?: PortableTextContent;
   services?: Service[];
   showCta?: boolean;
   ctaHeading?: string;
@@ -356,7 +351,7 @@ export interface BlogPage extends SanityDocument {
   seo?: SeoData;
   hero?: HeroSection;
   heading?: string;
-  introText?: string;
+  intro?: string;
 }
 
 // ============================================
@@ -373,6 +368,7 @@ export interface FooterData {
   phoneNumber?: string;
   email?: string;
   address?: string;
+  description?: string;
   landAcknowledgement?: string;
   socialLinks?: SocialLink[];
   copyrightText?: string;

@@ -41,6 +41,7 @@ export const GLOBAL_CHROME_QUERY = /* groq */ `
     phoneNumber,
     email,
     address,
+    description,
     landAcknowledgement,
     socialLinks[]{ platform, url },
     copyrightText
@@ -51,13 +52,7 @@ export const GLOBAL_CHROME_QUERY = /* groq */ `
 const HERO_PROJECTION = /* groq */ `
 hero{
   heading,
-  subheading,
-  backgroundImage{
-    asset,
-    alt,
-    hotspot,
-    crop
-  }
+  subheading
 }
 `;
 
@@ -126,21 +121,16 @@ export const HOME_PAGE_QUERY = /* groq */ `
   propertyTypes[]->{
     title,
     slug,
-    shortDescription,
     image{
       asset,
       alt,
       hotspot,
       crop
     },
-    icon{
-      asset,
-      alt
-    },
     enableDetailPage
   },
   whatWeOfferHeading,
-  whatWeOfferIntro,
+  whatWeOfferContent,
   whatWeOfferImage{
     asset,
     alt,
@@ -159,13 +149,7 @@ export const HOME_PAGE_QUERY = /* groq */ `
   featuredTestimonials[]-> {
     quote,
     authorName,
-    authorTitle,
-    image{
-      asset,
-      alt,
-      hotspot,
-      crop
-    }
+    authorTitle
   },
   showCta,
   "ctaData": select(
@@ -264,8 +248,6 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
 export const SERVICES_PAGE_QUERY = /* groq */ `
 *[_type == "servicesPage"][0]{
   ${HERO_PROJECTION},
-  introHeading,
-  introContent,
   services[]->{
     title,
     slug,
@@ -318,7 +300,7 @@ export const BLOG_PAGE_QUERY = /* groq */ `
 *[_type == "blogPage"][0]{
   ${HERO_PROJECTION},
   heading,
-  introText,
+  intro,
   postsPerPageDesktop,
   postsPerPageMobile,
   showCta,

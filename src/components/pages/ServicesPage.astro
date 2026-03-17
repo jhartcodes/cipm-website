@@ -7,7 +7,6 @@
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import SecondaryHeroSection from "../sections/shared/SecondaryHeroSection.astro";
-import IntroSection from "../sections/services/IntroSection.astro";
 import ServicesListSection from "../sections/services/ServicesListSection.astro";
 import FaqSection from "../sections/about/FaqSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
@@ -23,7 +22,6 @@ const pageTitle = data?.hero?.heading || "Our Services";
 
 <BaseLayout title={pageTitle} seo={data?.seo}>
   <SecondaryHeroSection title={pageTitle} subtitle={data?.hero?.subheading} />
-  <!-- <IntroSection heading={data?.introHeading} content={data?.introContent} /> -->
   <ServicesListSection services={data?.services} />
   <FaqSection heading={data?.faqHeading} faqs={data?.faqs} />
   {

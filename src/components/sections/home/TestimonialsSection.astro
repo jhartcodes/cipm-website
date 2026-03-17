@@ -8,13 +8,11 @@
 
 import Section from "../../layout/Section.astro";
 import Text from "../../ui/Text.astro";
-import SanityImage from "../../content/SanityImage.astro";
 
 interface Testimonial {
   quote?: string;
   authorName?: string;
   authorTitle?: string;
-  image?: any;
 }
 
 interface Props {
@@ -73,15 +71,6 @@ const testimonialItems = Array.isArray(testimonials) ? testimonials : [];
                       )}
 
                       <footer class="mt-5">
-                        {item.image && (
-                          <SanityImage
-                            image={item.image}
-                            alt={item.authorName || "Testimonial author"}
-                            width={128}
-                            height={128}
-                            class="w-12 h-12 rounded-full mb-3 object-cover"
-                          />
-                        )}
                         <cite class="not-italic block">
                           {item.authorName && (
                             <span class="block text-sm font-medium text-navy">
