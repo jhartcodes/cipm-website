@@ -20,11 +20,11 @@ const background = section?.background === "gray" ? "gray" : "white";
 const tone = background === "gray" ? "muted" : "default";
 
 const contentClasses = layout === "centered"
-  ? "mt-4 max-w-3xl"
+  ? "mt-4"
   : "lg:mt-2";
 ---
 
-<Section size="lg" tone={tone} containerSize={layout === "centered" ? "narrow" : "wide"}>
+<Section size="lg" tone={tone} containerSize="wide">
   {layout === "centered" ? (
     <div class="text-center">
       {section?.eyebrow && (
