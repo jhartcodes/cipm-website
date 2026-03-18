@@ -234,7 +234,8 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
       hotspot,
       crop
     },
-    bio
+    bio,
+    linkedinUrl
   },
   showCta,
   "ctaData": select(

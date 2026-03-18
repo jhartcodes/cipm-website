@@ -11,12 +11,14 @@ import TeamMemberCard from "./TeamMemberCard.astro";
 import SanityImage from "../../content/SanityImage.astro";
 import { urlFor } from "../../../lib/sanity/image";
 import Text from "../../ui/Text.astro";
+import linkedinTurquoise from "../../../assets/linkedin-turquoise.svg";
 
 interface TeamMember {
   name?: string;
   title?: string;
   headshot?: any;
   bio?: string;
+  linkedinUrl?: string;
 }
 
 interface Props {
@@ -117,6 +119,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
               title={member.title}
               headshot={member.headshot}
               bio={member.bio}
+              linkedinUrl={member.linkedinUrl}
               id={`team-member-${index}`}
             />
           ))}
@@ -176,7 +179,25 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
       </div>
 
       <h3 id="team-modal-title" class="text-xl font-bold text-navy"></h3>
-      <p id="modal-title" class="mt-1 text-turquoise font-medium"></p>
+      <div class="mt-1 flex items-center justify-center gap-2">
+        <p id="modal-title" class="text-turquoise font-medium"></p>
+        <a
+          id="modal-linkedin"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden"
+          aria-label="LinkedIn profile"
+        >
+          <Image
+            src={linkedinTurquoise}
+            alt="LinkedIn"
+            width={20}
+            height={20}
+            class="h-5 w-5 hover:opacity-80 transition-opacity"
+          />
+        </a>
+      </div>
       <p id="modal-bio" class="mt-4 text-gray-600 text-left"></p>
     </div>
   </div>
@@ -194,6 +215,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
     const modalName = document.getElementById("team-modal-title");
     const modalTitle = document.getElementById("modal-title");
     const modalBio = document.getElementById("modal-bio");
+    const modalLinkedin = document.getElementById("modal-linkedin");
 
     const focusableSelector =
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
@@ -206,6 +228,15 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
       if (modalImage) {
         modalImage.src = card.dataset.image || "";
         modalImage.alt = card.dataset.name || "";
+      }
+      if (modalLinkedin) {
+        const linkedinUrl = card.dataset.linkedin;
+        if (linkedinUrl) {
+          modalLinkedin.href = linkedinUrl;
+          modalLinkedin.classList.remove("hidden");
+        } else {
+          modalLinkedin.classList.add("hidden");
+        }
       }
 
       previousFocus = document.activeElement;

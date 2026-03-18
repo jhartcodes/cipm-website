@@ -208,6 +208,7 @@ export interface TeamMember {
   title?: string;
   headshot?: SanityImage;
   bio?: string;
+  linkedinUrl?: string;
 }
 
 export interface Testimonial {

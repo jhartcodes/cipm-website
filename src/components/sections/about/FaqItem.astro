@@ -43,15 +43,15 @@ const getPlainText = (value: string | any[] | undefined): string => {
 const contentId = `${id}-content`;
 ---
 
-<div class="rounded-xl bg-white shadow-lg" data-accordion-item>
+<div class="rounded-lg bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-accordion-item>
   <button
     type="button"
-    class="w-full flex items-center justify-between gap-4 px-8 py-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-turquoise focus-visible:ring-inset"
+    class="w-full flex items-center justify-between gap-3 px-5 py-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-turquoise focus-visible:ring-inset"
     aria-expanded="false"
     aria-controls={contentId}
     data-accordion-trigger
   >
-    <Text as="span" variant="bodyLg" class="font-semibold text-navy">
+    <Text as="span" variant="body" class="font-medium text-navy">
       {getPlainText(question) || "Question"}
     </Text>
     <span
@@ -59,7 +59,7 @@ const contentId = `${id}-content`;
       aria-hidden="true"
       data-accordion-icon
     >
-      <Icon name="chevron-down" size={28} />
+      <Icon name="chevron-down" size={20} />
     </span>
   </button>
 
@@ -73,7 +73,7 @@ const contentId = `${id}-content`;
   >
     <!-- Inner wrapper with overflow hidden for the animation -->
     <div class="overflow-hidden">
-      <div class="px-8 pb-6">
+      <div class="px-5 pb-4 pt-0 border-t border-gray-100">
         {
           isPortableText(answer) ? (
             <RichText content={answer} class="richtext--muted" />
