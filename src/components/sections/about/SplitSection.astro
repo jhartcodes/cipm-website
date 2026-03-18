@@ -1,0 +1,50 @@
+---
+/**
+ * SplitSection Component
+ *
+ * Two-column split with image and content. Simplified version for dedicated fields.
+ */
+
+import Section from "../../layout/Section.astro";
+import Text from "../../ui/Text.astro";
+import RichText from "../../content/RichText.astro";
+import SanityImage from "../../content/SanityImage.astro";
+
+interface Props {
+  headline?: string;
+  content?: any;
+  image?: any;
+  imageSide?: "left" | "right";
+  tone?: "default" | "muted";
+}
+
+const { headline, content, image, imageSide = "left", tone = "default" } = Astro.props;
+const imageOnRight = imageSide === "right";
+---
+
+<Section size="lg" tone={tone}>
+  <div class="grid gap-10 lg:grid-cols-2 items-start">
+    <div class={imageOnRight ? "lg:order-2" : undefined}>
+      {image?.asset && (
+        <SanityImage
+          image={image}
+          alt={image?.alt || ""}
+          width={900}
+          class="w-full aspect-4/3 rounded-2xl object-cover"
+        />
+      )}
+    </div>
+    <div class={imageOnRight ? "lg:order-1" : undefined}>
+      {headline && (
+        <Text as="h2" variant="headingLg">
+          {headline}
+        </Text>
+      )}
+      {content && (
+        <div class={headline ? "mt-4" : undefined}>
+          <RichText content={content} />
+        </div>
+      )}
+    </div>
+  </div>
+</Section>

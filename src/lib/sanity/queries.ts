@@ -188,32 +188,25 @@ export const HOME_PAGE_QUERY = /* groq */ `
 export const ABOUT_PAGE_QUERY = /* groq */ `
 *[_type == "aboutPage"][0]{
   ${HERO_PROJECTION},
-  storySections[]{
-    _key,
-    _type,
-    eyebrow,
-    headline,
-    content,
-    layout,
-    background,
-    sidebar{
-      title,
-      content
-    },
-    imagePosition,
-    imageSide,
-    image{
-      asset,
-      alt,
-      hotspot,
-      crop
-    },
-    intro,
-    items[]{
-      title,
-      description
-    }
+  ourStoryHeadline,
+  ourStoryContent,
+  ourStoryImage{
+    asset,
+    alt,
+    hotspot,
+    crop
   },
+  ourStoryImageSide,
+  experienceHeadline,
+  experienceContent,
+  experienceImage{
+    asset,
+    alt,
+    hotspot,
+    crop
+  },
+  experienceImageSide,
+  statementText,
   communityEyebrow,
   communityHeading,
   communityIntro,

@@ -11,7 +11,6 @@
  */
 
 import Text from "../../ui/Text.astro";
-import Icon from "../../ui/Icon.astro";
 import RichText from "../../content/RichText.astro";
 
 interface Props {
@@ -43,23 +42,26 @@ const getPlainText = (value: string | any[] | undefined): string => {
 const contentId = `${id}-content`;
 ---
 
-<div class="rounded-lg bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-accordion-item>
+<div class="border-b border-gray-200" data-accordion-item>
   <button
     type="button"
-    class="w-full flex items-center justify-between gap-3 px-5 py-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-turquoise focus-visible:ring-inset"
+    class="w-full flex items-center justify-between gap-4 py-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-turquoise focus-visible:ring-offset-2 rounded-sm group"
     aria-expanded="false"
     aria-controls={contentId}
     data-accordion-trigger
   >
-    <Text as="span" variant="body" class="font-medium text-navy">
+    <Text as="span" variant="body" class="font-medium text-navy group-hover:text-turquoise transition-colors">
       {getPlainText(question) || "Question"}
     </Text>
     <span
-      class="shrink-0 text-turquoise transition-transform duration-300 ease-out"
+      class="shrink-0 h-6 w-6 flex items-center justify-center text-turquoise"
       aria-hidden="true"
       data-accordion-icon
     >
-      <Icon name="chevron-down" size={20} />
+      <svg class="h-4 w-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="3" x2="8" y2="13" class="accordion-vertical transition-opacity duration-200" />
+        <line x1="3" y1="8" x2="13" y2="8" />
+      </svg>
     </span>
   </button>
 
@@ -73,7 +75,7 @@ const contentId = `${id}-content`;
   >
     <!-- Inner wrapper with overflow hidden for the animation -->
     <div class="overflow-hidden">
-      <div class="px-5 pb-4 pt-0 border-t border-gray-100">
+      <div class="pb-5">
         {
           isPortableText(answer) ? (
             <RichText content={answer} class="richtext--muted" />
@@ -89,9 +91,9 @@ const contentId = `${id}-content`;
 </div>
 
 <style>
-  /* Rotate chevron when expanded */
-  [aria-expanded="true"] [data-accordion-icon] {
-    transform: rotate(180deg);
+  /* Hide vertical line when expanded (plus becomes minus) */
+  [aria-expanded="true"] .accordion-vertical {
+    opacity: 0;
   }
 
   /* CSS Grid height animation technique */

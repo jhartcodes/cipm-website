@@ -224,62 +224,6 @@ export interface FaqItem {
   answer?: string | PortableTextContent;
 }
 
-export interface AboutRichTextSection {
-  _key: string;
-  _type: "aboutRichTextSection";
-  eyebrow?: string;
-  headline?: string;
-  content?: PortableTextContent;
-  layout?: "centered" | "twoColumn";
-  background?: "white" | "gray";
-}
-
-export interface AboutSidebarSection {
-  _key: string;
-  _type: "aboutSidebarSection";
-  headline?: string;
-  content?: PortableTextContent;
-  sidebar?: {
-    title?: string;
-    content?: PortableTextContent;
-  };
-  image?: SanityImage;
-  imagePosition?: "sidebar" | "full-width" | "inline";
-  background?: "white" | "gray";
-}
-
-export interface AboutSplitImageSection {
-  _key: string;
-  _type: "aboutSplitImageSection";
-  headline?: string;
-  content?: PortableTextContent;
-  image?: SanityImage;
-  imageSide?: "left" | "right";
-  background?: "white" | "gray";
-}
-
-export interface AboutFeatureListSectionItem {
-  _key?: string;
-  title?: string;
-  description?: string;
-}
-
-export interface AboutFeatureListSection {
-  _key: string;
-  _type: "aboutFeatureListSection";
-  headline?: string;
-  intro?: PortableTextContent;
-  items?: AboutFeatureListSectionItem[];
-  layout?: "cards" | "list";
-  background?: "white" | "gray" | "navy";
-}
-
-export type AboutStorySection =
-  | AboutRichTextSection
-  | AboutSidebarSection
-  | AboutSplitImageSection
-  | AboutFeatureListSection;
-
 // ============================================
 // Page Types
 // ============================================
@@ -313,7 +257,24 @@ export interface AboutPage extends SanityDocument {
   _type: "aboutPage";
   seo?: SeoData;
   hero?: HeroSection;
-  storySections?: AboutStorySection[];
+  // Our Story section
+  ourStoryHeadline?: string;
+  ourStoryContent?: PortableTextContent;
+  ourStoryImage?: SanityImage;
+  ourStoryImageSide?: "left" | "right";
+  // Experience section
+  experienceHeadline?: string;
+  experienceContent?: PortableTextContent;
+  experienceImage?: SanityImage;
+  experienceImageSide?: "left" | "right";
+  // Statement section
+  statementText?: string;
+  // Community section
+  communityEyebrow?: string;
+  communityHeading?: string;
+  communityIntro?: string;
+  communityImage?: SanityImage;
+  // Team section
   teamHeading?: string;
   teamIntro?: string;
   teamMembers?: TeamMember[];

@@ -1,0 +1,66 @@
+---
+/**
+ * StatementSection Component
+ *
+ * A centered statement/quote section with scroll-triggered fade-up animation.
+ */
+
+import Section from "../../layout/Section.astro";
+
+interface Props {
+  text?: string;
+}
+
+const { text } = Astro.props;
+---
+
+{text && (
+  <Section size="lg" tone="default">
+    <div
+      class="statement-section max-w-5xl mx-auto text-center"
+      data-animate-statement
+    >
+      <p class="text-2xl md:text-3xl lg:text-4xl font-semibold italic text-navy leading-snug">
+        {text}
+      </p>
+    </div>
+  </Section>
+)}
+
+<style>
+  .statement-section {
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+  }
+
+  .statement-section.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const statements = document.querySelectorAll("[data-animate-statement]");
+
+    if (!statements.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: "0px 0px -50px 0px",
+      }
+    );
+
+    statements.forEach((statement) => observer.observe(statement));
+  });
+</script>

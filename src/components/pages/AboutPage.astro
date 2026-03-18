@@ -7,7 +7,8 @@
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import SecondaryHeroSection from "../sections/shared/SecondaryHeroSection.astro";
-import AboutStorySections from "../sections/about/AboutStorySections.astro";
+import SplitSection from "../sections/about/SplitSection.astro";
+import StatementSection from "../sections/about/StatementSection.astro";
 import TeamSection from "../sections/about/TeamSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
 
@@ -25,7 +26,28 @@ const pageTitle = data?.hero?.heading || "About Us";
     title={pageTitle}
     subtitle={data?.hero?.subheading}
   />
-  <AboutStorySections sections={data?.storySections} />
+
+  {/* Our Story Section */}
+  <SplitSection
+    headline={data?.ourStoryHeadline}
+    content={data?.ourStoryContent}
+    image={data?.ourStoryImage}
+    imageSide={data?.ourStoryImageSide || "right"}
+    tone="default"
+  />
+
+  {/* Experience Section */}
+  <SplitSection
+    headline={data?.experienceHeadline}
+    content={data?.experienceContent}
+    image={data?.experienceImage}
+    imageSide={data?.experienceImageSide || "left"}
+    tone="muted"
+  />
+
+  {/* Statement Section with animation */}
+  <StatementSection text={data?.statementText} />
+
   <TeamSection
     communityEyebrow={data?.communityEyebrow}
     communityHeading={data?.communityHeading}
