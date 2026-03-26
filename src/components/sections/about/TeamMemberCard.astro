@@ -17,10 +17,11 @@ interface Props {
   headshot?: any;
   bio?: string;
   linkedinUrl?: string;
+  email?: string;
   id: string;
 }
 
-const { name, title, headshot, bio, linkedinUrl, id } = Astro.props;
+const { name, title, headshot, bio, linkedinUrl, email, id } = Astro.props;
 
 // Get the image URL for the modal data attribute
 const imageUrl = headshot?.asset ? urlFor(headshot).width(400).url() : '';
@@ -37,6 +38,7 @@ const imageUrl = headshot?.asset ? urlFor(headshot).width(400).url() : '';
   data-bio={bio || ''}
   data-image={imageUrl}
   data-linkedin={linkedinUrl || ''}
+  data-email={email || ''}
 >
   <div class="mx-auto mb-4 h-40 w-40 overflow-hidden rounded-full ring-4 ring-transparent group-hover:ring-turquoise/30 transition-all">
     {headshot?.asset ? (

@@ -34,8 +34,8 @@ export const GLOBAL_CHROME_QUERY = /* groq */ `
     enabled,
     phoneNumber,
     email,
-    serviceText
-
+    serviceText,
+    serviceTextUrl
   },
   "footer": *[_type == "footer"][0]{
     phoneNumber,
@@ -228,7 +228,8 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
       crop
     },
     bio,
-    linkedinUrl
+    linkedinUrl,
+    email
   },
   showCta,
   "ctaData": select(

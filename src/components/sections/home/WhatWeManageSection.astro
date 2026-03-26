@@ -50,7 +50,7 @@ const validPropertyTypes = propertyTypes.filter((pt) => pt != null);
 
   {
     validPropertyTypes.length > 0 && (
-      <div class="mt-12 grid grid-cols-2 gap-4 md:gap-5 md:[grid-template-columns:repeat(auto-fit,minmax(10.5rem,12.5rem))] md:justify-center lg:grid-cols-5">
+      <div class="mt-12 grid grid-cols-2 gap-4 md:gap-5 md:[grid-template-columns:repeat(auto-fit,minmax(10.5rem,12.5rem))] md:justify-center lg:grid-cols-4 lg:max-w-4xl lg:mx-auto">
         {validPropertyTypes.map((item, index) => (
           <div
             class="property-card group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4] md:aspect-[3/3.5] xl:aspect-[3/4]"

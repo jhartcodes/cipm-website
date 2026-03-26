@@ -15,6 +15,7 @@ interface Props {
     phoneNumber?: string;
     email?: string;
     serviceText?: string;
+    serviceTextUrl?: string;
   };
 }
 
@@ -57,9 +58,20 @@ if (!data?.enabled) {
       </div>
       {
         data.serviceText && (
-          <span class="text-sm text-white/60 hidden md:inline">
-            {data.serviceText}
-          </span>
+          data.serviceTextUrl ? (
+            <a
+              href={data.serviceTextUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm text-turquoise-light hover:text-white transition-colors font-medium hidden md:inline"
+            >
+              {data.serviceText}
+            </a>
+          ) : (
+            <span class="text-sm text-turquoise-light font-medium hidden md:inline">
+              {data.serviceText}
+            </span>
+          )
         )
       }
     </div>

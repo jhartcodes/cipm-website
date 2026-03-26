@@ -11,7 +11,7 @@ import TeamMemberCard from "./TeamMemberCard.astro";
 import SanityImage from "../../content/SanityImage.astro";
 import { urlFor } from "../../../lib/sanity/image";
 import Text from "../../ui/Text.astro";
-import linkedinTurquoise from "../../../assets/linkedin-turquoise.svg";
+import Icon from "../../ui/Icon.astro";
 
 interface TeamMember {
   name?: string;
@@ -19,6 +19,7 @@ interface TeamMember {
   headshot?: any;
   bio?: string;
   linkedinUrl?: string;
+  email?: string;
 }
 
 interface Props {
@@ -120,6 +121,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
               headshot={member.headshot}
               bio={member.bio}
               linkedinUrl={member.linkedinUrl}
+              email={member.email}
               id={`team-member-${index}`}
             />
           ))}
@@ -186,16 +188,18 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
           href="#"
           target="_blank"
           rel="noopener noreferrer"
-          class="hidden"
+          class="hidden text-turquoise opacity-80 hover:opacity-100 transition-opacity"
           aria-label="LinkedIn profile"
         >
-          <Image
-            src={linkedinTurquoise}
-            alt="LinkedIn"
-            width={20}
-            height={20}
-            class="h-5 w-5 hover:opacity-80 transition-opacity"
-          />
+          <Icon name="linkedin" size={20} />
+        </a>
+        <a
+          id="modal-email"
+          href="#"
+          class="hidden text-turquoise opacity-80 hover:opacity-100 transition-opacity"
+          aria-label="Send email"
+        >
+          <Icon name="mail" size={20} />
         </a>
       </div>
       <p id="modal-bio" class="mt-4 text-gray-600 text-left"></p>
@@ -216,6 +220,7 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
     const modalTitle = document.getElementById("modal-title");
     const modalBio = document.getElementById("modal-bio");
     const modalLinkedin = document.getElementById("modal-linkedin");
+    const modalEmail = document.getElementById("modal-email");
 
     const focusableSelector =
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
@@ -236,6 +241,15 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
           modalLinkedin.classList.remove("hidden");
         } else {
           modalLinkedin.classList.add("hidden");
+        }
+      }
+      if (modalEmail) {
+        const email = card.dataset.email;
+        if (email) {
+          modalEmail.href = `mailto:${email}`;
+          modalEmail.classList.remove("hidden");
+        } else {
+          modalEmail.classList.add("hidden");
         }
       }
 
