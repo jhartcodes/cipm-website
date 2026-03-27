@@ -5,6 +5,7 @@
  * Receives data as props (fetched by the route)
  */
 
+import { stegaClean } from "@sanity/client/stega";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import HeroSection from "../sections/home/HeroSection.astro";
 import SecondaryHeroSection from "../sections/shared/SecondaryHeroSection.astro";
@@ -22,7 +23,8 @@ interface Props {
 
 const { data, ctaData } = Astro.props;
 const pageTitle = data?.hero?.heading || "Home";
-const heroVariant = data?.heroVariant || "primary";
+// Use stegaClean to strip visual editing encoding from values used in logic
+const heroVariant = stegaClean(data?.heroVariant) || "primary";
 ---
 
 <BaseLayout title={pageTitle} seo={data?.seo}>
