@@ -17,10 +17,11 @@ const { data, perspective } = await loadQuery({ query: HOME_PAGE_QUERY, visualEd
 console.log('=== SANITY DEBUG ===');
 console.log('visualEditingEnabled:', visualEditingEnabled);
 console.log('perspective:', perspective);
-console.log('heroVariant:', data?.heroVariant);
+console.log('heroVariant raw:', JSON.stringify(data?.heroVariant));
+console.log('heroVariant length:', data?.heroVariant?.length);
+console.log('heroVariant === "secondary":', data?.heroVariant === "secondary");
 console.log('propertyTypes count:', data?.propertyTypes?.length);
-console.log('propertyTypes:', JSON.stringify(data?.propertyTypes?.map((p: any) => p?.title)));
-console.log('hero:', JSON.stringify(data?.hero));
+console.log('first propertyType:', JSON.stringify(data?.propertyTypes?.[0]));
 console.log('=== END DEBUG ===');
 ---
 
