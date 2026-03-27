@@ -5,6 +5,7 @@
  * Handles hotspot cropping, responsive sizing, and format optimization
  */
 
+import { stegaClean } from "@sanity/client/stega";
 import { createImageUrlBuilder } from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url";
 import { sanityClient } from "sanity:client";
@@ -13,9 +14,10 @@ const builder = createImageUrlBuilder(sanityClient);
 
 /**
  * Get image URL builder for a Sanity image
+ * Cleans stega encoding from source to ensure proper URL generation
  */
 export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
+  return builder.image(stegaClean(source));
 }
 
 /**
@@ -59,6 +61,7 @@ export function getImageSrcSet(
 
 /**
  * Get image dimensions from Sanity image metadata
+ * Cleans stega encoding from _ref to ensure proper regex matching
  */
 export function getImageDimensions(
   source: any,
@@ -66,7 +69,8 @@ export function getImageDimensions(
   if (!source?.asset?._ref) return null;
 
   // Parse dimensions from asset ref (e.g., "image-123abc-1920x1080-jpg")
-  const ref = source.asset._ref;
+  // Use stegaClean to strip visual editing encoding
+  const ref = stegaClean(source.asset._ref);
   const match = ref.match(/-(\d+)x(\d+)-/);
 
   if (match) {

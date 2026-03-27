@@ -6,6 +6,7 @@
  * Site footer with contact info, social links, land acknowledgement
  */
 
+import { stegaClean } from "@sanity/client/stega";
 import { Image } from "astro:assets";
 import Container from "../layout/Container.astro";
 import SmartLink from "../ui/SmartLink.astro";
@@ -33,17 +34,17 @@ interface Props {
 
 const { data } = Astro.props;
 
-// Map platform names to icon names
+// Map platform names to icon names (use stegaClean for visual editing compatibility)
 const platformToIcon: Record<
   string,
   "linkedin" | "facebook" | "instagram" | "twitter" | "youtube" | "link"
 > = {
-  LinkedIn: "linkedin",
-  Facebook: "facebook",
-  Instagram: "instagram",
-  Twitter: "twitter",
-  X: "twitter",
-  YouTube: "youtube",
+  linkedin: "linkedin",
+  facebook: "facebook",
+  instagram: "instagram",
+  twitter: "twitter",
+  x: "twitter",
+  youtube: "youtube",
 };
 
 const currentYear = new Date().getFullYear();
@@ -82,8 +83,9 @@ const currentYear = new Date().getFullYear();
           data.socialLinks && data.socialLinks.length > 0 && (
             <div class="flex gap-4 mt-6">
               {data.socialLinks.map((link) => {
-                const iconName = platformToIcon[link.platform] || "link";
-                const isLinkedIn = link.platform?.toLowerCase() === "linkedin";
+                const cleanPlatform = stegaClean(link.platform)?.toLowerCase();
+                const iconName = platformToIcon[cleanPlatform] || "link";
+                const isLinkedIn = cleanPlatform === "linkedin";
                 return (
                   <SmartLink
                     href={link.url}
