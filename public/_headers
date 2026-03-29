@@ -1,0 +1,26 @@
+# Astro assets (JS, CSS) - immutable, cache forever
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML pages - cache briefly, always revalidate
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/blog/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/services/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/about
+  Cache-Control: public, max-age=0, must-revalidate
+
+/contact
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Fonts
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

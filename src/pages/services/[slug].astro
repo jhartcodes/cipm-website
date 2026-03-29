@@ -1,15 +1,25 @@
 ---
 /**
- * Service Detail Page (Dynamic Route)
+ * Service Detail Page (Static Generation)
+ * Only generates pages for services with enableDetailPage: true
  */
-
-export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/layout/Section.astro";
 import Text from "../../components/ui/Text.astro";
 import RichText from "../../components/content/RichText.astro";
 import { isVisualEditingEnabled, loadQuery } from "../../lib/sanity/loadQuery";
+
+export async function getStaticPaths() {
+  const { data: services } = await loadQuery<{ slug: { current: string } }[]>({
+    query: `*[_type == "service" && enableDetailPage == true]{ "slug": slug.current }`,
+    visualEditingEnabled: false,
+  });
+
+  return (services || []).map((service) => ({
+    params: { slug: service.slug },
+  }));
+}
 
 const { slug } = Astro.params;
 const visualEditingEnabled = isVisualEditingEnabled({

@@ -358,6 +358,28 @@ export const BLOG_COUNT_AND_LIST_QUERY = /* groq */ `
 }
 `;
 
+export const BLOG_ALL_POSTS_QUERY = /* groq */ `
+*[_type == "blogPost"] | order(publishedAt desc) {
+  title,
+  slug,
+  publishedAt,
+  excerpt,
+  featuredImage{
+    asset,
+    alt,
+    hotspot,
+    crop
+  },
+  author,
+  showAuthor,
+  category->{
+    title,
+    slug,
+    color
+  }
+}
+`;
+
 export const BLOG_POST_QUERY = /* groq */ `
 *[_type == "blogPost" && slug.current == $slug][0]{
   title,

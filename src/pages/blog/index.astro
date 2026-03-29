@@ -1,56 +1,36 @@
 ---
 /**
- * Blog Page (SSR for pagination/filtering)
+ * Blog Page (Static Generation)
+ * All posts fetched at build time
  */
 
 import { isVisualEditingEnabled, loadQuery } from "../../lib/sanity/loadQuery";
 import {
   BLOG_PAGE_QUERY,
-  BLOG_COUNT_AND_LIST_QUERY,
+  BLOG_ALL_POSTS_QUERY,
 } from "../../lib/sanity/queries";
 import BlogPage from "../../components/pages/BlogPage.astro";
-
-// SSR for pagination/filtering
-export const prerender = false;
 
 const visualEditingEnabled = isVisualEditingEnabled({
   url: Astro.url,
   request: Astro.isPrerendered ? undefined : Astro.request,
 });
 
-// Fetch page settings first (used for pagination size)
+// Fetch page settings
 const { data: pageData } = await loadQuery({
   query: BLOG_PAGE_QUERY,
   visualEditingEnabled,
 });
 
-// Get pagination params from URL
-const url = Astro.url;
-const currentPage = Math.max(1, parseInt(url.searchParams.get("page") || "1"));
-// Posts per page (default to 9 if not set in Sanity)
-const postsPerPage = pageData?.postsPerPageDesktop || 9;
-
-// Get posts for current page
-const startIndex = (currentPage - 1) * postsPerPage;
-const endIndex = startIndex + postsPerPage;
-const { data: paginatedData } = await loadQuery<{
-  totalCount: number;
-  posts: any[];
-}>({
-  query: BLOG_COUNT_AND_LIST_QUERY,
-  params: { start: startIndex, end: endIndex },
+// Fetch all posts at build time
+const { data: posts } = await loadQuery({
+  query: BLOG_ALL_POSTS_QUERY,
   visualEditingEnabled,
 });
-
-const totalPosts = paginatedData?.totalCount || 0;
-const totalPages = Math.ceil(totalPosts / postsPerPage);
-const paginatedPosts = paginatedData?.posts || [];
 ---
 
 <BlogPage
   data={pageData}
-  posts={paginatedPosts}
-  currentPage={currentPage}
-  totalPages={totalPages}
+  posts={posts || []}
   ctaData={pageData?.ctaData}
 />

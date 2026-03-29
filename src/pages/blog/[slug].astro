@@ -1,13 +1,22 @@
 ---
 /**
- * Blog Post Page (Dynamic Route)
+ * Blog Post Page (Static Generation)
  */
-
-export const prerender = false;
 
 import { isVisualEditingEnabled, loadQuery } from "../../lib/sanity/loadQuery";
 import { BLOG_POST_QUERY } from "../../lib/sanity/queries";
 import BlogPostPage from "../../components/pages/BlogPostPage.astro";
+
+export async function getStaticPaths() {
+  const { data: posts } = await loadQuery<{ slug: { current: string } }[]>({
+    query: `*[_type == "blogPost"]{ "slug": slug.current }`,
+    visualEditingEnabled: false,
+  });
+
+  return (posts || []).map((post) => ({
+    params: { slug: post.slug },
+  }));
+}
 
 const { slug } = Astro.params;
 const visualEditingEnabled = isVisualEditingEnabled({
