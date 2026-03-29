@@ -62,6 +62,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         label="Name"
         type="text"
         required
+        autocomplete="name"
         placeholder="Your name"
       />
       <TextField
@@ -69,6 +70,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         label="Email"
         type="email"
         required
+        autocomplete="email"
         placeholder="your@email.com"
       />
     </div>
@@ -79,6 +81,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         label="Phone"
         type="tel"
         required
+        autocomplete="tel"
         placeholder="(123) 456-7890"
       />
       <div>
@@ -121,6 +124,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       name="buildingAddress"
       label="Building Address"
       type="text"
+      autocomplete="street-address"
       placeholder="Street, City, Province"
     />
 

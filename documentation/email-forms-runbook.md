@@ -161,4 +161,4 @@ Complete these steps in the client-owned accounts before launch.
 ## Out of Scope
 
 - No form submission persistence in Sanity.
-- No Google Places autocomplete integration for building address.
+- No external address autocomplete integration for building address.

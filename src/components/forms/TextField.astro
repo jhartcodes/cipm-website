@@ -11,6 +11,7 @@ interface Props {
   label: string;
   type?: 'text' | 'email' | 'tel' | 'url';
   required?: boolean;
+  autocomplete?: string;
   placeholder?: string;
   value?: string;
   error?: string;
@@ -22,6 +23,7 @@ const {
   label,
   type = 'text',
   required = false,
+  autocomplete,
   placeholder,
   value,
   error,
@@ -43,6 +45,7 @@ const errorId = `error-${name}`;
     id={inputId}
     name={name}
     value={value}
+    autocomplete={autocomplete}
     placeholder={placeholder}
     required={required}
     aria-required={required}
