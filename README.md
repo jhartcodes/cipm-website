@@ -29,7 +29,7 @@ For Studio-specific deployment and Presentation configuration, see [`/Users/joel
 - Crawlable: no
 - Sitemap: no
 
-### Studio
+## Studio Local Workflow
 
 - Hosted separately on Sanity
 - Current canonical Studio URL: `https://cipm.sanity.studio`
@@ -47,6 +47,55 @@ Reasons:
 - simpler production behavior for SEO and crawling
 
 Embedding Studio would still be valid if we ever want the Studio on the same domain, for example `https://example.com/studio`. That would be a different architecture, not an error correction to this one.
+
+## Core Services
+
+This frontend depends on a small set of external platforms. Each one has a specific responsibility in production.
+
+### Sanity
+
+- Stores and serves structured website content.
+- Hosts the standalone Studio at `https://cipm.sanity.studio`.
+- Powers the Presentation workflow for draft preview and click-to-edit overlays.
+- Provides both published-content CDN reads and direct API reads for preview.
+
+### Netlify
+
+- Builds and deploys the Astro frontend.
+- Hosts the public site and preview frontend.
+- Runs Astro server routes through the Netlify adapter.
+- Handles `POST /api/form-submit` through the generated Netlify `ssr` function rather than a manually named custom function.
+
+Operationally:
+
+- The browser calls `/api/form-submit`.
+- Astro compiles [`src/pages/api/form-submit.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/api/form-submit.ts) into the Netlify server bundle.
+- In the local build output this is represented by:
+  - [`/Users/joel/Personal/CIPM/cipm-astro/.netlify/build/pages/api/form-submit.astro.mjs`](/Users/joel/Personal/CIPM/cipm-astro/.netlify/build/pages/api/form-submit.astro.mjs)
+  - [`/Users/joel/Personal/CIPM/cipm-astro/.netlify/v1/functions/ssr/ssr.mjs`](/Users/joel/Personal/CIPM/cipm-astro/.netlify/v1/functions/ssr/ssr.mjs)
+- When debugging production form failures in Netlify, inspect the `ssr` function logs.
+
+### Resend
+
+- Sends transactional email for both lead forms.
+- Runs only server-side through the API route.
+- Requires a valid `RESEND_API_KEY`.
+- Requires `CONTACT_FROM` to be on a verified sending domain with Resend DNS records configured correctly.
+- Requires at least one recipient in `CONTACT_TO`.
+
+### Cloudflare Turnstile
+
+- Provides bot protection for both forms.
+- Uses `PUBLIC_TURNSTILE_SITE_KEY` in the browser and `TURNSTILE_SECRET_KEY` on the server.
+- Requires allowed hostnames to include every environment where forms are expected to work:
+  - `localhost` for local development
+  - Netlify preview URLs if preview testing is needed
+  - the production custom domain
+
+Important:
+
+- If `PUBLIC_TURNSTILE_SITE_KEY` is missing on the frontend, the form still renders but submissions will fail because no valid Turnstile token can be generated.
+- If `TURNSTILE_SECRET_KEY` is missing on the server, verification will fail in the API route.
 
 ## How Presentation works
 
@@ -222,6 +271,19 @@ The site has two lead forms:
 
 Both submit to [`src/pages/api/form-submit.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/api/form-submit.ts).
 
+### Public endpoint vs Netlify function
+
+The forms do not submit directly to `/.netlify/functions/...`.
+
+- The browser sends `POST` requests to `/api/form-submit`.
+- Astro maps that route to the server-side page API module in [`src/pages/api/form-submit.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/api/form-submit.ts).
+- On Netlify, the adapter bundles that route into the generated `ssr` function.
+
+This matters for debugging:
+
+- In browser devtools, you should expect to see `/api/form-submit`.
+- In Netlify logs, you should expect the request to show up under the `ssr` function.
+
 ### Form flow
 
 1. The browser submits JSON to `/api/form-submit`.
@@ -244,12 +306,20 @@ Schemas live in [`src/lib/forms/schemas.ts`](/Users/joel/Personal/CIPM/cipm-astr
 - `contactFormSchema`
 - `requestProposalFormSchema`
 
+Server validation is the actual source of truth. Client-side validation improves UX only and should not be treated as a security boundary.
+
 ### Turnstile
 
 Turnstile verification lives in [`src/lib/forms/turnstile.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/lib/forms/turnstile.ts).
 
 - browser uses `PUBLIC_TURNSTILE_SITE_KEY`
 - server verifies with `TURNSTILE_SECRET_KEY`
+
+Operational notes:
+
+- Turnstile hostnames must match the real frontend hostname where the widget is rendered.
+- A missing or expired token is rejected before any email send is attempted.
+- Reused tokens can fail with `timeout-or-duplicate`, which is expected behavior.
 
 ### Resend
 
@@ -264,6 +334,8 @@ Behavior:
 - optionally includes `CONTACT_BCC`
 - uses the form submitter email as `reply_to`
 
+This `reply_to` pattern is intentional and preferred. The email is sent from the verified site/domain address, and replies go back to the person who submitted the form.
+
 Subjects are set in [`src/pages/api/form-submit.ts`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/api/form-submit.ts):
 
 - contact form: `CONTACT_SUBJECT_CONTACT` fallback
@@ -273,11 +345,41 @@ Subjects are set in [`src/pages/api/form-submit.ts`](/Users/joel/Personal/CIPM/c
 
 - Resend runs only server-side through the API route.
 - The Resend API key must never be exposed to the client.
+- The Turnstile secret must never be exposed to the client.
+- A build passing does not prove forms will work in production; production success still depends on Turnstile hostname configuration, Resend sender-domain verification, and the Netlify environment variables.
 - If forms stop working, check:
   1. Turnstile keys
   2. Resend API key
   3. recipient env vars
-  4. Netlify function/server logs
+  4. Turnstile allowed hostnames
+  5. Resend sender-domain verification and DNS
+  6. Netlify `ssr` function/server logs
+
+## Privacy Policy
+
+The current privacy policy page is a hardcoded Astro page:
+
+- route: [`src/pages/privacy-policy.astro`](/Users/joel/Personal/CIPM/cipm-astro/src/pages/privacy-policy.astro)
+
+Current behavior:
+
+- The policy copy is written directly in code.
+- The effective date is hardcoded.
+- The contact address, phone number, and email are hardcoded.
+- The page is not modeled in Sanity.
+
+Implications:
+
+- Any content update currently requires a code change and deploy.
+- Non-developers cannot update the privacy policy through Sanity Studio.
+- Legal/policy copy is less maintainable than the rest of the site content.
+
+Recommended direction:
+
+- Treat the privacy policy as customizable content.
+- Move it into Sanity as a singleton page or policy document.
+- Use Portable Text for the policy body and structured fields for metadata like effective date and contact information.
+- Keep the frontend route, but source the content from Sanity instead of hardcoding it in the Astro page.
 
 ### Studio
 
@@ -287,7 +389,7 @@ npm install
 npm run dev
 ```
 
-### Builds
+## Builds
 
 Frontend:
 
@@ -349,6 +451,9 @@ Check these first:
 3. Is `TURNSTILE_SECRET_KEY` present on the server?
 4. Is `RESEND_API_KEY` valid?
 5. Are `CONTACT_FROM` and `CONTACT_TO` configured?
+6. Does Turnstile allow the real production hostname?
+7. Is `CONTACT_FROM` on a verified Resend domain with working SPF/DKIM?
+8. If checking Netlify logs, are you looking at the `ssr` function?
 
 ## References
 

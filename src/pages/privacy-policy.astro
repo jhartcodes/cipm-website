@@ -2,30 +2,80 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/layout/Section.astro";
 import Text from "../components/ui/Text.astro";
+import Button from "../components/ui/Button.astro";
 ---
 
 <BaseLayout title="Privacy Policy">
   <Section size="lg" containerSize="narrow">
-      <Text as="h1" variant="hero">Privacy Policy</Text>
+    <Text as="h1" variant="hero">Privacy Policy</Text>
+    <p class="mt-2 text-gray-500">Effective Date: March 29, 2025</p>
 
-      <div class="mt-8 space-y-6 text-gray-700 leading-relaxed">
+    <div class="mt-8 space-y-6 text-gray-700 leading-relaxed">
+      <p>
+        Community Impact Property Management ("CIPM") respects your privacy.
+      </p>
+
+      <div>
+        <Text as="h2" variant="sectionTitle" class="text-lg font-semibold text-gray-900 mb-2">Information We Collect</Text>
         <p>
-          This Privacy Policy describes how information is collected, used, and
-          protected when you use this website.
-        </p>
-        <p>
-          If you submit information through our contact forms, we use that
-          information only to respond to your inquiry and provide requested
-          services.
-        </p>
-        <p>
-          We do not sell your personal information. We may use trusted service
-          providers to process website functionality and communications.
-        </p>
-        <p>
-          If you have any questions about this policy, please contact us using
-          the contact information provided on the website.
+          If you submit a form through this website, we may collect your name, email address, phone number, and any other information you choose to provide.
         </p>
       </div>
-    </Section>
+
+      <div>
+        <Text as="h2" variant="sectionTitle" class="text-lg font-semibold text-gray-900 mb-2">How We Use Your Information</Text>
+        <p>
+          We use this information only to respond to your inquiry, discuss our services, and keep in touch with you as a potential client.
+        </p>
+      </div>
+
+      <div>
+        <Text as="h2" variant="sectionTitle" class="text-lg font-semibold text-gray-900 mb-2">Information Sharing</Text>
+        <p>
+          We do not sell, rent, or share your personal information for marketing purposes.
+        </p>
+      </div>
+
+      <div>
+        <Text as="h2" variant="sectionTitle" class="text-lg font-semibold text-gray-900 mb-2">Website Analytics</Text>
+        <p>
+          We may use basic website analytics to track general activity such as page views and clicks so we can improve the website. This information is not used to personally identify you.
+        </p>
+      </div>
+
+      <div>
+        <Text as="h2" variant="sectionTitle" class="text-lg font-semibold text-gray-900 mb-2">Form Submissions</Text>
+        <p>
+          Information submitted through this website is sent to us by email so we can review and respond to your request.
+        </p>
+      </div>
+
+      <div>
+        <Text as="h2" variant="sectionTitle" class="text-lg font-semibold text-gray-900 mb-2">Contact Us</Text>
+        <p class="mb-4">
+          If you have any questions about this Privacy Policy, please contact us at:
+        </p>
+        <address class="not-italic bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <p class="font-semibold text-gray-900">Community Impact Property Management</p>
+          <p>516 Richards Street</p>
+          <p>Vancouver, BC V6B 3A2</p>
+          <p class="mt-2">
+            <a href="tel:+12368889339" class="text-primary-600 hover:text-primary-700">(236) 888-9339</a>
+          </p>
+          <p>
+            <a href="mailto:info@cipmc.ca" class="text-primary-600 hover:text-primary-700">info@cipmc.ca</a>
+          </p>
+        </address>
+        <div class="mt-4">
+          <Button href="/contact" variant="secondary" size="sm">Visit Our Contact Page</Button>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-gray-200">
+        <p class="text-sm text-gray-500">
+          We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date.
+        </p>
+      </div>
+    </div>
+  </Section>
 </BaseLayout>
