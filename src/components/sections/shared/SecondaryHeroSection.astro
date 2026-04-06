@@ -23,6 +23,10 @@ const sizeClasses =
   layout === "homeLarge"
     ? "sm:min-h-[30vh] lg:min-h-[70vh] max-h-200 py-8 md:py-12 lg:py-16"
     : "min-h-[30vh] md:min-h-[40vh] lg:min-h-[50vh] max-h-120 py-16 lg:py-20";
+const cubeClass =
+  layout === "homeLarge"
+    ? "hero-cube hero-cube--home-large"
+    : "hero-cube hero-cube--default";
 ---
 
 <section
@@ -56,7 +60,7 @@ const sizeClasses =
     src={CubeHouse}
     alt=""
     aria-hidden="true"
-    class="hero-cube"
+    class={cubeClass}
     loading="eager"
     width={384}
     height={384}
@@ -78,25 +82,47 @@ const sizeClasses =
   .hero-cube {
     display: none;
     position: absolute;
-    right: 0;
-    bottom: calc(-10% + 80px);
-    width: 12rem;
     opacity: 0.9;
     pointer-events: none;
     transform-origin: center;
     animation: cube-enter 1.2s ease-out both;
   }
 
+  .hero-cube--default {
+    right: -4%;
+    bottom: calc(-6% + 80px);
+    width: 10rem;
+  }
+
+  .hero-cube--home-large {
+    right: 0;
+    bottom: calc(-10% + 80px);
+    width: 12rem;
+  }
+
   @media (min-width: 768px) {
     .hero-cube {
       display: block;
+    }
+
+    .hero-cube--default {
+      width: 12rem;
+      bottom: calc(-8% + 80px);
+    }
+
+    .hero-cube--home-large {
       width: 14.5rem;
       bottom: calc(-12% + 80px);
     }
   }
 
   @media (min-width: 1024px) {
-    .hero-cube {
+    .hero-cube--default {
+      width: 18rem;
+      bottom: calc(-10% + 80px);
+    }
+
+    .hero-cube--home-large {
       width: 24rem;
       bottom: calc(-14% + 80px);
     }
