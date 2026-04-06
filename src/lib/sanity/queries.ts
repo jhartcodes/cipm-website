@@ -6,8 +6,18 @@ export const GLOBAL_CHROME_QUERY = /* groq */ `
     siteName,
     siteDescription,
     logo,
-    favicon,
-    defaultOgImage,
+    favicon{
+      asset,
+      alt,
+      hotspot,
+      crop
+    },
+    defaultOgImage{
+      asset,
+      alt,
+      hotspot,
+      crop
+    },
     contactEmail,
     contactPhone,
     address

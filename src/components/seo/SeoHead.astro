@@ -12,7 +12,7 @@
  * - Does NOT render <head> tag - parent layout handles that
  */
 
-import { getImageUrl } from "../../lib/sanity/image";
+import { getImageUrl, urlFor } from "../../lib/sanity/image";
 import { stegaClean } from "@sanity/client/stega";
 
 interface SeoData {
@@ -25,6 +25,7 @@ interface SeoData {
 interface SiteSettings {
   siteName?: string;
   siteDescription?: string;
+  favicon?: any;
   defaultOgImage?: any;
 }
 
@@ -45,19 +46,37 @@ const {
 } = Astro.props;
 
 // Determine final meta values with fallback chain
-const metaTitle =
-  stegaClean(seo?.metaTitle || fallbackTitle || siteSettings?.siteName || "CIPM");
-const metaDescription =
-  stegaClean(
-    seo?.metaDescription ||
-      fallbackDescription ||
-      siteSettings?.siteDescription ||
-      "Community Impact Property Management",
-  );
+const metaTitle = stegaClean(
+  seo?.metaTitle || fallbackTitle || siteSettings?.siteName || "CIPM",
+);
+const metaDescription = stegaClean(
+  seo?.metaDescription ||
+    fallbackDescription ||
+    siteSettings?.siteDescription ||
+    "Community Impact Property Management",
+);
+
+const faviconUrl = siteSettings?.favicon?.asset
+  ? urlFor(siteSettings.favicon)
+      .width(32)
+      .height(32)
+      .fit("crop")
+      .format("png")
+      .url()
+  : null;
+const appleTouchIconUrl = siteSettings?.favicon?.asset
+  ? urlFor(siteSettings.favicon)
+      .width(180)
+      .height(180)
+      .fit("crop")
+      .format("png")
+      .url()
+  : null;
 
 // Open Graph image
 const ogImage = seo?.ogImage || siteSettings?.defaultOgImage;
 const ogImageUrl = ogImage ? getImageUrl(ogImage, 1200, 85) : null;
+const ogImageAlt = ogImage?.alt ? stegaClean(ogImage.alt) : null;
 
 const previewDeployment =
   String(
@@ -66,7 +85,8 @@ const previewDeployment =
   ).toLowerCase() === "true";
 
 // Robots meta
-const robots = previewDeployment || seo?.noIndex ? "noindex, nofollow" : "index, follow";
+const robots =
+  previewDeployment || seo?.noIndex ? "noindex, nofollow" : "index, follow";
 
 // Canonical URL
 const canonical = previewDeployment ? null : canonicalUrl || Astro.url.href;
@@ -78,6 +98,21 @@ const cleanCanonical = canonical ? stegaClean(canonical) : null;
 <meta name="title" content={metaTitle} />
 <meta name="description" content={metaDescription} />
 <meta name="robots" content={robots} />
+{
+  faviconUrl ? (
+    <>
+      <link rel="icon" type="image/png" sizes="32x32" href={faviconUrl} />
+      {appleTouchIconUrl && (
+        <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIconUrl} />
+      )}
+    </>
+  ) : (
+    <>
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    </>
+  )
+}
 
 <!-- Canonical URL -->
 {cleanCanonical && <link rel="canonical" href={cleanCanonical} />}
@@ -88,6 +123,7 @@ const cleanCanonical = canonical ? stegaClean(canonical) : null;
 <meta property="og:title" content={metaTitle} />
 <meta property="og:description" content={metaDescription} />
 {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+{ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
@@ -95,6 +131,7 @@ const cleanCanonical = canonical ? stegaClean(canonical) : null;
 <meta property="twitter:title" content={metaTitle} />
 <meta property="twitter:description" content={metaDescription} />
 {ogImageUrl && <meta property="twitter:image" content={ogImageUrl} />}
+{ogImageAlt && <meta property="twitter:image:alt" content={ogImageAlt} />}
 
 <!-- Additional content from slot -->
 <slot />

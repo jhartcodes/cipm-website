@@ -125,6 +125,7 @@ export interface SiteSettings extends SanityDocument {
   _type: "siteSettings";
   siteName?: string;
   siteDescription?: string;
+  favicon?: SanityImage;
   defaultOgImage?: SanityImage;
 }
 
@@ -374,9 +375,14 @@ export type BlogContentBlock = TextBlock | ImageBlock | VideoBlock;
 // Type Guards
 // ============================================
 
-export function isPortableTextContent(value: unknown): value is PortableTextContent {
-  return Array.isArray(value) && value.every(
-    (item) => typeof item === "object" && item !== null && "_type" in item
+export function isPortableTextContent(
+  value: unknown,
+): value is PortableTextContent {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item) => typeof item === "object" && item !== null && "_type" in item,
+    )
   );
 }
 
