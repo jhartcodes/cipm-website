@@ -11,6 +11,7 @@ import SplitSection from "../sections/about/SplitSection.astro";
 import StatementSection from "../sections/about/StatementSection.astro";
 import TeamSection from "../sections/about/TeamSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
+import { buildMetaDescription } from "../../lib/seo";
 
 interface Props {
   data?: any;
@@ -19,13 +20,13 @@ interface Props {
 
 const { data, ctaData } = Astro.props;
 const pageTitle = data?.hero?.heading || "About Us";
+const pageDescription =
+  buildMetaDescription([data?.hero?.subheading, data?.communityIntro]) ||
+  "Learn about CIPM, our community focus, and the team behind our property management services.";
 ---
 
-<BaseLayout title={pageTitle} seo={data?.seo}>
-  <SecondaryHeroSection
-    title={pageTitle}
-    subtitle={data?.hero?.subheading}
-  />
+<BaseLayout title={pageTitle} seo={data?.seo} description={pageDescription}>
+  <SecondaryHeroSection title={pageTitle} subtitle={data?.hero?.subheading} />
 
   {/* Our Story Section */}
   <SplitSection

@@ -1,12 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/layout/Section.astro";
+import Text from "../components/ui/Text.astro";
 import RequestProposalFormSection from "../components/sections/requestProposal/RequestProposalFormSection.astro";
 import { isVisualEditingEnabled, loadQuery } from "../lib/sanity/loadQuery";
 import {
   PROPERTY_TYPE_OPTIONS_QUERY,
   REQUEST_PROPOSAL_PAGE_QUERY,
 } from "../lib/sanity/queries";
+import { buildMetaDescription } from "../lib/seo";
 
 const visualEditingEnabled = isVisualEditingEnabled({
   url: Astro.url,
@@ -23,16 +25,31 @@ const [{ data: pageData }, { data: propertyTypes }] = await Promise.all([
     visualEditingEnabled,
   }),
 ]);
+const pageTitle = "Request Proposal";
+const pageDescription =
+  buildMetaDescription([pageData?.formDescription]) ||
+  "Tell CIPM about your property and request a proposal for property management support.";
 ---
 
-<BaseLayout title="Request Proposal" seo={pageData?.seo}>
+<BaseLayout title={pageTitle} seo={pageData?.seo} description={pageDescription}>
   <Section size="sm" containerSize="wide">
-    <RequestProposalFormSection
-      propertyTypes={propertyTypes || []}
-      heading={pageData?.formHeading}
-      description={pageData?.formDescription}
-      buttonText={pageData?.submitButtonText}
-      successMessage={pageData?.successMessage}
-    />
+    <div class="max-w-3xl">
+      <Text as="h1" variant="hero">
+        {pageTitle}
+      </Text>
+      <Text as="p" variant="bodyLg" class="mt-4 text-gray-600">
+        {pageDescription}
+      </Text>
+    </div>
+
+    <div class="mt-12">
+      <RequestProposalFormSection
+        propertyTypes={propertyTypes || []}
+        heading={pageData?.formHeading}
+        buttonText={pageData?.submitButtonText}
+        successMessage={pageData?.successMessage}
+        showHeading={false}
+      />
+    </div>
   </Section>
 </BaseLayout>

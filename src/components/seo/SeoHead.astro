@@ -14,6 +14,7 @@
 
 import { getImageUrl, urlFor } from "../../lib/sanity/image";
 import { stegaClean } from "@sanity/client/stega";
+import { compactJsonLd } from "../../lib/seo";
 
 interface SeoData {
   metaTitle?: string;
@@ -25,24 +26,38 @@ interface SeoData {
 interface SiteSettings {
   siteName?: string;
   siteDescription?: string;
+  logo?: any;
   favicon?: any;
   defaultOgImage?: any;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
+}
+
+interface FooterData {
+  socialLinks?: Array<{
+    url?: string;
+  }>;
 }
 
 interface Props {
   seo?: SeoData;
   siteSettings?: SiteSettings;
+  footerData?: FooterData;
   title?: string; // Page title fallback
   description?: string; // Description fallback
   canonicalUrl?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   seo,
   siteSettings,
+  footerData,
   title: fallbackTitle,
   description: fallbackDescription,
   canonicalUrl,
+  structuredData,
 } = Astro.props;
 
 // Determine final meta values with fallback chain
@@ -77,6 +92,12 @@ const appleTouchIconUrl = siteSettings?.favicon?.asset
 const ogImage = seo?.ogImage || siteSettings?.defaultOgImage;
 const ogImageUrl = ogImage ? getImageUrl(ogImage, 1200, 85) : null;
 const ogImageAlt = ogImage?.alt ? stegaClean(ogImage.alt) : null;
+const logoSource = siteSettings?.logo?.asset
+  ? siteSettings.logo
+  : siteSettings?.favicon?.asset
+    ? siteSettings.favicon
+    : null;
+const logoUrl = logoSource ? getImageUrl(logoSource, 600, 85) : null;
 
 const previewDeployment =
   String(
@@ -85,12 +106,82 @@ const previewDeployment =
   ).toLowerCase() === "true";
 
 // Robots meta
-const robots =
-  previewDeployment || seo?.noIndex ? "noindex, nofollow" : "index, follow";
+const robots = [
+  previewDeployment || seo?.noIndex ? "noindex" : "index",
+  previewDeployment || seo?.noIndex ? "nofollow" : "follow",
+  "max-image-preview:large",
+].join(", ");
 
 // Canonical URL
 const canonical = previewDeployment ? null : canonicalUrl || Astro.url.href;
 const cleanCanonical = canonical ? stegaClean(canonical) : null;
+const siteUrl = (
+  Astro.site?.toString() || new URL("/", Astro.url).toString()
+).replace(/\/$/, "");
+const organizationId = `${siteUrl}#organization`;
+const socialLinks = (footerData?.socialLinks || [])
+  .map((link) => link.url?.trim())
+  .filter((value): value is string => Boolean(value));
+const organizationStructuredData = siteSettings?.siteName
+  ? compactJsonLd({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": organizationId,
+      name: stegaClean(siteSettings.siteName),
+      description: siteSettings.siteDescription
+        ? stegaClean(siteSettings.siteDescription)
+        : undefined,
+      url: siteUrl,
+      logo: logoUrl,
+      email: siteSettings.contactEmail,
+      telephone: siteSettings.contactPhone,
+      address: siteSettings.address,
+      sameAs: socialLinks,
+      contactPoint:
+        siteSettings.contactEmail || siteSettings.contactPhone
+          ? [
+              compactJsonLd({
+                "@type": "ContactPoint",
+                contactType: "customer service",
+                email: siteSettings.contactEmail,
+                telephone: siteSettings.contactPhone,
+              }),
+            ]
+          : undefined,
+    })
+  : undefined;
+const websiteStructuredData = siteSettings?.siteName
+  ? compactJsonLd({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": `${siteUrl}#website`,
+      url: siteUrl,
+      name: stegaClean(siteSettings.siteName),
+      description: siteSettings.siteDescription
+        ? stegaClean(siteSettings.siteDescription)
+        : undefined,
+      publisher: {
+        "@id": organizationId,
+      },
+    })
+  : undefined;
+const pageStructuredData = Array.isArray(structuredData)
+  ? structuredData
+  : structuredData
+    ? [structuredData]
+    : [];
+const structuredDataItems = [
+  organizationStructuredData,
+  websiteStructuredData,
+  ...pageStructuredData,
+]
+  .map((item) => compactJsonLd(item))
+  .filter((item): item is Record<string, unknown> => Boolean(item));
+const openGraphType = pageStructuredData.some(
+  (item) => item && item["@type"] === "Article",
+)
+  ? "article"
+  : "website";
 ---
 
 <!-- Primary Meta Tags -->
@@ -98,6 +189,7 @@ const cleanCanonical = canonical ? stegaClean(canonical) : null;
 <meta name="title" content={metaTitle} />
 <meta name="description" content={metaDescription} />
 <meta name="robots" content={robots} />
+<meta property="og:site_name" content={siteSettings?.siteName || "CIPM"} />
 {
   faviconUrl ? (
     <>
@@ -118,7 +210,7 @@ const cleanCanonical = canonical ? stegaClean(canonical) : null;
 {cleanCanonical && <link rel="canonical" href={cleanCanonical} />}
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={openGraphType} />
 {cleanCanonical && <meta property="og:url" content={cleanCanonical} />}
 <meta property="og:title" content={metaTitle} />
 <meta property="og:description" content={metaDescription} />
@@ -126,12 +218,15 @@ const cleanCanonical = canonical ? stegaClean(canonical) : null;
 {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-{cleanCanonical && <meta property="twitter:url" content={cleanCanonical} />}
-<meta property="twitter:title" content={metaTitle} />
-<meta property="twitter:description" content={metaDescription} />
-{ogImageUrl && <meta property="twitter:image" content={ogImageUrl} />}
-{ogImageAlt && <meta property="twitter:image:alt" content={ogImageAlt} />}
+<meta name="twitter:card" content="summary_large_image" />
+{cleanCanonical && <meta name="twitter:url" content={cleanCanonical} />}
+<meta name="twitter:title" content={metaTitle} />
+<meta name="twitter:description" content={metaDescription} />
+{ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+{ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
 
-<!-- Additional content from slot -->
-<slot />
+{
+  structuredDataItems.map((item) => (
+    <script type="application/ld+json" set:html={JSON.stringify(item)} />
+  ))
+}

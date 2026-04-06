@@ -125,8 +125,12 @@ export interface SiteSettings extends SanityDocument {
   _type: "siteSettings";
   siteName?: string;
   siteDescription?: string;
+  logo?: SanityImage;
   favicon?: SanityImage;
   defaultOgImage?: SanityImage;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
 }
 
 // ============================================

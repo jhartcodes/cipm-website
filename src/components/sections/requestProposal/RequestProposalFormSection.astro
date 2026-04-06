@@ -17,6 +17,7 @@ interface Props {
   description?: string;
   buttonText?: string;
   successMessage?: string;
+  showHeading?: boolean;
 }
 
 const {
@@ -25,21 +26,30 @@ const {
   description,
   buttonText,
   successMessage,
+  showHeading = true,
 } = Astro.props;
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <div class="space-y-6">
-  <div>
-    <Text as="h2" variant="heading" class="text-2xl font-bold text-navy">
-      {heading || "Request a Proposal"}
-    </Text>
-    <Text as="p" variant="body" class="mt-2 text-gray-600">
-      {description || "Tell us a bit about your property and we will follow up with a proposal."}
-    </Text>
-  </div>
+  {
+    showHeading && (
+      <div>
+        <Text as="h2" variant="heading" class="text-2xl font-bold text-navy">
+          {heading || "Request a Proposal"}
+        </Text>
+        <Text as="p" variant="body" class="mt-2 text-gray-600">
+          {description ||
+            "Tell us a bit about your property and we will follow up with a proposal."}
+        </Text>
+      </div>
+    )
+  }
 
-  <div class="rounded-xl bg-red-50 border border-red-200 p-6 hidden" data-form-error>
+  <div
+    class="rounded-xl bg-red-50 border border-red-200 p-6 hidden"
+    data-form-error
+  >
     <Text as="p" variant="body" class="text-red-700" data-form-error-text>
       Unable to submit form right now. Please try again.
     </Text>
@@ -85,7 +95,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         placeholder="(123) 456-7890"
       />
       <div>
-        <label for="field-propertyType" class="mb-2 block text-sm font-semibold text-navy">
+        <label
+          for="field-propertyType"
+          class="mb-2 block text-sm font-semibold text-navy"
+        >
           Property Type
           <span class="ml-1 text-red-500">*</span>
         </label>
@@ -148,7 +161,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           class="cf-turnstile"
           data-sitekey={turnstileSiteKey}
           data-theme="light"
-        ></div>
+        />
       ) : (
         <p class="text-sm text-red-600">
           Form protection is not configured. Set `PUBLIC_TURNSTILE_SITE_KEY`.
@@ -157,18 +170,35 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     }
 
     <div class="pt-2">
-      <Button type="submit" variant="primary" size="lg" class="w-full sm:w-auto" data-submit-button>
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        class="w-full sm:w-auto"
+        data-submit-button
+      >
         {buttonText || "Request Proposal"}
       </Button>
     </div>
 
-    <div class="rounded-xl bg-green-50 border border-green-200 p-6 hidden" data-form-success>
+    <div
+      class="rounded-xl bg-green-50 border border-green-200 p-6 hidden"
+      data-form-success
+    >
       <div class="flex items-center gap-3">
         <div class="flex-shrink-0 text-green-600">
           <Icon name="check-circle" size={24} />
         </div>
-        <Text as="p" variant="body" class="text-green-800" data-form-success-text>
-          {successMessage || "Thanks for your proposal request. We'll be in touch soon."}
+        <Text
+          as="p"
+          variant="body"
+          class="text-green-800"
+          data-form-success-text
+        >
+          {
+            successMessage ||
+              "Thanks for your proposal request. We'll be in touch soon."
+          }
         </Text>
       </div>
     </div>
@@ -181,7 +211,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       src="https://challenges.cloudflare.com/turnstile/v0/api.js"
       async
       defer
-    ></script>
+    />
   )
 }
 
@@ -214,17 +244,15 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     };
 
     const clearFieldErrors = () => {
-      form
-        .querySelectorAll("input, textarea, select")
-        .forEach((field) => {
-          if (
-            field instanceof HTMLInputElement ||
-            field instanceof HTMLTextAreaElement ||
-            field instanceof HTMLSelectElement
-          ) {
-            field.setCustomValidity("");
-          }
-        });
+      form.querySelectorAll("input, textarea, select").forEach((field) => {
+        if (
+          field instanceof HTMLInputElement ||
+          field instanceof HTMLTextAreaElement ||
+          field instanceof HTMLSelectElement
+        ) {
+          field.setCustomValidity("");
+        }
+      });
     };
 
     const applyFieldErrors = (details: Record<string, unknown>) => {
@@ -252,19 +280,17 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       return applied;
     };
 
-    form
-      .querySelectorAll("input, textarea, select")
-      .forEach((field) => {
-        if (
-          field instanceof HTMLInputElement ||
-          field instanceof HTMLTextAreaElement ||
-          field instanceof HTMLSelectElement
-        ) {
-          const clear = () => field.setCustomValidity("");
-          field.addEventListener("input", clear);
-          field.addEventListener("change", clear);
-        }
-      });
+    form.querySelectorAll("input, textarea, select").forEach((field) => {
+      if (
+        field instanceof HTMLInputElement ||
+        field instanceof HTMLTextAreaElement ||
+        field instanceof HTMLSelectElement
+      ) {
+        const clear = () => field.setCustomValidity("");
+        field.addEventListener("input", clear);
+        field.addEventListener("change", clear);
+      }
+    });
 
     const getErrorMessage = (result: any) => {
       if (result?.message === "Invalid form data" && result?.details) {
@@ -279,7 +305,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         return "Please complete the anti-bot check again and resubmit.";
       }
 
-      return result?.message || "Unable to submit form right now. Please try again.";
+      return (
+        result?.message || "Unable to submit form right now. Please try again."
+      );
     };
 
     const resetTurnstile = () => {
@@ -345,7 +373,8 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
         if (successText) {
           successText.textContent =
-            result?.message || "Thanks for your proposal request. We'll be in touch soon.";
+            result?.message ||
+            "Thanks for your proposal request. We'll be in touch soon.";
         }
         successBox?.classList.remove("hidden");
         form.reset();

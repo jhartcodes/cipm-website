@@ -13,15 +13,47 @@ import Button from "../ui/Button.astro";
 import BlogPostHeroSection from "../sections/blog/BlogPostHeroSection.astro";
 import BlogPostFeaturedImage from "../sections/blog/BlogPostFeaturedImage.astro";
 import BlogBlocks from "../content/BlogBlocks.astro";
+import {
+  buildArticleStructuredData,
+  buildBreadcrumbStructuredData,
+  buildMetaDescription,
+} from "../../lib/seo";
 
 interface Props {
   post: any;
 }
 
 const { post } = Astro.props;
+const siteUrl = (
+  Astro.site?.toString() || new URL("/", Astro.url).toString()
+).replace(/\/$/, "");
+const pageDescription =
+  buildMetaDescription([post?.excerpt, post?.content]) ||
+  `${post?.title || "Blog post"} article from CIPM.`;
+const structuredData = [
+  buildBreadcrumbStructuredData([
+    { name: "Home", item: `${siteUrl}/` },
+    { name: "Blog", item: `${siteUrl}/blog` },
+    { name: post?.title || "Blog Post", item: Astro.url.toString() },
+  ]),
+  buildArticleStructuredData({
+    headline: post?.title,
+    description: pageDescription,
+    url: Astro.url.toString(),
+    publishedAt: post?.publishedAt,
+    image: post?.featuredImage,
+    authorName: post?.author,
+    publisherId: `${siteUrl}#organization`,
+  }),
+].filter(Boolean);
 ---
 
-<BaseLayout title={post.title} seo={post.seo}>
+<BaseLayout
+  title={post.title}
+  seo={post.seo}
+  description={pageDescription}
+  structuredData={structuredData}
+>
   <BlogPostHeroSection
     title={post.title}
     category={post.category}

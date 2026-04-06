@@ -10,6 +10,7 @@ import SecondaryHeroSection from "../sections/shared/SecondaryHeroSection.astro"
 import ServicesListSection from "../sections/services/ServicesListSection.astro";
 import FaqSection from "../sections/about/FaqSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
+import { buildMetaDescription } from "../../lib/seo";
 
 interface Props {
   data?: any;
@@ -18,9 +19,12 @@ interface Props {
 
 const { data, ctaData } = Astro.props;
 const pageTitle = data?.hero?.heading || "Our Services";
+const pageDescription =
+  buildMetaDescription([data?.hero?.subheading]) ||
+  "Explore CIPM property management services and how we support buildings, boards, and communities.";
 ---
 
-<BaseLayout title={pageTitle} seo={data?.seo}>
+<BaseLayout title={pageTitle} seo={data?.seo} description={pageDescription}>
   <SecondaryHeroSection title={pageTitle} subtitle={data?.hero?.subheading} />
   <ServicesListSection services={data?.services} />
   <FaqSection heading={data?.faqHeading} faqs={data?.faqs} />

@@ -32,10 +32,17 @@ interface Props {
   title?: string;
   description?: string;
   seo?: any;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
   class?: string;
 }
 
-const { title, description, seo, class: className } = Astro.props;
+const {
+  title,
+  description,
+  seo,
+  structuredData,
+  class: className,
+} = Astro.props;
 
 const { data: globalData } = await loadQuery({
   query: GLOBAL_CHROME_QUERY,
@@ -59,8 +66,10 @@ const { site, nav, topRibbon, footer } = globalData;
     <SeoHead
       seo={seo}
       siteSettings={site}
+      footerData={footer}
       title={title}
       description={description}
+      structuredData={structuredData}
     />
     {!visualEditingEnabled && <Analytics />}
     {

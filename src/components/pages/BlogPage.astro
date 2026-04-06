@@ -10,6 +10,7 @@ import SecondaryHeroSection from "../sections/shared/SecondaryHeroSection.astro"
 import BlogIntroSection from "../sections/blog/BlogIntroSection.astro";
 import BlogGridSection from "../sections/blog/BlogGridSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
+import { buildMetaDescription } from "../../lib/seo";
 
 interface Props {
   data?: any;
@@ -27,13 +28,13 @@ const {
   totalPages = 1,
 } = Astro.props;
 const pageTitle = data?.hero?.heading || "Blog";
+const pageDescription =
+  buildMetaDescription([data?.intro, data?.hero?.subheading]) ||
+  "Read articles from CIPM about property management, operations, and community-focused service.";
 ---
 
-<BaseLayout title={pageTitle} seo={data?.seo}>
-  <SecondaryHeroSection
-    title={pageTitle}
-    subtitle={data?.hero?.subheading}
-  />
+<BaseLayout title={pageTitle} seo={data?.seo} description={pageDescription}>
+  <SecondaryHeroSection title={pageTitle} subtitle={data?.hero?.subheading} />
   <BlogIntroSection heading={data?.heading} intro={data?.intro} />
   <div transition:name="blog-grid" transition:animate="initial">
     <BlogGridSection

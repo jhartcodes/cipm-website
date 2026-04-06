@@ -20,12 +20,13 @@ interface Props {
 }
 
 const { title, category, author, publishedAt } = Astro.props;
-
-const formattedDate = publishedAt
-  ? new Date(publishedAt).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+const publishedDate = publishedAt ? new Date(publishedAt) : null;
+const publishedIso = publishedDate ? publishedDate.toISOString() : null;
+const formattedDate = publishedDate
+  ? publishedDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     })
   : null;
 ---
@@ -33,23 +34,29 @@ const formattedDate = publishedAt
 <section class="py-16 lg:py-24 bg-gradient-to-br from-navy to-navy-dark">
   <Container>
     <div class="text-center">
-      {category?.title && (
-        <span class="inline-block bg-turquoise/20 text-turquoise-light font-semibold text-sm uppercase tracking-wide px-4 py-1 rounded-full mb-6">
-          {category.title}
-        </span>
-      )}
+      {
+        category?.title && (
+          <span class="inline-block bg-turquoise/20 text-turquoise-light font-semibold text-sm uppercase tracking-wide px-4 py-1 rounded-full mb-6">
+            {category.title}
+          </span>
+        )
+      }
 
       <Text as="h1" variant="hero" tone="inverted" class="mb-6 leading-tight">
         {title || "Untitled Post"}
       </Text>
 
-      {(author || formattedDate) && (
-        <div class="flex items-center justify-center gap-4 text-white/70">
-          {author && <span>{author}</span>}
-          {author && formattedDate && <span>&bull;</span>}
-          {formattedDate && <time>{formattedDate}</time>}
-        </div>
-      )}
+      {
+        (author || formattedDate) && (
+          <div class="flex items-center justify-center gap-4 text-white/70">
+            {author && <span>{author}</span>}
+            {author && formattedDate && <span>&bull;</span>}
+            {formattedDate && (
+              <time datetime={publishedIso || undefined}>{formattedDate}</time>
+            )}
+          </div>
+        )
+      }
     </div>
   </Container>
 </section>

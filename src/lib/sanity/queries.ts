@@ -5,7 +5,12 @@ export const GLOBAL_CHROME_QUERY = /* groq */ `
   "site": *[_type == "siteSettings"][0]{
     siteName,
     siteDescription,
-    logo,
+    logo{
+      asset,
+      alt,
+      hotspot,
+      crop
+    },
     favicon{
       asset,
       alt,

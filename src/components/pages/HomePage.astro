@@ -15,6 +15,7 @@ import WhatWeManageSection from "../sections/home/WhatWeManageSection.astro";
 import WhatWeOfferSection from "../sections/home/WhatWeOfferSection.astro";
 import TestimonialsSection from "../sections/home/TestimonialsSection.astro";
 import ContactCtaSection from "../sections/shared/ContactCtaSection.astro";
+import { buildMetaDescription } from "../../lib/seo";
 
 interface Props {
   data?: any;
@@ -25,9 +26,12 @@ const { data, ctaData } = Astro.props;
 const pageTitle = data?.hero?.heading || "Home";
 // Use stegaClean to strip visual editing encoding from values used in logic
 const heroVariant = stegaClean(data?.heroVariant) || "primary";
+const pageDescription =
+  buildMetaDescription([data?.hero?.subheading, data?.introductionText]) ||
+  "CIPM provides community-focused property management services and support for buildings, boards, and communities.";
 ---
 
-<BaseLayout title={pageTitle} seo={data?.seo}>
+<BaseLayout title={pageTitle} seo={data?.seo} description={pageDescription}>
   {
     heroVariant === "secondary" ? (
       <SecondaryHeroSection
