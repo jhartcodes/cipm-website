@@ -5,7 +5,6 @@
  * Community Focus block + Team intro + team member grid.
  */
 
-import { Image } from "astro:assets";
 import Section from "../../layout/Section.astro";
 import TeamMemberCard from "./TeamMemberCard.astro";
 import SanityImage from "../../content/SanityImage.astro";
@@ -42,10 +41,13 @@ const {
   members = [],
 } = Astro.props;
 
+const avatarPlaceholderSrc = "/cube_house.svg";
 const modalFallbackMember = members.find((member) => member?.headshot?.asset);
 const modalFallbackSrc = modalFallbackMember?.headshot?.asset
   ? urlFor(modalFallbackMember.headshot).width(400).url()
-  : "/favicon.svg";
+  : avatarPlaceholderSrc;
+
+console.log("modal", { modalFallbackMember, modalFallbackSrc });
 ---
 
 <Section size="lg" tone="muted">
@@ -170,12 +172,11 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
       <div
         class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full ring-4 ring-turquoise/30"
       >
-        <Image
+        <img
           id="modal-image"
           src={modalFallbackSrc}
+          data-placeholder-src={avatarPlaceholderSrc}
           alt=""
-          width={400}
-          height={400}
           class="h-full w-full object-cover"
         />
       </div>
@@ -221,19 +222,37 @@ const modalFallbackSrc = modalFallbackMember?.headshot?.asset
     const modalBio = document.getElementById("modal-bio");
     const modalLinkedin = document.getElementById("modal-linkedin");
     const modalEmail = document.getElementById("modal-email");
+    const placeholderSrc = modalImage?.dataset.placeholderSrc || "";
 
     const focusableSelector =
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
     let previousFocus = null;
 
+    const setModalImage = (imageSrc, name) => {
+      if (!modalImage) return;
+
+      const nextImageSrc = imageSrc || placeholderSrc;
+      const isPlaceholder = nextImageSrc === placeholderSrc;
+
+      modalImage.src = nextImageSrc;
+      modalImage.alt = isPlaceholder
+        ? name
+          ? `${name} avatar placeholder`
+          : "Team member avatar placeholder"
+        : name || "";
+      modalImage.classList.toggle("bg-gray-50", isPlaceholder);
+      modalImage.classList.toggle("object-contain", isPlaceholder);
+      modalImage.classList.toggle("p-4", isPlaceholder);
+      modalImage.classList.toggle("object-cover", !isPlaceholder);
+    };
+
     const openModal = (card) => {
-      if (modalName) modalName.textContent = card.dataset.name || "";
+      const name = card.dataset.name || "";
+
+      if (modalName) modalName.textContent = name;
       if (modalTitle) modalTitle.textContent = card.dataset.title || "";
       if (modalBio) modalBio.textContent = card.dataset.bio || "";
-      if (modalImage) {
-        modalImage.src = card.dataset.image || "";
-        modalImage.alt = card.dataset.name || "";
-      }
+      setModalImage(card.dataset.image || "", name);
       if (modalLinkedin) {
         const linkedinUrl = card.dataset.linkedin;
         if (linkedinUrl) {

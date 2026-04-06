@@ -22,61 +22,69 @@ interface Props {
 }
 
 const { name, title, headshot, bio, linkedinUrl, email, id } = Astro.props;
+const avatarPlaceholderSrc = "/cube_house.svg";
 
 // Get the image URL for the modal data attribute
-const imageUrl = headshot?.asset ? urlFor(headshot).width(400).url() : '';
+const imageUrl = headshot?.asset
+  ? urlFor(headshot).width(400).url()
+  : avatarPlaceholderSrc;
 ---
 
 <div
   class="group text-center cursor-pointer"
   tabindex="0"
   role="button"
-  aria-label={`View ${name || 'team member'}'s full bio`}
+  aria-label={`View ${name || "team member"}'s full bio`}
   data-team-card
-  data-name={name || ''}
-  data-title={title || ''}
-  data-bio={bio || ''}
+  data-name={name || ""}
+  data-title={title || ""}
+  data-bio={bio || ""}
   data-image={imageUrl}
-  data-linkedin={linkedinUrl || ''}
-  data-email={email || ''}
+  data-linkedin={linkedinUrl || ""}
+  data-email={email || ""}
 >
-  <div class="mx-auto mb-4 h-40 w-40 overflow-hidden rounded-full ring-4 ring-transparent group-hover:ring-turquoise/30 transition-all">
-    {headshot?.asset ? (
-      <SanityImage
-        image={headshot}
-        alt={headshot?.alt || name || "Team member"}
-        width={200}
-        class="h-full w-full object-cover"
-      />
-    ) : (
-      <div class="h-full w-full bg-gray-200 flex items-center justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="h-16 w-16 text-gray-400"
-          aria-hidden="true"
-        >
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-      </div>
-    )}
+  <div
+    class="mx-auto mb-4 h-40 w-40 overflow-hidden rounded-full ring-4 ring-transparent group-hover:ring-turquoise/30 transition-all"
+  >
+    {
+      headshot?.asset ? (
+        <SanityImage
+          image={headshot}
+          alt={headshot?.alt || name || "Team member"}
+          width={200}
+          class="h-full w-full object-cover"
+        />
+      ) : (
+        <img
+          src={avatarPlaceholderSrc}
+          alt={
+            name
+              ? `${name} avatar placeholder`
+              : "Team member avatar placeholder"
+          }
+          class="h-full w-full bg-gray-50 object-contain p-5"
+        />
+      )
+    }
   </div>
 
-  {name && (
-    <Text as="h3" variant="headingSm" class="text-xl font-bold text-navy group-hover:text-turquoise transition-colors">
-      {name}
-    </Text>
-  )}
+  {
+    name && (
+      <Text
+        as="h3"
+        variant="headingSm"
+        class="text-xl font-bold text-navy group-hover:text-turquoise transition-colors"
+      >
+        {name}
+      </Text>
+    )
+  }
 
-  {title && (
-    <Text as="p" variant="small" class="mt-1 text-turquoise font-medium">
-      {title}
-    </Text>
-  )}
+  {
+    title && (
+      <Text as="p" variant="small" class="mt-1 text-turquoise font-medium">
+        {title}
+      </Text>
+    )
+  }
 </div>
